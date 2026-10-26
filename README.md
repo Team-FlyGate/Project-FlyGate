@@ -132,7 +132,7 @@ Project-FlyGate는 **NVIDIA 스킬 위에 구성한 에이전트 워크플로**�
 | **NVIDIA Nemotron Safety Guard 8B v3** + **Nemotron 3.5 Content Safety (PV 정책)** | 메모의 주장마다 두 가드를 동시에 돌려 치료 조언, PRR 인과 단정, 자발 보고로 낸 발생률, 재식별 시도를 반려 | PV 정책은 공식 스킬 `nemotron-policy-generator`로 생성해 `custom_policy`로 전달, 평가 50건 정확도 0.58 → 0.84 |
 | **NVIDIA Nemotron 리랭커** (`llama-nemotron-rerank-vl-1b-v2`) | 문헌 읽기 전 PubMed 후보 20편 재정렬 | 공식 스킬 `nemotron-retrieval-recipes` 기준, 추가 지연 중앙값 0.57초 |
 | **NVIDIA BioNeMo NIM** | MSA-Search → OpenFold3 → DiffDock → Boltz-2 | 공식 스킬 `bionemo-msa-structure-prediction-pipeline` 규격 |
-| **NVIDIA Agent Skills** ([NVIDIA/skills](https://github.com/NVIDIA/skills)) | 우리 역량 11개를 공식 규격의 [skills/*/SKILL.md](skills/)와 스킬 카드로 패키징하고, 공식 스킬 `bionemo-msa-structure-prediction-pipeline` · `nemotron-policy-generator` · `nemotron-retrieval-recipes` · `skill-card-generator`를 실제로 적용 | 목록: [skills/README.md](skills/README.md) |
+| **NVIDIA Agent Skills** ([NVIDIA/skills](https://github.com/NVIDIA/skills)) | 우리 역량 12개를 공식 규격의 [skills/*/SKILL.md](skills/)와 스킬 카드로 패키징하고, 공식 스킬 `bionemo-msa-structure-prediction-pipeline` · `nemotron-policy-generator` · `nemotron-retrieval-recipes` · `skill-card-generator`를 실제로 적용 | 목록: [skills/README.md](skills/README.md) |
 | **NemoClaw · OpenShell · OpenClaw** | OpenClaw 작업 공간(SOUL · AGENTS · TOOLS · HEARTBEAT), deny-by-default(밖으로 나가는 연결을 기본으로 모두 막고 목록에 적은 곳만 여는 방식) 네트워크 정책, Landlock(리눅스의 파일 경로 접근 제한 기능) 파일 시스템, 비루트(관리자 권한 없는) 실행 | [agent/policy/flygate.yaml](agent/policy/flygate.yaml), 실제 OpenShell 샌드박스 스모크 **20/20** 통과 [agent/evidence/](agent/evidence/) |
 
 비자기회귀 판단 모델로는 TypeSafe AI의 Jev를 FlyVigilance 안에서 씁니다.
@@ -273,7 +273,7 @@ FV_CACHE_DIR=data/cache/api .venv/bin/python pipeline/bench/ablation.py
 | `fly_discovery/` | STEP 1 FlyDiscovery 화면과 NIM 실측 원본 |
 | `api/_fv/` | STEP 2 FlyVigilance 핵심 모듈(트리아지, 라벨, 통계, 문헌, 평가, 크리틱, 국내 모드) |
 | `pipeline/` | FAERS 웨어하우스, 참조 세트 검증, 벤치마크 |
-| `skills/` | NVIDIA Agent Skills 형식의 역량 11개 |
+| `skills/` | NVIDIA Agent Skills 형식의 역량 12개 |
 | `web/` | 라이브 대시보드(React + Vite) |
 | `docs/` | 평가 보고서, 아키텍처, 에이전트 구성, 약사 검토 반영 |
 

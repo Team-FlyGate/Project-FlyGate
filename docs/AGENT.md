@@ -17,7 +17,7 @@ NemoClaw 과정(03a)은 배포를 네 부품으로 나눕니다. FlyGate 는 각
 | 층 | 과정의 정의 | FlyGate |
 | --- | --- | --- |
 | LLM(대형 언어 모델) 엔드포인트(모델을 부르는 주소) | 프롬프트와 도구 결과를 응답으로 바꿉니다. 세션 상태는 없습니다. | NVIDIA build.nvidia.com NIM(NVIDIA 추론 마이크로서비스: AI 모델을 표준 API로 부르게 포장한 서비스): Nemotron(NVIDIA 언어 모델 계열) 3 Super(숙의 메모, 국내 보고 구조화), Nemotron Safety Guard(주장별 안전 검사), BioNeMo NIM 4종(MSA-Search, OpenFold3, DiffDock, Boltz-2). FlyVigilance 안의 비자기회귀 판단 모델(글을 한 글자씩 생성하지 않고 확률을 한 번에 돌려주는 모델. Jev, TypeSafe AI)이 타입 있는 확률 판단(예/아니오 · 선택지 · 점수처럼 형식이 정해진 답)을 맡습니다. |
-| OpenClaw 하네스 | 세션 기록, 파일 기반 작업 공간, 도구 접근을 유지합니다. | 작업 공간 파일 7개(`agent/workspace/`), Agent Skills(에이전트 능력 패키지 규격) 12개(`skills/` 11개 + `agent/skills/discovery-evidence`), 도구는 `flygate` CLI(명령줄 인터페이스) 하위 명령 7개(exec). |
+| OpenClaw 하네스 | 세션 기록, 파일 기반 작업 공간, 도구 접근을 유지합니다. | 작업 공간 파일 7개(`agent/workspace/`), Agent Skills(에이전트 능력 패키지 규격) 13개(`skills/` 12개 + `agent/skills/discovery-evidence`), 도구는 `flygate` CLI(명령줄 인터페이스) 하위 명령 7개(exec). |
 | OpenShell 샌드박스 | 실행 중인 에이전트가 닿는 파일·네트워크·시스템 호출을 제한합니다. | `agent/policy/flygate.yaml`: 기본 거부, 외부 API 5곳을 파이썬 실행 파일에만 묶어 메서드·경로 단위로 허용, 쓰기 경로 제한, 비루트(관리자 권한 없이 실행), Landlock(읽고 쓸 수 있는 파일 경로를 제한하는 리눅스 보안 기능). |
 | NemoClaw 청사진 | OpenClaw 와 OpenShell 이 함께 돌도록 구성합니다. | NemoClaw 청사진의 OpenClaw 샌드박스 이미지와 게이트웨이 위에 올립니다. `agent/deploy_nemoclaw.sh` 가 정책 프리셋, 도구 묶음, 작업 공간, 스킬, cron(정해진 시각에 명령을 자동 실행하는 예약 도구) 을 더합니다. |
 
@@ -207,7 +207,7 @@ agent/bin/flygate grade NIRAPARIB thrombocytopenia
 | --- | --- |
 | `agent/flygate.py`, `agent/bin/flygate` | CLI 와 실행 래퍼 |
 | `agent/workspace/` | SOUL, AGENTS, IDENTITY, USER, TOOLS, HEARTBEAT, MEMORY |
-| `agent/skills/discovery-evidence/` | FlyDiscovery 스킬(나머지 11개는 `skills/`) |
+| `agent/skills/discovery-evidence/` | FlyDiscovery 스킬(나머지 12개는 `skills/`) |
 | `agent/policy/flygate.yaml` | OpenShell 정책 |
 | `agent/policy/typesafe-provider.yaml` | 판단 API 자격 증명 provider profile |
 | `agent/deploy_nemoclaw.sh` | 배포(worker, assistant) |

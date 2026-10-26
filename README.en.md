@@ -126,7 +126,7 @@ Detailed architecture is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), and th
 | **NVIDIA Nemotron Safety Guard 8B v3** + **Nemotron 3.5 Content Safety (PV policy)** | Runs both guards in parallel on every claim in a memo to reject treatment advice, causal claims drawn from the PRR, incidence rates derived from spontaneous reports, and re-identification attempts | The PV policy is generated with the official skill `nemotron-policy-generator` and passed as `custom_policy`; accuracy on 50 evaluation items 0.58 → 0.84 |
 | **NVIDIA Nemotron reranker** (`llama-nemotron-rerank-vl-1b-v2`) | Reorders 20 PubMed candidates before literature reading | Follows the official skill `nemotron-retrieval-recipes`; median added latency 0.57 s |
 | **NVIDIA BioNeMo NIM** | MSA-Search → OpenFold3 → DiffDock → Boltz-2 | Follows the official skill `bionemo-msa-structure-prediction-pipeline` specification |
-| **NVIDIA Agent Skills** ([NVIDIA/skills](https://github.com/NVIDIA/skills)) | Packages our 11 capabilities as [skills/*/SKILL.md](skills/) files and skill cards in the official format, and applies the official skills `bionemo-msa-structure-prediction-pipeline` · `nemotron-policy-generator` · `nemotron-retrieval-recipes` · `skill-card-generator` in practice | List: [skills/README.md](skills/README.md) |
+| **NVIDIA Agent Skills** ([NVIDIA/skills](https://github.com/NVIDIA/skills)) | Packages our 12 capabilities as [skills/*/SKILL.md](skills/) files and skill cards in the official format, and applies the official skills `bionemo-msa-structure-prediction-pipeline` · `nemotron-policy-generator` · `nemotron-retrieval-recipes` · `skill-card-generator` in practice | List: [skills/README.md](skills/README.md) |
 | **NemoClaw · OpenShell · OpenClaw** | OpenClaw workspace (SOUL · AGENTS · TOOLS · HEARTBEAT), a deny-by-default network policy (all outbound connections blocked by default, with only listed destinations allowed), a Landlock (a Linux feature that restricts file path access) file system, non-root (no administrator privileges) execution | [agent/policy/flygate.yaml](agent/policy/flygate.yaml), real OpenShell sandbox smoke test passed **20/20** [agent/evidence/](agent/evidence/) |
 
 For the non-autoregressive judgment model, FlyVigilance uses Jev by TypeSafe AI.
@@ -267,7 +267,7 @@ Steps to reproduce everything from scratch (loading 55 FAERS quarters, reference
 | `fly_discovery/` | STEP 1 FlyDiscovery screens and raw NIM measurements |
 | `api/_fv/` | STEP 2 FlyVigilance core modules (triage, label, statistics, literature, assessment, critic, Korean mode) |
 | `pipeline/` | FAERS warehouse, reference set validation, benchmarks |
-| `skills/` | 11 capabilities in NVIDIA Agent Skills format |
+| `skills/` | 12 capabilities in NVIDIA Agent Skills format |
 | `web/` | Live dashboard (React + Vite) |
 | `docs/` | Evaluation report, architecture, agent setup, pharmacist review log |
 

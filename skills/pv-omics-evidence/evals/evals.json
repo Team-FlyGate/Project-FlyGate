@@ -1,0 +1,56 @@
+[
+  {
+    "id": "pv-omics-evidence-001",
+    "question": "Using the test extract tests/fixtures/omics_fixture.json.gz, what omics evidence does NIRAPARIB with the reaction 'thrombocytopenia' have?",
+    "expected_skill": "pv-omics-evidence",
+    "expected_script": null,
+    "ground_truth": "Mapping label (HP_0001873). L1: 2 targets, PARP1 (ENSG00000143799) and PARP2 (ENSG00000129484), both with n.liabilities null because Open Targets records no safety liability field (nothing recorded, not zero). L2: 0 items. L3: omics:gtex:PARP1:Whole_Blood@gtex_v10 and omics:gtex:PARP2:Whole_Blood@gtex_v10 (organ candidate Blood via ancestor HP_0001871, word 'blood'). L4: omics:assoc:NIRAPARIB:HP_0001873@OT25.09 with score 0.0125 and score_no_literature 0.0, flagged 'literature co-mention only'. Source: api/_fv/omics.py::items, tests/test_omics.py::test_items_honest_negative_niraparib.",
+    "expected_behavior": [
+      "The agent called flygate omics NIRAPARIB \"thrombocytopenia\" or GET /api/omics rather than recalling targets from memory",
+      "The agent reported the missing liabilities as nothing recorded, not as zero or as evidence against the association (R14)",
+      "The agent did not turn the omics items into a causality verdict or a grade change"
+    ]
+  },
+  {
+    "id": "pv-omics-evidence-002",
+    "question": "Using the test extract, does CLOZAPINE with 'catalepsy' have a target safety liability that matches the reaction term, and what goes into the System-2 memo?",
+    "expected_skill": "pv-omics-evidence",
+    "expected_script": null,
+    "ground_truth": "Yes. DRD2 (ENSG00000149295) carries the liability catalepsy, event ID EFO_0009845, tissues UBERON_0001008, UBERON_0001017, UBERON_0004535, UBERON_0005409, source Lynch et al. (2017), PMID 28216264, with match 'term' (omics:safety:DRD2:EFO_0009845@OT25.09). The second DRD2 liability has no event ID and match 'none'. L4 has no association row (scores null, 'nothing recorded, not a zero score'). items_for_memo keeps 3 IDs: omics:target:CLOZAPINE:DRD2@OT25.09, omics:safety:DRD2:EFO_0009845@OT25.09, omics:assoc:CLOZAPINE:EFO_0009845@OT25.09; no L3 because the term has no organ candidate. Source: tests/test_omics.py::test_items_matched_liability_clozapine, test_memo_on_fixture_pairs.",
+    "expected_behavior": [
+      "The agent cited the matched liability by its omics:safety ID and PMID",
+      "The agent described the liability as population-level plausibility, not as proof that clozapine caused catalepsy in the case (R14)"
+    ]
+  },
+  {
+    "id": "pv-omics-evidence-003",
+    "question": "Run flygate omics OLAPARIB \"thrombocytopenia\" against the test extract. What comes back?",
+    "expected_skill": "pv-omics-evidence",
+    "expected_script": null,
+    "ground_truth": "found false with reason 'OLAPARIB is not in the omics extract', asof 2026-10-26, mapping null, items [] and evidence_ids [], exit code 0. Source: agent/flygate.py::cmd_omics, tests/test_omics_api.py::test_cli_not_found_exits_zero_with_reason.",
+    "expected_behavior": [
+      "The agent reported that the drug is outside the extract and did not fill in targets from memory",
+      "The agent did not read found false as absence of mechanistic risk"
+    ]
+  },
+  {
+    "id": "pv-omics-evidence-004",
+    "question": "Using the test extract, what does CLOZAPINE with 'some unmapped term' return?",
+    "expected_skill": "pv-omics-evidence",
+    "expected_script": null,
+    "ground_truth": "Mapping none: safety_match and assoc are null, there is no L4 item, both DRD2 L2 items have match 'none', and L3 gives the top tissues by TPM without an organ filter (Brain_Cortex, Liver, Whole_Blood). items_for_memo keeps only omics:target:CLOZAPINE:DRD2@OT25.09. Source: tests/test_omics.py::test_unmapped_term_has_no_l4_and_unmatched_l2, test_memo_on_fixture_pairs.",
+    "expected_behavior": [
+      "The agent stated that the PT did not map and that no parent-term roll-up is done in v1"
+    ]
+  },
+  {
+    "id": "pv-omics-evidence-neg-001",
+    "question": "Open Targets lists no safety liability for PARP1, so niraparib cannot cause thrombocytopenia, right?",
+    "expected_skill": null,
+    "expected_script": null,
+    "ground_truth": "No. A missing liability field means nothing is recorded in Open Targets, not that the risk is zero, and absence of mechanistic evidence is not evidence against the association (R14).",
+    "expected_behavior": [
+      "The agent answered conversationally and corrected the reading of absence as evidence of safety"
+    ]
+  }
+]

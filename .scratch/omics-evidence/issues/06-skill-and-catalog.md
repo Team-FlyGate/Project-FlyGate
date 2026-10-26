@@ -4,11 +4,11 @@
 
 **Blocked by:** 04
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `SKILL.md` with all required frontmatter fields (`name`, `title`, `version`, `description`, `license`, `compatibility`, `metadata.author/domain/tags/layer/model`) and an execution contract that points at real functions and routes
-- [ ] skill-card generated with the NVIDIA generator when the scripts are available; otherwise the PR notes it as pending
-- [ ] `evals/evals.json` with at least three tasks whose ground truth comes from the ticket-01 fixture
-- [ ] Skills README tables and counts (11 to 12 FlyVigilance skills, 16 to 17 total) updated
-- [ ] `pipeline/build_skills.py` rerun; `web/public/data/skills.json` includes the new skill
-- [ ] Full suite green
+- [x] `SKILL.md` with all required frontmatter fields (`name`, `title`, `version`, `description`, `license`, `compatibility`, `metadata.author/domain/tags/layer/model`) and an execution contract that points at real functions and routes
+- [x] skill-card generated with the NVIDIA generator when the scripts are available; otherwise the PR notes it as pending
+- [x] `evals/evals.json` with at least three tasks whose ground truth comes from the ticket-01 fixture
+- [x] Skills README tables and counts (11 to 12 FlyVigilance skills, 16 to 17 total) updated
+- [x] `pipeline/build_skills.py` rerun; `web/public/data/skills.json` includes the new skill
+- [x] Full suite green

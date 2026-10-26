@@ -1,13 +1,13 @@
 # Project-FlyGate Agent Skills
 
-Project-FlyGate 의 능력을 [NVIDIA Agent Skills](https://github.com/NVIDIA/skills) 규격의 스킬 16개로 나눴습니다.
-STEP 2 FlyVigilance(시판 후 약물감시)가 11개, STEP 1 FlyDiscovery(시판 전 탐색, 라이브 NIM 실행)가 5개입니다.
+Project-FlyGate 의 능력을 [NVIDIA Agent Skills](https://github.com/NVIDIA/skills) 규격의 스킬 17개로 나눴습니다.
+STEP 2 FlyVigilance(시판 후 약물감시)가 12개, STEP 1 FlyDiscovery(시판 전 탐색, 라이브 NIM 실행)가 5개입니다.
 각 스킬은 `SKILL.md`(프런트매터 + 언제 쓰는지 + 실행 계약), `skill-card.md`(NVIDIA 거버넌스 카드), 그리고 확인 가능한 사례가 있는 스킬은 `evals/evals.json`(평가 과제)을 갖습니다.
 모든 스킬은 저장소의 실제 코드(`api/_fv/`, `pipeline/`, `agent/flygate.py`)를 가리키며, 참조한 파일과 함수가 실제로 있는지 확인했습니다.
 
 이 스킬들은 연구·개발용입니다. 결과는 사람 검토를 전제로 한 초안이며, 규제 보고와 인과성 최종 판정은 사람이 합니다.
 
-## STEP 2 FlyVigilance 스킬 11개
+## STEP 2 FlyVigilance 스킬 12개
 
 | 스킬 | 층 | 하는 일 | 모델 · 엔드포인트 | 평가 과제 |
 | --- | --- | --- | --- | --- |
@@ -16,6 +16,7 @@ STEP 2 FlyVigilance(시판 후 약물감시)가 11개, STEP 1 FlyDiscovery(시�
 | [`pv-signal-memory`](pv-signal-memory/SKILL.md) | 기억 | FAERS 2x2, openFDA 라벨 절, PubMed 문헌, 근거 등급, 참조 세트 지표를 인용 가능한 근거 ID 묶음으로 돌려줍니다 | 모델 미사용(문헌 판정만 판단 모델) | 4 |
 | [`pv-literature-reading`](pv-literature-reading/SKILL.md) | 기억 | PubMed 후보 20편을 Nemotron 리랭커로 재정렬하고 상위 6편의 설계와 연관 보고 여부를 판정합니다 | `nvidia/llama-nemotron-rerank-vl-1b-v2` + 비자기회귀 판단 모델 | 5 |
 | [`pv-evidence-grade`](pv-evidence-grade/SKILL.md) | 기억 | 라벨 상태 × SDR 로 PV 분류 후보와 한 글자 등급(A/B/C/L/D/U)을 규칙으로 정하고 근거와 공백을 함께 냅니다 | 모델 미사용 | 5 |
+| [`pv-omics-evidence`](pv-omics-evidence/SKILL.md) | 기억 | 약물-반응 쌍의 기전 맥락(표적, 표적 안전성 책임, GTEx 조직 발현, 표적-질환 연관)을 오프라인 추출본에서 `omics:` 근거 ID 로 돌려줍니다. 설명용이며 인과 판정이나 등급에 쓰지 않습니다(R14) | 모델 미사용 · `GET /api/omics` | 5 |
 | [`pv-deliberate-assess`](pv-deliberate-assess/SKILL.md) | 숙고 | 올라온 사례에 대해 근거 ID 가 붙은 평가 메모를 쓰고 크리틱을 거칩니다 | `nvidia/nemotron-3-super-120b-a12b` (→ ultra-550b → 3.5-lightning-30b) | – |
 | [`pv-critic`](pv-critic/SKILL.md) | 억제 | 근거 ID 규칙, 숫자 오라클, 과잉해석 판정, 주장별 안전 가드로 AI 가 쓴 주장을 검사하고 사유와 함께 되돌립니다 | `nvidia/llama-3.1-nemotron-safety-guard-8b-v3`, `nvidia/nemotron-3.5-content-safety` + 비자기회귀 판단 모델 | 5 |
 | [`pv-guardrail-policy`](pv-guardrail-policy/SKILL.md) | 억제 | 약물감시 전용 범주(PV-1~PV-5)를 BYO 정책으로 만들어 Nemotron 3.5 Content Safety 에 `custom_policy` 로 넣고, Safety Guard 8B v3 와 함께 주장마다 검사합니다 | `nvidia/nemotron-3.5-content-safety` + `nvidia/llama-3.1-nemotron-safety-guard-8b-v3` | 50 |
@@ -49,7 +50,7 @@ STEP 2 FlyVigilance(시판 후 약물감시)가 11개, STEP 1 FlyDiscovery(시�
 | `bionemo-msa-structure-prediction-pipeline` | [`discovery-msa-search`](discovery-msa-search/), [`discovery-openfold3`](discovery-openfold3/), `api/_fv/discovery.py` | 1단계 MSA-Search(Uniref30_2302) → 2단계 OpenFold3(`msa.uniref30.a3m`) 규격을 그대로 따라 라이브로 호출합니다. 라이브 실행에서 정렬 101줄(10.8초), pLDDT 95.95, 4R6E 대비 CA RMSD 0.997 Å 를 받았고 지난 측정과 같았습니다. |
 | `msa-search-nim` · `openfold3-nim` · `diffdock-nim` · `boltz2-nim` (NVIDIA-BioNeMo/bionemo-agent-toolkit) | [`discovery-*`](.) 5개, `api/_fv/discovery.py` | 엔드포인트 선택, 요청 본문(수용체 ATOM 줄, `ligand_file_type=txt`, `predict_affinity` 한 개, A3M `alignment`/`format`/`rank`), 응답 필드 읽기를 스킬 문서대로 구현했습니다. |
 | `nemotron-policy-generator` | [`pv-guardrail-policy`](pv-guardrail-policy/) | 약물감시 범주를 BYO 정책(Markdown 정책, JSON 분류 체계, 시스템 프롬프트)으로 만들어 Nemotron 콘텐츠 안전 가드에 얹습니다. |
-| `skill-card-generator` | STEP 2 스킬 11개의 `skill-card.md` | 공식 스크립트(`discover_assets.py` → `render_card.py` → `validate_submission.py`)로 카드를 만들고, 검토 표시가 남지 않았음을 확인했습니다. |
+| `skill-card-generator` | STEP 2 스킬 11개의 `skill-card.md` | 공식 스크립트(`discover_assets.py` → `render_card.py` → `validate_submission.py`)로 카드를 만들고, 검토 표시가 남지 않았음을 확인했습니다. `pv-omics-evidence` 카드는 같은 구조로 손으로 썼고, 생성기 실행을 기다립니다. |
 | `nemotron-retrieval-recipes` | [`pv-literature-reading`](pv-literature-reading/) | 1단계 검색(PubMed) 뒤 2단계 리랭커로 상위 순서를 바로잡는 구성과 그 평가 방식(상위 k 정밀도, 쌍별 AUC)을 따랐습니다. 리랭커는 build.nvidia.com 호스팅 모델을 그대로 쓰며, 레시피의 파인튜닝 단계는 쓰지 않았습니다. |
 
 NemoClaw · OpenShell · OpenClaw 는 에이전트 배포에 썼습니다(`agent/`, `docs/AGENT.md`). 이 배포는 NVIDIA DLI 과정 *Securing Agents with NemoClaw and OpenShell* 의 구성을 따랐고, 공식 스킬 `nemoclaw-user-guide` 는 쓰지 않았으므로 위 표에 넣지 않았습니다.
@@ -58,8 +59,8 @@ NemoClaw · OpenShell · OpenClaw 는 에이전트 배포에 썼습니다(`agent
 
 | 검사 | 도구 | 결과 |
 | --- | --- | --- |
-| 스킬 카드 검토 표시 | `skill-card-generator/scripts/validate_submission.py` | 카드 11개 모두 통과 |
-| 프런트매터 파싱과 `name`·`description` | NVIDIA 카탈로그 `generate-skill-metadata.py` 의 파서 | 11개 모두 통과, `name` 과 디렉터리 이름 일치 |
+| 스킬 카드 검토 표시 | `skill-card-generator/scripts/validate_submission.py` | 생성기로 만든 카드 11개 모두 통과. `pv-omics-evidence` 카드는 손으로 써서 아직 검사하지 않았습니다 |
+| 프런트매터 파싱과 `name`·`description` | NVIDIA 카탈로그 `generate-skill-metadata.py` 의 파서 | 11개 모두 통과, `name` 과 디렉터리 이름 일치. `pv-omics-evidence` 는 아직 돌리지 않았습니다 |
 | Agent Skills 규격 | [`skills-ref`](https://github.com/agentskills/agentskills/tree/main/skills-ref) 0.1.1 | 이름 형식, 설명 1,024자, compatibility 500자 한도를 모두 지킵니다. `title`·`version` 은 NVIDIA 카탈로그 확장 필드라 skills-ref 가 표시하며, 공식 `nemotron-policy-generator` 도 같은 표시를 받습니다 |
 | 참조 경로 | 저장소 자체 점검 | `SKILL.md` 와 카드가 가리키는 파일·함수가 모두 있습니다 |
 | 단위 테스트 | `.venv/bin/python -m pytest -q tests` | 평가 과제의 정답은 이 테스트와 `docs/EVALUATION.md` 의 측정값에서 가져왔습니다 |
