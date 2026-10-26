@@ -90,6 +90,8 @@ The output is one file, `api/_data/omics.json.gz`. Facts live once in three tabl
 }
 ```
 
+Ticket 01 fixed these details while implementing. A top-level `gtex_tissues` table (`tissueSiteDetailId` to `tissueSite`) expands tissue groups to detailed tissues. `safety_match` entries are `{"target": <ENSG>, "index", "relation"}`, because an index alone is ambiguous for a drug with several targets. One liability is `{"event", "event_id", "tissue_ids", "datasource", "pmid"}`, and the build merges two entries with the same `event_id` from different sources into one. `pair()` returns `{drug, pt, term, mapping, safety_match, assoc, safety_recorded}`, where `safety_recorded` is true when any target has a non-null `safety`. `n` is `{"liabilities": null | count}` for L1, `null` for L2, `{"median_tpm", "rank_of_54"}` for L3 (rank among tissues with a value, 1 is highest), and `{"score", "score_no_literature"}` for L4. When `row_found` is false, one L4 item says "no association row ... nothing recorded, not a zero score" with null scores. A liability without an event ID uses the lowercased event name as a slug in its ID. Serialization is `ensure_ascii=False`, separators `(",", ":")`, gzip with `mtime=0` and an empty filename, and the build uses the same settings so the replay test can compare bytes.
+
 In this example the real query values are the CHEMBL ID, the Ensembl IDs, the mechanism string, the ancestor list, and the association score 0.0125 (pilot). The `gtex` values 0.0 and `organs` are placeholders. `safety: null` means the field was absent; `[]` means the field was present and empty.
 
 Rules.

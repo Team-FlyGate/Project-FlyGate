@@ -50,3 +50,5 @@ zcat tests/fixtures/omics_fixture.json.gz | python3 -m json.tool
 
 상한(5개), 복합제 키(`\`), 문헌 제외 점수가 0보다 큰 L4 는 `test_omics.py` 의 `synthetic()` 이 만드는 합성 추출로
 봅니다. 그 안의 유전자·조직 이름(`GENE1`, `X1` 등)은 모두 가짜입니다.
+
+생성 스크립트는 `make_omics_fixture.py`이며, 같은 바이트를 다시 만듭니다.

@@ -90,6 +90,8 @@ MedDRA는 사용권이 필요하고 이 저장소에는 PT 이름만 있습니�
 }
 ```
 
+티켓 01이 구현하며 정한 세부는 다음과 같습니다. 최상위에 `gtex_tissues` 표(`tissueSiteDetailId` → `tissueSite`)를 두어 조직 그룹을 세부 조직으로 풉니다. `safety_match` 항목은 `{"target": <ENSG>, "index", "relation"}`이며 표적이 여럿인 약에서 인덱스만으로는 모호하기 때문입니다. 안전성 책임 한 건은 `{"event", "event_id", "tissue_ids", "datasource", "pmid"}`이고 같은 `event_id`가 두 출처에서 오면 빌드가 한 건으로 합칩니다. `pair()`는 `{drug, pt, term, mapping, safety_match, assoc, safety_recorded}`를 돌려주고 `safety_recorded`는 표적 가운데 하나라도 `safety`가 `null`이 아닐 때 참입니다. L1의 `n`은 `{"liabilities": null | 개수}`, L2의 `n`은 `null`, L3의 `n`은 `{"median_tpm", "rank_of_54"}`(순위는 값이 있는 조직 가운데, 1이 최고), L4의 `n`은 `{"score", "score_no_literature"}`입니다. `row_found`가 거짓이면 L4 항목 하나가 "no association row ... nothing recorded, not a zero score"를 적고 점수는 `null`입니다. 이벤트 ID가 없는 책임은 사건명을 소문자 slug로 바꿔 ID에 씁니다. 직렬화는 `ensure_ascii=False`, 구분자 `(",", ":")`, gzip `mtime=0`에 빈 파일명이며 재생 시험이 바이트 단위로 같아지도록 빌드도 같은 설정을 씁니다.
+
 위 예시에서 실제 조회값은 CHEMBL ID, Ensembl ID, 기전 문장, 상위 용어 목록, 연관 점수 0.0125(파일럿)입니다. `gtex` 값 0.0과 `organs`는 자리 표시입니다. `safety: null`은 필드 없음, `[]`는 필드는 있으나 비어 있음입니다.
 
 규칙은 아래와 같습니다.
