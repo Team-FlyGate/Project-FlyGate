@@ -28,6 +28,9 @@ OVERCLAIM_RULES = [
     ("R11", "No individual treatment advice or dosing recommendations for the patient."),
     ("R12", "Quoted label text must actually appear in the cited label section."),
     ("R13", "An evidence grade is population-level context: never cite the grade without its basis, and never as proof of causality in this case."),
+    ("R14", "Mechanistic evidence (target safety liabilities, tissue expression, target-disease association) shows "
+            "biological plausibility at the population level. It never establishes that the drug caused the reaction in "
+            "this case, and absence of mechanistic evidence is not evidence against the association."),
 ]
 
 SYSTEM = """You are the System-2 pharmacovigilance assessor inside FlyVigilance.

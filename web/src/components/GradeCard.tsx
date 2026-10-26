@@ -52,6 +52,7 @@ const GAP_EN: Record<string, string> = {
   '문헌은 찾았지만 판단 모델 호출에 실패해 연관 보고 여부를 판단하지 못했습니다': 'Literature was found, but the judgment model call failed, so association could not be assessed',
   '상위 문헌에 이 약과 이 반응을 실제로 다룬 분석 연구(RCT·코호트·환자대조군·메타분석)가 없습니다': 'No analytic study (RCT, cohort, case-control, meta-analysis) among the top articles actually addresses this drug and reaction',
   'SDR 부재는 안전성의 증거가 아닙니다 (R4)': 'Absence of an SDR is not evidence of safety (R4)',
+  '오믹스 근거는 등급에 반영하지 않음': 'Omics evidence is not reflected in the grade',
   '논문에 실린 증례는 제약사가 FAERS 에도 보고하는 경우가 많습니다. 미국 21 CFR 314.80 은 과학 문헌의 이상사례 정보를 검토하도록 의무로 두기 때문입니다. 그래서 문헌 편수와 FAERS 건수를 서로 독립된 근거로 더하지 않습니다.':
     'Published case reports are often also submitted to FAERS by manufacturers, because US 21 CFR 314.80 requires review of adverse-event information in the scientific literature. Literature counts and FAERS counts are therefore not added as independent evidence.',
 }

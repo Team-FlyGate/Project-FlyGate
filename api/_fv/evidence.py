@@ -8,6 +8,10 @@ label:<setid>#<section>        openFDA 라벨에서 반응명이 기재된 절. 
 pubmed:<pmid>#<design>         PubMed 초록을 읽고 연구 설계를 판정한 문헌 (literature.py)
 grade:<DRUG>:<pt>@<asof>       근거 등급 (grade.py)
 metric:<rule>:<refset>@<asof>  참조 세트에서 잰 신호 기준의 민감도·특이도 (pipeline/refsets)
+omics:target:<DRUG>:<SYMBOL>@OT<ver>              약물의 작용 기전 표적 (omics.py, L1)
+omics:safety:<SYMBOL>:<eventId or slug>@OT<ver>   표적의 안전성 책임 (L2)
+omics:gtex:<SYMBOL>:<tissueSiteDetailId>@gtex_v10 표적의 조직별 발현 (L3)
+omics:assoc:<DRUG>:<termId>@OT<ver>               표적-질환 연관 점수 (L4)
 """
 import asyncio
 import functools
@@ -241,7 +245,7 @@ async def pubmed(drug: str, pt: str, client: httpx.AsyncClient, retmax: int = 5)
 # ---------------------------------------------------------------- 근거 묶음
 async def bundle(case: dict, suspect: str, read_literature: bool = True) -> dict:
     """케이스 하나에 대한 근거 묶음입니다. 주 반응 3개까지 라벨·통계·문헌·근거 등급을 붙입니다."""
-    from . import grade as grade_mod, literature  # 순환 import 를 피합니다
+    from . import grade as grade_mod, literature, omics  # 순환 import 를 피합니다
 
     pts = [p for p in case.get("reactions", []) if not labeltext.is_nonclinical(p)][:3] or case.get("reactions", [])[:3]
     ps_route = next((d.get("route") for d in case.get("drugs", []) if d.get("drug") == suspect), None)
@@ -251,6 +255,8 @@ async def bundle(case: dict, suspect: str, read_literature: bool = True) -> dict
         label, *lits = await asyncio.gather(label_t, *lit_t)
     faers = [faers_2x2(suspect, pt) for pt in pts]
     grades = [grade_mod.grade_pair(suspect, pt, f, label, lit) for pt, f, lit in zip(pts, faers, lits)]
+    om_recs = {pt: omics.pair(suspect, pt) for pt in pts}
+    om_items = {pt: omics.items_for_memo(r) if r else [] for pt, r in om_recs.items()}
 
     # 인용 가능한 근거 ID 카탈로그입니다. 모델은 이 문자열만 그대로 쓸 수 있습니다.
     catalog = [{"id": f"faers:case:{case['primaryid']}", "what": "this ICSR (demographics, drugs, reactions, outcomes)"}]
@@ -285,6 +291,13 @@ async def bundle(case: dict, suspect: str, read_literature: bool = True) -> dict
                             f"[{a['design_source']}], reports association p={a['supports']:.2f}: {a.get('title', '')[:140]}"})
         for pid in ([] if lit.get("articles") else lit.get("pmids", [])):
             catalog.append({"id": f"pubmed:{pid}", "what": f"PubMed record PMID {pid} (top relevance for {pt})"})
+    # 같은 ID 의 what 은 쌍과 무관하게 같아서, 여러 반응이 공유하는 표적 항목은 한 번만 넣습니다
+    seen = {c["id"] for c in catalog}
+    for its in om_items.values():
+        for i in its:
+            if i["id"] not in seen:
+                seen.add(i["id"])
+                catalog.append({"id": i["id"], "what": i["what"]})
     catalog += metric_catalog()
     for g in grades:
         catalog.append({"id": g["id"], "what": f"Evidence grade {g['grade']} ({g['grade_name']}) for {suspect} / {g['pt']}: "
@@ -293,4 +306,7 @@ async def bundle(case: dict, suspect: str, read_literature: bool = True) -> dict
     return {"suspect": suspect, "reactions": pts, "faers": faers, "label": label, "literature": dict(zip(pts, lits)),
             "pubmed": {pt: {"count": lit.get("count"), "pmids": lit.get("pmids", []), "ids": lit.get("ids", [])}
                        for pt, lit in zip(pts, lits)},
-            "grades": grades, "catalog": catalog, "ids": sorted(ids)}
+            "grades": grades,
+            "omics": {pt: {"found": r is not None, "mapping": r["mapping"] if r else None, "n_memo": len(om_items[pt])}
+                      for pt, r in om_recs.items()},
+            "catalog": catalog, "ids": sorted(ids)}

@@ -18,6 +18,7 @@ const rules = (): [string, ReactNode][] => [
   ['R9', t(<><Term k="indication">적응증</Term> 교란과 병용약을 무시하지 않습니다</>, <>Never ignore <Term k="indication">indication</Term> confounding or co-medications</>)], ['R10', t('모델 확률은 집단 보정값이지 개별 확신이 아닙니다', 'Model probabilities are calibrated at the population level, not certainty about an individual')],
   ['R11', t(<>환자 개별 치료·용량 조언을 하지 않습니다 (NVIDIA Nemotron <Term k="guard">Safety Guard</Term>)</>, <>No individual treatment or dosing advice for patients (NVIDIA Nemotron <Term k="guard">Safety Guard</Term>)</>)], ['R12', t('인용한 라벨 문구는 실제 해당 절에 있어야 합니다', 'Quoted label text must actually appear in the cited section')],
   ['R13', t('근거 등급은 집단 근거입니다: 근거·공백 없이 등급만 인용하거나 이 사례의 인과로 쓰지 않습니다', 'Evidence grades describe population-level evidence: never quote a grade without its evidence and gaps, or use it as causation for this case')],
+  ['R14', t('기전 근거(표적 안전성 책임, 조직 발현, 표적-질환 연관)는 집단 수준의 생물학적 개연성입니다: 이 사례의 인과를 확립하지 않으며, 기전 근거가 없다고 연관에 반하는 근거가 되지도 않습니다', 'Mechanistic evidence (target safety liabilities, tissue expression, target-disease association) shows population-level biological plausibility: it never establishes causation in this case, and its absence is not evidence against the association')],
 ]
 
 function Md({ text }: { text: string }) {

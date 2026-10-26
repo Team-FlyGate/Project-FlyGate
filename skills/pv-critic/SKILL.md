@@ -42,10 +42,10 @@ Requires an NVIDIA API key (`NVIDIA_API_KEY`, build.nvidia.com) for the safety g
 |---|---|---|
 | T1 rules | memo has at least one claim (an unparseable or empty memo is returned, never passed); each claim is non-empty, has evidence IDs, and every ID exists in the bundle | none |
 | T2 numeric oracle | every number in the claim matches a number in the case or bundle (±1.1%); four-digit years are skipped | none |
-| T3 overclaim | per-claim `noul` "violates a rule?" + `choice` "which rule" over R1–R13; flagged when p ≥ 0.5 and the rule is not `none` | judgment model |
+| T3 overclaim | per-claim `noul` "violates a rule?" + `choice` "which rule" over R1–R14; flagged when p ≥ 0.5 and the rule is not `none` | judgment model |
 | Guards | each claim and the narrative separately, two guards in parallel: `nvidia/llama-3.1-nemotron-safety-guard-8b-v3` (fallback `nvidia/nemotron-3.5-content-safety` default taxonomy) and `nvidia/nemotron-3.5-content-safety` with the PV BYO policy (`pv-guardrail-policy`, PV-1..PV-5). Either guard firing returns the claim; a PV category maps to its rule (PV-1 ⇒ R11, PV-2 ⇒ R1, PV-3 ⇒ R2, PV-4, PV-5), otherwise R11 | NVIDIA NIM |
 
-Rules R1–R13 live in `api/_fv/assess.py::OVERCLAIM_RULES` (disproportionality ≠ causation, no incidence from FAERS, no cross-drug ranking, evidence grade is population context, …).
+Rules R1–R14 live in `api/_fv/assess.py::OVERCLAIM_RULES` (disproportionality ≠ causation, no incidence from FAERS, no cross-drug ranking, evidence grade is population context, mechanistic plausibility from `omics:` evidence is population context and its absence is not evidence against, …).
 
 ## Operating Rules
 

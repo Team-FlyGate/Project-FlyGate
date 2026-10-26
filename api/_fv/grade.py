@@ -157,6 +157,7 @@ def grade_pair(drug: str, pt: str, f: dict | None, label: dict, lit: dict | None
         gaps.append(literature.DOUBLE_COUNT_NOTE)
     if sig in ("none", "weak") and reg == 0:
         gaps.append("SDR 부재는 안전성의 증거가 아닙니다 (R4)")
+    gaps.append("오믹스 근거는 등급에 반영하지 않음")
     summary = (f"label={LABEL_STATUS_NAMES.get(status, status)}, FAERS={SIG_NAMES[sig]}"
                + (f", literature supportive {lit_s.get('supportive', 0)}/{lit_s.get('read', 0)} "
                   f"(analytic {lit_s.get('analytic_supportive', 0)}/{lit_s.get('analytic_read', 0)} {lit_s.get('analytic_status')}, "
