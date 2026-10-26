@@ -35,6 +35,17 @@
 
 - 웨어하우스 추출본의 2×2 통계(a, PRR, ROR025, IC025)와 SDR 단계(strong · weak · none)입니다. 모델이 개입하지 않습니다.
 
+## omics
+
+`flygate omics <DRUG> "<MedDRA PT>" [--memo]`
+
+- 빌드 때 공개 DB(Open Targets, GTEx, 온톨로지)에서 뽑은 추출본만 읽습니다. 실행 중에는 네트워크를 쓰지 않고 모델도 개입하지 않습니다.
+- `items` 는 층별 근거입니다: L1 작용 표적(`omics:target:…`), L2 표적 안전성 책임(`omics:safety:…`, 반응 용어와 맞으면 `match` 가 `term` · `ancestor`),
+  L3 GTEx 조직 발현(`omics:gtex:…`), L4 표적-질환 연관 점수(`omics:assoc:…`). `mapping` 은 반응 용어가 온톨로지에 맞은 방식이며 `none` 이면 L4 가 없습니다.
+- `--memo` 는 System-2 메모에 들어가는 몫(L1 5개, 맞은 L2, 후보 조직 L3 5개, L4 1개)만 냅니다.
+- 추출본에 없는 약물이나 쌍은 `found: false` 와 `reason` 을 내고 정상 종료합니다. 빠진 값은 '기록 없음'이지 0 이 아닙니다.
+- 기전 근거는 집단 수준의 생물학적 개연성입니다. 이 사례에서 약이 반응을 일으켰다는 근거로 쓰지 않습니다.
+
 ## kr-causality
 
 `flygate kr-causality <report.txt> [--form narrative|professional|consumer] [--route]`

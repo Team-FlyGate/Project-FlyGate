@@ -15,10 +15,11 @@ import uuid
 from contextlib import contextmanager
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-ALLOWED = {'discover', 'signals', 'triage', 'grade', 'critic', 'kr-causality', 'watch'}
+ALLOWED = {'discover', 'signals', 'omics', 'triage', 'grade', 'critic', 'kr-causality', 'watch'}
 HELP = '''  /help                 도움말
   /discover parp1       저장 근거 조회 · 새 도킹은 --live 옵션
   /signals <약물>       이상사례 신호 통계
+  /omics <약물> <반응>  오믹스 기전 근거 (표적·조직 발현)
   /triage               사례 분류
   /grade                근거 등급 평가
   /critic               근거·수치·해석 검토
@@ -43,6 +44,7 @@ Reply in clear polite Korean unless user asks otherwise. You can explain and pro
 Return a JSON object only: {"reply": "explanation", "command": null or ["subcommand", "arg", ...]}.
 Never claim a tool executed until a result is provided. Never invent results or file paths. Ask for missing inputs.
 Commands: discover parp1|xa|cox2 reads stored measurements; signals DRUG --limit 5 reads statistics;
+omics DRUG REACTION [--memo] reads stored target, tissue-expression and association evidence;
 triage agent/examples/case_niraparib.json --no-outcome classifies a report;
 grade DRUG REACTION fetches label/literature; critic agent/examples/claims_niraparib.json --offline runs rules;
 kr-causality agent/examples/kr_report.txt --route uses models; watch --memory-dir data/chat-memory writes notes;

@@ -71,7 +71,7 @@ def test_banner_sizes_and_dashboard():
         assert 'FlyGate CLI' in text
         assert max(map(len,text.splitlines())) <= width
         box=dashboard(ROOT,'nvidia/nemotron-3-super-120b-a12b',True,False,width,False,'test')
-        assert 'discover' in box and '7 tools' in box
+        assert 'discover' in box and '8 tools' in box
         assert max(map(len,box.splitlines())) <= width
 
 

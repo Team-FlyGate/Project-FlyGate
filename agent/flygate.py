@@ -7,6 +7,7 @@ OpenClaw 에이전트는 exec 도구로 이 명령을 부릅니다. 하위 명�
   triage        ICSR 한 건 반사 판단 (규칙 게이트 -> 라벨 근거 -> 판단 모델 7문항 -> 결정 정책 + DME 안전망)
   grade         약물-반응 쌍의 근거 등급과 PV 분류 후보 (FAERS SQL 통계 + 라벨 절 + 문헌 읽기)
   signals       한 약물의 불균형 지표 상위 반응 (웨어하우스 추출본, 모델 미개입)
+  omics         약물-반응 쌍의 오믹스 근거 L1-L4 (표적, 표적 안전성 책임, GTEx 조직 발현, 표적-질환 연관; 추출본, 모델 미개입)
   kr-causality  국내 보고 구조화(Nemotron) + 한국형 인과성 평가 ver 2.0 (판단 모델 + 규칙 합산)
   critic        주장 목록을 크리틱 3단(+ 안전 가드)에 통과
   discover      FlyDiscovery 실측(MSA-Search, OpenFold3, DiffDock, Boltz-2, ChEMBL)과 크리틱 판정
@@ -152,6 +153,21 @@ def cmd_signals(a) -> dict:
             "rows": out, "evidence_ids": [r["id"] for r in out],
             "note": "SDR(불균형 보고 신호)은 보고 연관이지 인과가 아닙니다(R1). FAERS 에는 노출 분모가 없습니다(R2). "
                     "sdr=strong 은 Evans ∧ ROR025>1 ∧ IC025>0 세 기준을 모두 넘었다는 뜻입니다."}
+
+
+# ---------------------------------------------------------------- omics
+def cmd_omics(a) -> dict:
+    from _fv import omics
+    drug, pt = a.drug.upper(), a.pt.lower()
+    out = {"cmd": "omics", "drug": drug, "pt": pt}
+    rec = omics.pair(drug, pt)
+    if rec is None:
+        missing = drug if drug not in omics.drugs() else f"{drug}|{pt}"
+        return {**out, "found": False, "reason": f"{missing} is not in the omics extract", "asof": omics._omics()["asof"],
+                "mapping": None, "items": [], "evidence_ids": []}
+    items = (omics.items_for_memo if a.memo else omics.items)(rec)
+    return {**out, "found": True, "asof": omics._omics()["asof"], "mapping": rec["mapping"], "items": items,
+            "evidence_ids": _ids([i["id"] for i in items])}
 
 
 # ---------------------------------------------------------------- kr-causality
@@ -584,6 +600,11 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--pt", help="substring filter on the reaction")
     s.add_argument("--limit", type=int, default=20)
     s.set_defaults(fn=cmd_signals)
+    s = sub.add_parser("omics", help="omics evidence L1-L4 for a drug-event pair (targets, liabilities, GTEx, association)")
+    s.add_argument("drug")
+    s.add_argument("pt", help="MedDRA preferred term")
+    s.add_argument("--memo", action="store_true", help="only the capped items the System-2 memo receives")
+    s.set_defaults(fn=cmd_omics)
     s = sub.add_parser("kr-causality", help="structure a Korean report and score the Korean causality algorithm v2.0")
     s.add_argument("report", help="text file with the Korean report")
     s.add_argument("--form", default="narrative", choices=["narrative", "professional", "consumer"])

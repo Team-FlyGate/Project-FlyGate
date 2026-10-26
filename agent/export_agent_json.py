@@ -41,6 +41,8 @@ CLI = {
     "grade": ("flygate grade <DRUG> \"<MedDRA PT>\"",
               "약물·반응 쌍의 PV 분류 후보(라벨 상태 × SDR)와 근거 등급: FAERS 3중 기준, 라벨 절, PubMed 문헌 읽기"),
     "signals": ("flygate signals <DRUG> [--pt 부분문자열]", "웨어하우스 추출본의 불균형 지표(a, PRR, ROR025, IC025)와 SDR 단계, 모델 미개입"),
+    "omics": ("flygate omics <DRUG> \"<MedDRA PT>\" [--memo]",
+              "오믹스 추출본의 근거 L1-L4: 작용 표적, 표적 안전성 책임, GTEx 조직 발현, 표적-질환 연관 점수, 모델 미개입"),
     "kr-causality": ("flygate kr-causality <report.txt> --route",
                      "국내 보고를 Nemotron 으로 식약처 서식에 구조화하고 한국형 인과성 평가 ver 2.0 채점, 15일 신속보고 후보 라우팅"),
     "critic": ("flygate critic <claims.json>", "주장 목록을 크리틱 3단(근거 ID 규칙, 숫자 대조, 과잉해석 판단)과 주장별 NVIDIA Safety Guard 에 통과"),

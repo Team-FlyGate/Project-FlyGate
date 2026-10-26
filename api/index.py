@@ -10,6 +10,8 @@ POST /api/kr/intake       국내 보고서식·자유 서술 -> 구조화 (Nemot
 POST /api/kr/causality    한국형 인과성 평가 알고리즘 ver 2.0 (Jev) + WHO-UMC
 GET  /api/grade           근거 등급 (FAERS 통계 + 라벨 절 + 문헌 읽기)
 GET  /api/signals/{drug}  웨어하우스 불균형 지표 상위 반응
+GET  /api/omics?drug=&pt= 오믹스 근거 한 쌍 (L1-L4 항목 전부와 메모 몫). pt 를 빼면 그 약물의 쌍 목록
+GET  /api/omics/drugs     오믹스 추출 파일에 든 약물 목록
 POST /api/dock            STEP 1 직접 도킹: 결정 구조 수용체 × SMILES 를 DiffDock NIM 으로 실시간 도킹
 POST /api/dock/critic     STEP 1 도킹 주장을 크리틱 3단(1·2단 규칙 + 3단 도킹 해석 규칙 D1–D5, Jev)으로 판정
 """
@@ -29,6 +31,7 @@ from _fv import assess as assess_mod  # noqa: E402
 from _fv import dock as dock_mod  # noqa: E402
 from _fv import bio_search  # noqa: E402
 from _fv import discovery as disc_mod  # noqa: E402
+from _fv import omics  # noqa: E402
 from _fv import clients, config, evidence, grade as grade_mod, knowledge, kr as kr_mod, literature, triage as triage_mod  # noqa: E402
 
 app = FastAPI(title="FlyVigilance API", version="1.0")
@@ -37,7 +40,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 # 공개 배포에서 유료 API 남용을 막는 간단한 IP 별 속도 제한
 _hits: dict[str, deque] = {}
 LIMIT = {"triage": (30, 60), "assess": (6, 60), "critic": (10, 60), "kr": (10, 60), "grade": (20, 60), "dock": (8, 60),
-         "discovery": (12, 60), "discovery_status": (60, 60), "discovery_search": (60, 60)}
+         "discovery": (12, 60), "discovery_status": (60, 60), "discovery_search": (60, 60), "omics": (60, 60)}
 
 
 def _rate(req: Request, key: str):
@@ -158,7 +161,10 @@ async def grade(req: Request, drug: str, pt: str, route: str | None = None):
         lab, lit, kn = await asyncio.gather(evidence.label_lookup(drug, [pt], c, route), literature.read(drug, pt, c), know(c))
     g = grade_mod.grade_pair(drug, pt, evidence.faers_2x2(drug, pt), lab, lit)
     g["axes"]["knowledge"] = kn
-    return {**g, "literature": lit, "label": lab}
+    rec = omics.pair(drug, pt)
+    om = {"count": len(omics.items(rec)), "memo_count": len(omics.items_for_memo(rec)), "mapping": rec["mapping"],
+          "found": True} if rec else {"count": 0, "memo_count": 0, "mapping": None, "found": False}
+    return {**g, "literature": lit, "label": lab, "omics": om}
 
 
 @app.get("/api/discovery/catalog")
@@ -296,6 +302,28 @@ def signals(drug: str, limit: int = 40):
     if not rows:
         raise HTTPException(404, f"no signals for {drug}")
     return {"drug": drug.upper(), "asof": evidence._signals()["asof"], "rows": rows}
+
+
+@app.get("/api/omics/drugs")
+def omics_drugs(req: Request):
+    _rate(req, "omics")
+    return {"asof": omics._omics()["asof"], "drugs": omics.drugs()}
+
+
+@app.get("/api/omics")
+def omics_query(req: Request, drug: str, pt: str | None = None):
+    """PT 13개가 / 를 담아서 경로 변수 대신 쿼리 인자로 받습니다."""
+    _rate(req, "omics")
+    asof = omics._omics()["asof"]
+    if drug.upper() not in omics.drugs():
+        raise HTTPException(404, f"{drug.upper()} is not in the omics extract")
+    if pt is None:
+        return {"drug": drug.upper(), "asof": asof, "pairs": omics.drug_pairs(drug)}
+    rec = omics.pair(drug, pt)
+    if rec is None:
+        raise HTTPException(404, f"{drug.upper()}|{pt.lower()} is not in the omics extract")
+    return {"drug": rec["drug"], "pt": rec["pt"], "asof": asof, "pair": rec, "items": omics.items(rec),
+            "memo_items": omics.items_for_memo(rec)}
 
 
 @app.post("/api/dock")

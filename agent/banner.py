@@ -79,9 +79,10 @@ def dashboard(root, model, nvidia=False, jev=False, width=100, color=True, sessi
         (f'NVIDIA {"✓" if nvidia else "미설정"} · Jev {"✓" if jev else "선택"}', lime),
     ]
     right=[
-        ('SLASH COMMANDS · 7 tools', cyan),
+        ('SLASH COMMANDS · 8 tools', cyan),
         ('/discover     저장 근거 조회 / 새 도킹 실행', ''),
         ('/signals      이상사례 신호 통계', ''),
+        ('/omics        오믹스 기전 근거', ''),
         ('/triage       사례 분류', ''),
         ('/grade        근거 등급 평가', ''),
         ('/critic       근거·수치·해석 검토', ''),
