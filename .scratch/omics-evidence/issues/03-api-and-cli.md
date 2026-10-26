@@ -4,13 +4,13 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Three routes with query parameters (not path variables), rate-limit key `omics`, 404 on unknown drug or pair, endpoint list in the module docstring updated
-- [ ] `/api/grade` response includes `omics: {count, mapping}` sourced from the extract; grade, class, and flags unchanged
-- [ ] `flygate omics` registered with help text, output includes `cmd`, `drug`, `pt`, `found`, `items`, `evidence_ids`
-- [ ] Unknown drug or pair gives `found: false`, a reason string, empty `evidence_ids`, exit code 0
-- [ ] `ALLOWED` contains `omics`; `HELP` and the chat `SYSTEM` command list mention it; banner says 8 tools; `TOOLS.md` has an entry
-- [ ] Existing subcommand-set test and banner-count test updated to the new values
-- [ ] API tests through `TestClient` and CLI tests through the entry point, both on the ticket-01 fixture, offline
-- [ ] Full suite green
+- [x] Three routes with query parameters (not path variables), rate-limit key `omics`, 404 on unknown drug or pair, endpoint list in the module docstring updated
+- [x] `/api/grade` response includes `omics: {count, mapping}` sourced from the extract; grade, class, and flags unchanged
+- [x] `flygate omics` registered with help text, output includes `cmd`, `drug`, `pt`, `found`, `items`, `evidence_ids`
+- [x] Unknown drug or pair gives `found: false`, a reason string, empty `evidence_ids`, exit code 0
+- [x] `ALLOWED` contains `omics`; `HELP` and the chat `SYSTEM` command list mention it; banner says 8 tools; `TOOLS.md` has an entry
+- [x] Existing subcommand-set test and banner-count test updated to the new values
+- [x] API tests through `TestClient` and CLI tests through the entry point, both on the ticket-01 fixture, offline
+- [x] Full suite green

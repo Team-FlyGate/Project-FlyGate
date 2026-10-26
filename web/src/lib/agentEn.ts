@@ -20,7 +20,7 @@ export const AGENT_TEXT_EN: Record<string, string> = {
     'Runs on the NemoClaw blueprint\'s OpenClaw sandbox image and a local gateway (nemoclaw-8090). agent/deploy_nemoclaw.sh adds the policy preset, tool bundle, workspace, skills and cron.',
   // workspace[].role
   '성격, 경계, 말투, 가치입니다. 근거에 묶인 분석가이며 인과 단정·치료 조언·외부 발송을 하지 않습니다.': 'Personality, boundaries, tone and values. An evidence-bound analyst that never asserts causation, gives treatment advice or sends anything outside.',
-  '작업 규칙입니다. 도구는 flygate CLI, 모든 주장에 근거 ID, 크리틱 규칙 R1–R13, 사람 승인이 필요한 일.': 'Working rules: the flygate CLI as the tool, an evidence ID on every claim, critic rules R1–R13, and what needs human approval.',
+  '작업 규칙입니다. 도구는 flygate CLI, 모든 주장에 근거 ID, 크리틱 규칙 R1–R14, 사람 승인이 필요한 일.': 'Working rules: the flygate CLI as the tool, an evidence ID on every claim, critic rules R1–R14, and what needs human approval.',
   '이름과 정체입니다.': 'Name and identity.',
   '함께 일하는 사람(규제기관·제약사 PV 평가자, 지역 약물감시센터, 신약 탐색 연구자)과 선호입니다.': 'Who the agent works with (regulator and industry pharmacovigilance assessors, regional pharmacovigilance centers, drug-discovery researchers) and their preferences.',
   'flygate 명령별 사용 메모입니다. 허용된 외부 API, 자격 증명 처리, 출력 키.': 'Usage notes for each flygate command: allowed external APIs, credential handling, output keys.',
@@ -186,7 +186,7 @@ Per-command usage is in TOOLS.md. Every command only reads and computes; nothing
 2. Rank only within the same receptor and the same protocol. Cross-docking rows are not binding evidence.
 3. As \`handoff_to_vigilance\` says, pass the same molecule (niraparib, the demo drug) on with \`grade NIRAPARIB thrombocytopenia\`.
 
-## Critic rules R1–R13 (summary)
+## Critic rules R1–R14 (summary)
 
 | Rule | Meaning |
 | --- | --- |
@@ -292,7 +292,7 @@ Common points
 \`flygate critic <claims.json> [--offline]\`
 
 - Input: \`{"claims":[{"id","text","evidence":[…]}], "state":"…", "bundle":{"ids":[…]}}\` or \`{"claims":[…], "case":{…}}\`.
-- 3-tier check: T1 evidence-ID rule, T2 number check, T3 overclaim judgment (R1–R13) + per-claim NVIDIA Safety Guard.
+- 3-tier check: T1 evidence-ID rule, T2 number check, T3 overclaim judgment (R1–R14) + per-claim NVIDIA Safety Guard.
 - \`verdict\`: \`pass\` (fine to use in a summary) · \`returned\` (revise per the reasons and retry) · \`human_check\` (hand to a person). \`--offline\` runs only T1 and T2; even with no problems the verdict is \`human_check\`, not \`pass\`.
 
 ## discover

@@ -480,7 +480,7 @@ export default function LiveTriage() {
               </Card>
               <Card title={<>{t('System-2 메모와 3단 크리틱', 'System-2 memo and 3-tier critic')} <span className={`chip ${asr.verdict === 'pass' ? 'ok' : 'bad'}`} style={{ marginLeft: 8 }}>{asr.verdict === 'pass' ? t('통과 → 사람 검토 큐', 'Passed → human review queue') : t('반려 → 작성자에게', 'Rejected → back to the author')}</span></>}
                 sub={t(<>T1 규칙(<Term k="evidenceId">근거 ID</Term> 실재) · T2 <Term k="oracle">숫자 오라클</Term>(근거 수치 일치) · T3 <Term k="overclaim">과잉해석</Term> 판정(비자기회귀 판단 모델, 규칙 13종) · NVIDIA Nemotron <Term k="guard">Safety Guard</Term></>,
-                  <>T1 rules (<Term k="evidenceId">evidence IDs</Term> exist) · T2 <Term k="oracle">number oracle</Term> (numbers match the evidence) · T3 <Term k="overclaim">overclaim</Term> judgment (non-autoregressive judgment model, 13 rules) · NVIDIA Nemotron <Term k="guard">Safety Guard</Term></>)}>
+                  <>T1 rules (<Term k="evidenceId">evidence IDs</Term> exist) · T2 <Term k="oracle">number oracle</Term> (numbers match the evidence) · T3 <Term k="overclaim">overclaim</Term> judgment (non-autoregressive judgment model, 14 rules) · NVIDIA Nemotron <Term k="guard">Safety Guard</Term></>)}>
                 <MemoView res={asr} />
               </Card>
               {tri && <ProbeView asr={asr} tri={tri} />}

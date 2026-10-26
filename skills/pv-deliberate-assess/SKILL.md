@@ -38,7 +38,7 @@ Requires an NVIDIA API key (`NVIDIA_API_KEY`, build.nvidia.com) for Nemotron and
 ## Instructions
 
 1. `POST /api/assess` with `{case, triage}` (the triage response). The API first builds the evidence bundle with `pv-signal-memory` (`api/_fv/evidence.py::bundle`).
-2. The system prompt carries the 13 interpretation rules (R1–R13) and the list of allowed evidence IDs. Output is JSON only: `claims[{id,text,evidence[]}]` (3 to 6 claims), `assessment`, `narrative` (≤ 80 words), `open_questions`.
+2. The system prompt carries the 14 interpretation rules (R1–R14) and the list of allowed evidence IDs. Output is JSON only: `claims[{id,text,evidence[]}]` (3 to 6 claims), `assessment`, `narrative` (≤ 80 words), `open_questions`.
 3. Thinking is disabled (`chat_template_kwargs.enable_thinking=false`) and JSON mode is requested to keep latency bounded; the model chain falls back on 503 or timeout.
 4. `pv-critic` checks the memo. If it is returned, the issues are fed back once for a revision round (skipped when less than 35 s of the 100 s budget remain).
 5. The response carries `verdict` (`pass` / `returned`), every round with model, latency and token usage, the guard result and the evidence bundle.

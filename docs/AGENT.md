@@ -168,6 +168,7 @@ SANDBOX=flygate agent/openshell_smoke.sh     # 결과: agent/evidence/openshell_
 | `flygate triage <case.json> [--regime KR] [--no-outcome]` | ICSR 반사 판단: 규칙 게이트 → 라벨 근거 → 타입 있는 확률 7개(한 번의 호출) → 결정 정책 + DME 안전망 |
 | `flygate grade <DRUG> "<PT>"` | PV(약물감시) 분류 후보(라벨 상태 × SDR. SDR은 특정 약·이상반응 조합이 다른 약보다 유난히 많이 보고되는 불균형 보고 신호)와 근거 등급: FAERS 3중 기준(Evans · ROR₀₂₅ > 1 · IC₀₂₅ > 0 모두 충족), 라벨 절, 문헌 읽기 |
 | `flygate signals <DRUG> [--pt …]` | 불균형 지표(a 함께 보고된 사례 수, PRR 비례 보고 비, ROR025 보고 오즈비 하한, IC025 정보 성분 하한)와 SDR 단계, 모델 미개입 |
+| `flygate omics <DRUG> "<PT>" [--memo]` | 오믹스 근거 L1-L4(작용 기전 표적, 표적 안전성 책임, GTEx 조직 발현, 표적-질환 연관). 추출본 `omics.json.gz`만 읽고 모델 미개입. 없으면 `found: false` |
 | `flygate kr-causality <report.txt> --route` | 국내 보고 구조화(Nemotron), 한국형 인과성(약이 반응을 일으켰을 가능성) 평가 ver 2.0, 15일 신속보고(중요한 사례를 정해진 기한 안에 규제기관에 보고하는 의무) 후보 라우팅 |
 | `flygate critic <claims.json>` | 크리틱 3단 + 주장별 NVIDIA Safety Guard. `--offline` 은 T1·T2(근거 ID 실재 확인 · 숫자 대조) 만 돌리며, 문제가 없어도 `pass` 가 아니라 `human_check` 입니다 |
 | `flygate discover parp1\|xa\|cox2` | FlyDiscovery 실측(MSA-Search, OpenFold3, DiffDock, Boltz-2, ChEMBL)과 크리틱 판정, STEP 2 인계 |

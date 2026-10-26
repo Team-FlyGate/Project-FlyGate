@@ -59,7 +59,7 @@
 `flygate critic <claims.json> [--offline]`
 
 - 입력: `{"claims":[{"id","text","evidence":[…]}], "state":"…", "bundle":{"ids":[…]}}` 또는 `{"claims":[…], "case":{…}}`.
-- 3단 검사: T1 근거 ID 규칙, T2 숫자 대조, T3 과잉해석 판단(R1–R13) + 주장별 NVIDIA Safety Guard.
+- 3단 검사: T1 근거 ID 규칙, T2 숫자 대조, T3 과잉해석 판단(R1–R14) + 주장별 NVIDIA Safety Guard.
 - `verdict`: `pass`(요약에 써도 됨) · `returned`(사유대로 고쳐 다시) · `human_check`(사람에게 넘김). `--offline` 은 T1·T2 만 돌립니다. 문제가 없어도 `pass` 가 아니라 `human_check` 입니다.
 
 ## discover
