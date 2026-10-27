@@ -1,0 +1,1 @@
+{"request": {"tool": "OpenTargets_get_drug_chembId_by_generic_name", "arguments": {"drugName": "NIRAPARIB"}}, "retrieved": "2026-10-26", "response": {"search": {"hits": [{"id": "CHEMBL1094636", "name": "NIRAPARIB"}, {"id": "CHEMBL4650351", "name": "PARPI"}, {"id": "CHEMBL3989922", "name": "NIRAPARIB TOSYLATE MONOHYDRATE"}]}}}

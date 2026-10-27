@@ -1,0 +1,1 @@
+{"request": {"tool": "OpenTargets_get_disease_ancestors_parents_by_efoId", "arguments": {"efoId": "EFO_0009845"}}, "retrieved": "2026-10-26", "response": {"disease": {"id": "EFO_0009845", "name": "catalepsy", "ancestors": []}}}

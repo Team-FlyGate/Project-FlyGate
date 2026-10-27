@@ -1,0 +1,1 @@
+{"request": {"graphql": "Meta", "query": "query Meta { meta { apiVersion { x y z } dataVersion { year month iteration } } }", "variables": null}, "retrieved": "2026-10-26", "response": {"meta": {"apiVersion": {"x": "25", "y": "9", "z": "0"}, "dataVersion": {"year": "25", "month": "09", "iteration": null}}}}

@@ -45,7 +45,7 @@ MedDRA needs a license, and this repo holds PT names only (`api/_fv/labeltext.py
 Tissue expression (L3) needs the organ where the PT occurs. That value comes from the ontology, not from a model judgment.
 
 - Fetch the label and synonyms of each HP term among the mapped term's ancestors with `HPO_get_term` (the ancestor query returns IDs only). In HPO, the direct children of `HP_0000118` (Phenotypic abnormality) are the organ-system branches. `HP_0001871`, for example, is labeled "Abnormality of blood and blood-forming tissues" with the synonym "Hematological abnormality" (queried 2026-10-26).
-- If a word in an ancestor's label or synonyms matches, case-insensitively, a word in one of the 30 tissue-group names returned by `GTEx_get_tissue_sites` (`tissueSite`: Blood, Liver, Brain, and so on), that group becomes a tissue candidate. In the example above, "blood" matches and Blood becomes the candidate. The rule is one word-set intersection, with no exception table.
+- If every word of one of the 30 tissue-group names returned by `GTEx_get_tissue_sites` (`tissueSite`: Blood, Liver, Brain, and so on) appears, case-insensitively, in an ancestor's label or synonyms, that group becomes a tissue candidate. The word "blood" alone selects Blood and not Blood Vessel. In the example above, "blood" matches and Blood becomes the candidate. The rule is one word-set intersection, with no exception table.
 - If no group matches, `organs` is `null`. L3 then reports the top 5 of the 54 tissues by TPM without a candidate filter.
 - The method is recorded as `hpo_ancestor_label`, together with which ancestor and which word matched. After the build, the README records the share of PTs that got a tissue candidate.
 

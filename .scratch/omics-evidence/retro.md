@@ -28,3 +28,10 @@ Candidates for environment improvements, collected while the work runs. Presente
 ## Collected after the session restart (2026-10-26)
 
 - Information access. The Claude Code process restarted while tickets 02 and 05 were running. Their files survived on disk but their reports did not, so two fresh delegates had to re-assess state from scratch. Proposed: every code delegate writes `.scratch/<feature>/progress-<ticket>.md` (criteria done, commands run, open questions) after each red-green cycle, so a restart loses minutes, not the brief.
+
+## Collected during ticket 02 (2026-10-26)
+
+- Coding standards (judgement). The first organ rule matched any shared word, so "blood" selected both Blood and Blood Vessel in all 16 blood terms of the limited run. Tightened to "every word of the tissue-group name". Lesson for the design doc: state set relations exactly (subset, not intersection) when a rule is meant to be deterministic.
+- Information access. `uv run` picked the system Python 3.9 until `--python 3.12` was added; ToolUniverse refuses < 3.10. Proposed: put the interpreter flag in every documented command and in `pipeline/omics/README.md` (done).
+- Tool economy. Open Targets answers "returned no disease for ID" for terms outside its index; treating that as a failure meant it was never cached and re-sent every run. Proposed as a reviewer rule: a deterministic "not found" from an upstream is an answer to cache, not an error to retry.
+- Navigation. OLS EFO and Mondo search responses carry no synonyms through ToolUniverse; all synonym matches came from HPO. `rows: 5` misses some exact terms (eosinophilia). Candidates for a v1.1 mapping improvement, recorded in the pipeline README.

@@ -1,0 +1,1 @@
+{"request": {"tool": "OpenTargets_get_drug_chembId_by_generic_name", "arguments": {"drugName": "CLOZAPINE"}}, "retrieved": "2026-10-26", "response": {"search": {"hits": [{"id": "placeholder", "name": "CLOZAPINE"}]}}}

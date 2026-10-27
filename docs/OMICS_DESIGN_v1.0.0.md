@@ -45,7 +45,7 @@ MedDRA는 사용권이 필요하고 이 저장소에는 PT 이름만 있습니�
 조직 발현(L3)에는 PT가 어느 장기에서 생기는지가 필요합니다. 이 값은 모델이 판단하지 않고 온톨로지에서 가져옵니다.
 
 - 용어의 상위 용어 가운데 HP 용어의 라벨과 동의어를 `HPO_get_term`으로 받습니다(상위 용어 조회는 ID만 주기 때문입니다). HPO는 `HP_0000118`(Phenotypic abnormality) 바로 아래가 장기 계통 가지입니다. 예를 들어 `HP_0001871`의 라벨은 "Abnormality of blood and blood-forming tissues"이고 동의어에 "Hematological abnormality"가 있습니다(2026-10-26 조회).
-- 상위 용어의 라벨과 동의어에 든 단어가 `GTEx_get_tissue_sites`가 돌려준 30개 조직 그룹 이름(`tissueSite`: Blood, Liver, Brain 등)의 단어와 대소문자 무시로 겹치면 그 그룹을 조직 후보로 둡니다. 위 예에서는 "blood"가 겹쳐 Blood가 후보가 됩니다. 규칙은 단어 집합 교집합 하나이고 예외 표는 두지 않습니다.
+- `GTEx_get_tissue_sites`가 돌려준 30개 조직 그룹 이름(`tissueSite`: Blood, Liver, Brain 등)의 단어가 모두 상위 용어의 라벨이나 동의어에 대소문자 무시로 들어 있으면 그 그룹을 조직 후보로 둡니다. "blood" 하나로는 Blood만 잡히고 Blood Vessel은 잡히지 않습니다. 위 예에서는 "blood"가 겹쳐 Blood가 후보가 됩니다. 규칙은 단어 집합 교집합 하나이고 예외 표는 두지 않습니다.
 - 겹치는 그룹이 없으면 `organs: null`이고 L3은 조직 후보 없이 54개 조직 가운데 TPM 상위 5개만 냅니다.
 - 방법을 `hpo_ancestor_label`로 적고, 어느 상위 용어와 어느 단어가 겹쳤는지 함께 저장합니다. 빌드가 끝나면 조직 후보가 생긴 PT 비율을 README에 적습니다.
 

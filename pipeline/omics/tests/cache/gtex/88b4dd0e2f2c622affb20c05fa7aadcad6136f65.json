@@ -1,0 +1,1 @@
+{"request": {"tool": "GTEx_get_tissue_sites", "arguments": {"dataset_id": "gtex_v10"}}, "retrieved": "2026-10-26", "response": [{"tissueSiteDetailId": "Whole_Blood", "tissueSite": "Blood"}, {"tissueSiteDetailId": "Liver", "tissueSite": "Liver"}, {"tissueSiteDetailId": "Brain_Cortex", "tissueSite": "Brain"}]}

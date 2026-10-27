@@ -1,0 +1,3 @@
+NIRAPARIB	thrombocytopenia
+CLOZAPINE	catalepsy
+CLOZAPINE	some unmapped term

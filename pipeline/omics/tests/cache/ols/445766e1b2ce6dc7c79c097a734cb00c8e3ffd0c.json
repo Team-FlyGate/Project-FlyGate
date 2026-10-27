@@ -1,0 +1,1 @@
+{"request": {"tool": "ols_search_efo_terms", "arguments": {"query": "catalepsy", "rows": 5}}, "retrieved": "2026-10-26", "response": {"count": 1, "terms": [{"obo_id": "EFO:0009845", "short_form": "EFO_0009845", "label": "catalepsy"}]}}

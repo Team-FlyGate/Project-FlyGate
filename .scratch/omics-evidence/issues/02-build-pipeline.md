@@ -4,18 +4,18 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `python -m pipeline.omics.build --drugs ... --pairs ... --out ...` runs from the repo root with pinned ToolUniverse and does not import anything from the runtime `api/` beyond `labeltext`
-- [ ] `--dry-run` prints the planned call count per host without network
-- [ ] Nonclinical PTs are skipped; variants come from `labeltext.equivalents()`
-- [ ] Term mapping records `match` in `label`, `synonym`, `none`, the source, and the first hit for reference; no parent roll-up
-- [ ] Ancestors come from Open Targets, then HPO parents walk, then `null` with an error entry
-- [ ] Organ candidates record method `hpo_ancestor_label` with the matching ancestor and word; no match gives `organs: null`
-- [ ] L2 stores the full liability list per target, `null` when the field is absent; `safety_match` lists `term` and `ancestor` relations per pair
-- [ ] L3 stores GTEx v10 median TPM for all 54 tissues per target
-- [ ] L4 stores both pilot scores and `row_found`; literature-only flag only when score > 0 and no-literature score == 0
-- [ ] Each host gets 0.2 s spacing; failures are `null` plus an `errors[]` entry, never 0
-- [ ] Coverage table prints drugs, targets, PTs, mapping rate, organ-candidate rate, calls, failures, and the versions block records Open Targets `meta`
-- [ ] Cache replay test reproduces the ticket-01 fixture without network
-- [ ] `pipeline/omics/README.md` documents the command and the recorded numbers
+- [x] `python -m pipeline.omics.build --drugs ... --pairs ... --out ...` runs from the repo root with pinned ToolUniverse and does not import anything from the runtime `api/` beyond `labeltext`
+- [x] `--dry-run` prints the planned call count per host without network
+- [x] Nonclinical PTs are skipped; variants come from `labeltext.equivalents()`
+- [x] Term mapping records `match` in `label`, `synonym`, `none`, the source, and the first hit for reference; no parent roll-up
+- [x] Ancestors come from Open Targets, then HPO parents walk, then `null` with an error entry
+- [x] Organ candidates record method `hpo_ancestor_label` with the matching ancestor and word; no match gives `organs: null`
+- [x] L2 stores the full liability list per target, `null` when the field is absent; `safety_match` lists `term` and `ancestor` relations per pair
+- [x] L3 stores GTEx v10 median TPM for all 54 tissues per target
+- [x] L4 stores both pilot scores and `row_found`; literature-only flag only when score > 0 and no-literature score == 0
+- [x] Each host gets 0.2 s spacing; failures are `null` plus an `errors[]` entry, never 0
+- [x] Coverage table prints drugs, targets, PTs, mapping rate, organ-candidate rate, calls, failures, and the versions block records Open Targets `meta`
+- [x] Cache replay test reproduces the ticket-01 fixture without network
+- [x] `pipeline/omics/README.md` documents the command and the recorded numbers

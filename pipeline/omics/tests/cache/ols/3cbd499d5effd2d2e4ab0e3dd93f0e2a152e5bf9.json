@@ -1,0 +1,1 @@
+{"request": {"tool": "ols_search_efo_terms", "arguments": {"query": "thrombocytopenia", "rows": 5}}, "retrieved": "2026-10-26", "response": {"count": 2, "terms": [{"obo_id": "HP:0001873", "short_form": "HP_0001873", "label": "Thrombocytopenia"}, {"obo_id": "EFO:0700038", "short_form": "EFO_0700038", "label": "autosomal thrombocytopenia with normal platelets"}]}}

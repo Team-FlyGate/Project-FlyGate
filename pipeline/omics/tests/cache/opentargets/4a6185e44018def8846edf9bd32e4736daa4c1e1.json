@@ -1,0 +1,1 @@
+{"request": {"tool": "OpenTargets_get_drug_mechanisms_of_action_by_chemblId", "arguments": {"chemblId": "placeholder"}}, "retrieved": "2026-10-26", "response": {"drug": {"id": "placeholder", "mechanismsOfAction": {"rows": [{"mechanismOfAction": "placeholder", "actionType": "placeholder", "targets": [{"id": "ENSG00000149295", "approvedSymbol": "DRD2"}]}]}}}}
