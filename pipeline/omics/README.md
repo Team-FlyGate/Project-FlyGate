@@ -106,3 +106,21 @@ A second run from the cache sent nothing and wrote a byte-identical file.
 ### Full build
 
 Ticket 07 records the drug count, target count, PT count, mapping rate, organ-candidate rate, call count, and failure count of the full build here.
+
+## Recorded numbers (v1 build, 2026-10-26)
+
+Full build on a cpu-core node, job 8352682, then one rerun from the cache to retry 8 failed calls (7 Mondo, 1 HPO; the HPO one, an HTTP 400, stayed failed). Output `api/_data/omics.json.gz`, 389,610 bytes.
+
+| Measure | Value |
+|---|---|
+| drugs planned / in extract / with targets | 245 / 245 / 184 (27 had no exact Open Targets name match) |
+| targets | 315, safety field present for 117, GTEx recorded for 315 |
+| PTs planned | 1,737 (173 nonclinical dropped) |
+| mapping | 788 / 1,737 = 45.4% (label 685, synonym 103, none 949). Pilot: 24.5% |
+| organ candidates | 294 / 788 mapped terms = 37.3% |
+| pairs | 16,248, with an association row 8,745 |
+| calls sent (first run) | 6,739 (opentargets 1,795, hpo 1,941, ols 1,623, mondo 929, gtex 311, dgidb 140), 8 failed |
+| errors in extract | 33 (32 `no_ancestors`, 1 HPO HTTP 400) |
+| versions | opentargets 26.09, gtex_v10, ols_efo 3.95.0, hpo 2026-09-01, mondo 2026-10-06, tooluniverse 1.5.7 |
+
+Demo pairs were chosen with `python -m pipeline.omics.pick_demo_pairs`, which reads the extract and lists pairs whose `safety_match` has a `term` relation and whose no-literature association score is above 0. Honest negative: NIRAPARIB|thrombocytopenia (PARP1 and PARP2 `safety: null`, association 0.0125 with no-literature 0.0, mapped by label to HP_0001873). Positive: PIMAVANSERIN|hallucination (HTR2A liability "hallucinations" HP_0000738, sources Bowes et al. 2012 and Lynch et al. 2017, PMIDs 23197038 and 28216264; association 0.486, no-literature 0.484). PIMAVANSERIN is one of the demo-case drugs.

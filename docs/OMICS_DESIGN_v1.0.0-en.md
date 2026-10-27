@@ -1,6 +1,6 @@
 # Design of the omics evidence layer for FlyVigilance
 
-Version v1.0.0 · Written 2026-10-26 · Status: awaiting review · Korean original: [OMICS_DESIGN_v1.0.0.md](OMICS_DESIGN_v1.0.0.md)
+Version v1.0.0 · Written 2026-10-26 · Status: implemented, awaiting PR review · Korean original: [OMICS_DESIGN_v1.0.0.md](OMICS_DESIGN_v1.0.0.md)
 
 FlyVigilance scores a drug-reaction pair on three axes today. Was it reported (FAERS disproportionality), is it in the label (openFDA), and is it in the literature (PubMed). This document adds a fourth axis, whether the reaction is biologically plausible. Starting from the drug's mechanism-of-action target genes, it queries public omics databases for target safety liabilities, tissue expression, and target-disease association. The results enter the existing evidence-ID catalog under an `omics:` prefix. The System-2 memo cites them, the critic checks them, and the dashboard shows them in a table. They do not enter the evidence grade or the PV class. The earlier pilot showed why.
 
@@ -157,6 +157,8 @@ srun -A rsc -p cpu-core -c 2 --mem=15000M -t 06:00:00 \
 The drug set `drugs_v1.txt` is the union of the 31 SIDER pilot drugs, the 11 SignalLab presets, the 3 CLI watchlist drugs, the 9 Time Machine drugs, and the 224 primary-suspect drugs of the 440 demo cases. Pairs are the union of three sources: the top 80 PTs per drug from `signals.json.gz`, the top 3 reactions of each demo case with its primary-suspect drug, and the watchlist and Time Machine pairs listed in `pairs_v1.txt`. The last two are needed because 3 of the 10 watchlist pairs and 5 of the 9 Time Machine pairs fall outside the top 80. Any other drug or pair gets a 404 from the API and a "not in the extract" message on screen.
 
 Call counts are measured with `--dry-run` before the build. Roughly, each PT costs 3 ontology searches and 1 ancestor query, each target costs 1 safety, 1 GTEx, and 1 association-list query, and each drug costs 1 ID, 1 mechanism, and 1 DGIdb query. At 0.2 s spacing, 5,000 PTs take about 50 minutes for the searches alone. After the build, the README records the drug count, target count, PT count, mapping rate, tissue-candidate rate, call count, and failure count.
+
+Results of the v1 build on 2026-10-26 (SLURM job 8352682, then one rerun from the cache). Of 245 drugs, 184 got Open Targets targets (27 had no exact name match), and 117 of 315 targets carry a safety-liability field. Of 1,737 PTs (173 nonclinical dropped), 788 (45.4%) mapped (label 685, synonym 103), up from the pilot's 24.5%. 294 of the mapped terms (37.3%) got an organ candidate. 8,745 of 16,248 pairs have an association row. 8 of 6,739 calls failed; after the rerun one HPO HTTP 400 remains. Versions: Open Targets 26.09, GTEx v10, OLS EFO 3.95.0, HPO 2026-09-01, Mondo 2026-10-06. The extract is 389,610 bytes. Demo pairs were chosen with `pipeline/omics/pick_demo_pairs.py`. The honest negative is niraparib-thrombocytopenia (both targets `safety: null`, association 0.0125, no-literature 0.0). The positive is pimavanserin-hallucination (HTR2A liability "hallucinations" `HP_0000738`, Bowes et al. 2012 and Lynch et al. 2017, association 0.486, no-literature 0.484).
 
 ## 7. Out of v1, and next steps
 

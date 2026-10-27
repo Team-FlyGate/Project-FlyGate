@@ -59,7 +59,9 @@ def drug_pairs(drug: str) -> list[dict] | None:
 
 
 def _shown(x) -> str:
-    return "not recorded" if x is None else str(x)
+    if x is None:
+        return "not recorded"
+    return str(round(x, 4)) if isinstance(x, float) else str(x)
 
 
 def _target_item(drug: str, ensg: str, t: dict, ot: str) -> dict:
