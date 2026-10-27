@@ -35,3 +35,20 @@ Candidates for environment improvements, collected while the work runs. Presente
 - Information access. `uv run` picked the system Python 3.9 until `--python 3.12` was added; ToolUniverse refuses < 3.10. Proposed: put the interpreter flag in every documented command and in `pipeline/omics/README.md` (done).
 - Tool economy. Open Targets answers "returned no disease for ID" for terms outside its index; treating that as a failure meant it was never cached and re-sent every run. Proposed as a reviewer rule: a deterministic "not found" from an upstream is an answer to cache, not an error to retry.
 - Navigation. OLS EFO and Mondo search responses carry no synonyms through ToolUniverse; all synonym matches came from HPO. `rows: 5` misses some exact terms (eosinophilia). Candidates for a v1.1 mapping improvement, recorded in the pipeline README.
+
+## Collected during ticket 07 (2026-10-26)
+
+- Tool economy. The full build sent 6,739 calls in under two hours on one cpu-core node; the cache made the retry rerun send 8. The replay cache in `pipeline/omics/tests/cache/` keeps tests offline. Nothing to change.
+- Coding standards (mechanical). L4 `what` printed 17-digit floats until rounded in `_shown`. Proposed reviewer rule: any float that enters prose goes through one formatting helper.
+
+## Report (ordered by severity)
+
+1. **Automated checks: no runnable test command for a new agent.** The repo `.venv` is Python 3.9 without pytest while the code needs 3.10+, the README still says `.venv/bin/python -m pytest`, and no CI or pre-commit runs anything. Every delegate rediscovered this. Fix: `scripts/check.sh` that asserts the interpreter version, runs `pytest -q pipeline/omics/tests tests` and `cd web && npm run build`, plus a one-line setup note naming the miniforge `python3.10` and `uv run --python 3.12` for ToolUniverse. Wire it as a pre-commit hook.
+2. **Coding standards (mechanical): counts duplicated as literals.** "7 tools", "13 rules", "11 skills" lived in 14+ files. One test now guards three of them. Extend `test_rule_count_matches_every_place_that_lists_rules` to grep `web/src`, `docs/*.md`, `README*.md`, `skills/*/SKILL.md`, `agent/workspace/*.md` (not `docs/readme-versions`) for `R1[–-]R\d+`, `\d+(가지 |)규칙`, `\d+ rules`, and do the same for the tool count against `chat.ALLOWED` and the skill count against `skills/*/SKILL.md`.
+3. **Automated checks: `agent/export_agent_json.py` likely fails at HEAD** (`set(sub.choices) == set(CLI)` misses `login` and `chat`). Add a test that compares its table with `build_parser()` and put `pyyaml` in a dev requirements file so the script can run in the test venv.
+4. **Information access: delegates lose their reports on a session restart.** Two tickets had to be re-assessed from disk. Rule for delegate briefs: write `.scratch/<feature>/progress-<ticket>.md` after each red-green cycle.
+5. **Tool economy: shared working tree between parallel delegates** produced 14 transient test failures once. Use worktrees under `/data/hps/assoc/private/rsc/user/ybae/tmp/worktrees/` for file-writing delegates.
+6. **Navigation: pilot code lives in another repo and branch.** Add one pointer line in `docs/EVALUATION.md` section 7 to `korea-agentic-hackathon-2026@omics-plausibility:scripts/omics_plausibility.py` (ported into `pipeline/omics/`).
+7. **Global rules vs this account.** `rsc` has no `cpu-test` partition and `gh` is not installed on the HPC. Note both in the project CLAUDE.md so the institute rules do not cost a failed command each session.
+8. **Coding standards (judgement).** Deterministic "not found" from an upstream is an answer to cache, not an error to retry (Open Targets "returned no disease for ID"). Key names must not encode a constant the value can contradict (`rank_of_54`). Floats that enter prose go through one formatter. Candidates for `CODING_STANDARDS.md`.
+9. **Tool economy (plugins).** ToolUniverse MCP needs `tooluniverse==1.5.7` pinned (uv cache held 0.1.4). `humanize-korean` chunked a 15k-character doc into 12 pieces; single call was fine.
