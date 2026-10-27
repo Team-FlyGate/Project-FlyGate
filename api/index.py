@@ -322,8 +322,8 @@ def omics_query(req: Request, drug: str, pt: str | None = None):
     rec = omics.pair(drug, pt)
     if rec is None:
         raise HTTPException(404, f"{drug.upper()}|{pt.lower()} is not in the omics extract")
-    return {"drug": rec["drug"], "pt": rec["pt"], "asof": asof, "pair": rec, "items": omics.items(rec),
-            "memo_items": omics.items_for_memo(rec)}
+    return {"drug": rec["drug"], "pt": rec["pt"], "asof": asof, "pair": rec, "term": omics._term(rec),
+            "items": omics.items(rec), "memo_items": omics.items_for_memo(rec)}
 
 
 @app.post("/api/dock")

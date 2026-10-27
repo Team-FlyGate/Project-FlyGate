@@ -4,13 +4,13 @@
 
 **Blocked by:** 03
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Page registered in the FlyVigilance group and reachable at `/#/omics`, with `?drug=&pt=` deep links
-- [ ] Drug picker fed by `/api/omics/drugs`; pair list by `/api/omics?drug=`; table by `/api/omics?drug=&pt=`
-- [ ] Matched liabilities (`term`, `ancestor`) visually distinct from `none`; "nothing recorded" shown for `null` safety
-- [ ] Mapping status and organ provenance (ancestor, word) visible
-- [ ] 404 renders "not in the extract" in both languages
-- [ ] Grade card shows the omics count from `/api/grade` and links to the page
-- [ ] `npm run build` in `web/` succeeds with no type errors
+- [x] Page registered in the FlyVigilance group and reachable at `/#/omics`, with `?drug=&pt=` deep links
+- [x] Drug picker fed by `/api/omics/drugs`; pair list by `/api/omics?drug=`; table by `/api/omics?drug=&pt=`
+- [x] Matched liabilities (`term`, `ancestor`) visually distinct from `none`; "nothing recorded" shown for `null` safety
+- [x] Mapping status and organ provenance (ancestor, word) visible
+- [x] 404 renders "not in the extract" in both languages
+- [x] Grade card shows the omics count from `/api/grade` and links to the page
+- [x] `npm run build` in `web/` succeeds with no type errors
 - [ ] Manual check in the dev server on the two demo pairs recorded in the PR description

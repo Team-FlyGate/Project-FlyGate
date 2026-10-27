@@ -11,6 +11,7 @@ import MissionControl from './pages/MissionControl'
 import Architecture from './pages/Architecture'
 import LiveTriage from './pages/LiveTriage'
 import SignalLab from './pages/SignalLab'
+import Omics from './pages/Omics'
 import TimeMachine from './pages/TimeMachine'
 import Warehouse from './pages/Warehouse'
 import Benchmarks from './pages/Benchmarks'
@@ -51,6 +52,7 @@ const groups = (): { step?: string; name?: string; color?: string; pages: Page[]
     { id: 'triage', label: t('사례 분류 (트리아지)', 'Case Triage'), en: t('Live Triage · 보고 한 건', 'Live triage · one report'), icon: I('M3 12h4l3-8 4 16 3-8h4'), el: () => <LiveTriage /> },
     { id: 'korea', label: t('국내 보고 · 인과성', 'Korean Reports · Causality'), en: 'Korean PV Intake', icon: I('M4 4h16v16H4zM8 9h8M8 13h8M8 17h5'), el: () => <KoreanPV /> },
     { id: 'signals', label: t('부작용 신호 연구실', 'Signal Lab'), en: t('Signal Lab', 'Adverse-event signal statistics'), icon: I('M4 20V10M10 20V4M16 20v-7M22 20H2'), el: () => <SignalLab /> },
+    { id: 'omics', label: t('오믹스 근거', 'Omics evidence'), en: t('Omics evidence', 'Targets · liabilities · tissues'), icon: I('M7 3c0 6 10 6 10 12s-10 6-10 6M17 3c0 6-10 6-10 12s10 6 10 6M8.5 7h7M8.5 17h7'), el: () => <Omics /> },
     { id: 'timemachine', label: t('부작용 신호 타임머신', 'Signal Time Machine'), en: t('Signal Time Machine', 'Signals before the label'), icon: I('M12 7v5l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5'), el: () => <TimeMachine /> },
     { id: 'validation', label: t('유의성 검증', 'Signal Validation'), en: 'Reference Validation', icon: I('M9 12l2 2 4-4M4 4h16v16H4z'), el: () => <Validation /> },
     { id: 'bench', label: t('유의성 벤치마크', 'Benchmarks'), en: 'Measured Performance', icon: I('M3 3v18h18M7 15l4-4 3 3 6-7'), el: () => <Benchmarks /> },

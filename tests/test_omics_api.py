@@ -170,3 +170,12 @@ def test_cli_not_found_exits_zero_with_reason(flygate, capsys, drug, pt, reason)
     assert code == 0
     assert out == {"cmd": "omics", "drug": drug, "pt": pt, "found": False, "reason": reason, "asof": "2026-10-26",
                    "mapping": None, "items": [], "evidence_ids": []}
+
+
+def test_pair_response_carries_term_record():
+    c = TestClient(index.app)
+    r = c.get("/api/omics", params={"drug": "NIRAPARIB", "pt": "thrombocytopenia"}).json()
+    assert r["term"]["id"] == "HP_0001873"
+    assert r["term"]["organs"]["sites"] == ["Blood"]
+    r = c.get("/api/omics", params={"drug": "CLOZAPINE", "pt": "some unmapped term"}).json()
+    assert r["term"] is None

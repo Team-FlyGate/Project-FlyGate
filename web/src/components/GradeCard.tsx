@@ -110,6 +110,7 @@ export function GradeView({ g, compact = false }: { g: EvidenceGrade; compact?: 
   const step = LABEL_STEPS.findIndex(([k]) => k === g.axes.label_status)
   // 지식 기반 판별: 약·반응 이름으로 공인된 연관인지 보는 참고 축입니다(분류 규칙에는 쓰지 않습니다)
   const kn = (g.axes as { knowledge?: { p: number | null; latency_ms?: number } }).knowledge
+  const om = (g as { omics?: { count: number; memo_count: number; found: boolean } }).omics
   return (
     <div className="stack fade-in" style={{ gap: 10 }}>
       <div className="row" style={{ gap: 14, alignItems: 'flex-start' }}>
@@ -157,6 +158,9 @@ export function GradeView({ g, compact = false }: { g: EvidenceGrade; compact?: 
       {!compact && g.literature?.articles?.length ? <Articles arts={g.literature.articles} /> : null}
       <div className="row wrap" style={{ gap: 4 }}>{g.basis.map((b) => <span key={b} className="chip ev">{b}</span>)}</div>
       {g.gaps.length > 0 && <ul style={{ margin: 0, paddingLeft: 16, fontSize: 11, color: 'var(--text-3)' }}>{g.gaps.map((x) => <li key={x}>{gapEn(x)}</li>)}</ul>}
+      {om && <div style={{ fontSize: 11.5 }}>{om.found
+        ? <a href={`#/omics?drug=${encodeURIComponent(g.drug)}&pt=${encodeURIComponent(g.pt)}`}>{t(`오믹스 근거 ${om.count}건 (메모 ${om.memo_count}건)`, `Omics evidence: ${om.count} items (${om.memo_count} in memo)`)}</a>
+        : <span className="dim">{t('오믹스 근거 없음 (추출본에 없음)', 'No omics evidence (not in the extract)')}</span>}</div>}
       <div className="note">{t(g.caution, CAUTION_EN)}</div>
     </div>
   )
