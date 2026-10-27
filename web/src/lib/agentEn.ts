@@ -10,7 +10,7 @@ export const AGENT_TEXT_EN: Record<string, string> = {
   'NVIDIA build.nvidia.com NIM: Nemotron 3 Super(숙의 메모, 국내 보고 구조화), Nemotron Safety Guard(주장별 안전 검사), BioNeMo NIM 4종(MSA-Search, OpenFold3, DiffDock, Boltz-2). 비자기회귀 판단 모델(TypeSafe AI)이 타입 있는 확률 판단을 맡습니다.':
     'NVIDIA NIM (NVIDIA Inference Microservice) on build.nvidia.com: Nemotron 3 Super (deliberation memos, structuring Korean reports), Nemotron Safety Guard (per-claim safety checks), and four BioNeMo NIMs (MSA-Search, OpenFold3, DiffDock, Boltz-2). A non-autoregressive judgment model (TypeSafe AI) handles typed probability judgments.',
   '세션 기록, 파일 기반 작업 공간, 도구 접근을 유지합니다.': 'Keeps session history, a file-based workspace and tool access.',
-  '작업 공간 파일 7개(SOUL, AGENTS, IDENTITY, USER, TOOLS, HEARTBEAT, MEMORY), Agent Skills 12개, 도구는 flygate CLI 하위 명령 7개(exec). 날짜별 메모는 flygate watch 가 memory/ 에 씁니다.':
+  '작업 공간 파일 7개(SOUL, AGENTS, IDENTITY, USER, TOOLS, HEARTBEAT, MEMORY), Agent Skills 12개, 도구는 flygate CLI 하위 명령 8개(exec). 날짜별 메모는 flygate watch 가 memory/ 에 씁니다.':
     '7 workspace files (SOUL, AGENTS, IDENTITY, USER, TOOLS, HEARTBEAT, MEMORY), 12 Agent Skills, and 7 flygate CLI subcommands as tools (exec). flygate watch writes dated notes to memory/.',
   '실행 중인 에이전트가 닿을 수 있는 파일·네트워크·시스템 호출을 제한합니다.': 'Limits the files, network and system calls a running agent can reach.',
   'agent/policy/flygate.yaml: 외부 API 5곳을 파이썬 실행 파일에만 묶어 메서드·경로 단위로 허용, 쓰기는 /tmp, /sandbox/.openclaw, /sandbox/.nemoclaw, 작업 디렉터리, sandbox 사용자, Landlock best_effort. 라이브 점검 20/20 통과, 2026-09-28.':
@@ -57,7 +57,7 @@ export const AGENT_TEXT_EN: Record<string, string> = {
   'ReAct 루프와 도구 호출': 'ReAct loop and tool calls',
   'implemented · OpenClaw 가 flygate 명령을 exec 도구로 부르고 JSON 결과를 읽어 다음 행동을 정합니다. 크리틱이 반려하면 사유대로 한 번 고칩니다.': 'implemented · OpenClaw calls flygate commands via the exec tool and reads the JSON result to choose the next action. When the critic returns a claim, it revises once per the stated reason.',
   '도구 확장: 함수 호출, 도구 계약, MCP': 'Extending tools: function calling, tool contracts, MCP',
-  'implemented · 하위 명령 7개를 한 계약(JSON + evidence_ids)으로 묶고, 인자를 argparse 로 검증합니다. 역할별 지식은 Agent Skills 로 나눴습니다. 도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다.': 'implemented · 7 subcommands share one contract (JSON + evidence_ids), with arguments validated by argparse. Role-specific knowledge is split into Agent Skills. The tool boundary is a CLI contract rather than an MCP server.',
+  'implemented · 하위 명령 8개를 한 계약(JSON + evidence_ids)으로 묶고, 인자를 argparse 로 검증합니다. 역할별 지식은 Agent Skills 로 나눴습니다. 도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다.': 'implemented · 8 subcommands share one contract (JSON + evidence_ids), with arguments validated by argparse. Role-specific knowledge is split into Agent Skills. The tool boundary is a CLI contract rather than an MCP server.',
   '워크플로: ReWOO, 라우팅, 병렬 작업': 'Workflows: ReWOO, routing, parallel work',
   'implemented · 결정 정책이 규칙으로 라우팅합니다(반사 → System-2 → 사람). 근거는 라벨과 문헌을 병렬로 모읍니다.': 'implemented · The decision policy routes by rule (reflex → System-2 → human). Label and literature evidence are gathered in parallel.',
   '에이전트 RAG와 검색': 'Agentic RAG and retrieval',

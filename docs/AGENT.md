@@ -17,7 +17,7 @@ NemoClaw 과정(03a)은 배포를 네 부품으로 나눕니다. FlyGate 는 각
 | 층 | 과정의 정의 | FlyGate |
 | --- | --- | --- |
 | LLM(대형 언어 모델) 엔드포인트(모델을 부르는 주소) | 프롬프트와 도구 결과를 응답으로 바꿉니다. 세션 상태는 없습니다. | NVIDIA build.nvidia.com NIM(NVIDIA 추론 마이크로서비스: AI 모델을 표준 API로 부르게 포장한 서비스): Nemotron(NVIDIA 언어 모델 계열) 3 Super(숙의 메모, 국내 보고 구조화), Nemotron Safety Guard(주장별 안전 검사), BioNeMo NIM 4종(MSA-Search, OpenFold3, DiffDock, Boltz-2). FlyVigilance 안의 비자기회귀 판단 모델(글을 한 글자씩 생성하지 않고 확률을 한 번에 돌려주는 모델. Jev, TypeSafe AI)이 타입 있는 확률 판단(예/아니오 · 선택지 · 점수처럼 형식이 정해진 답)을 맡습니다. |
-| OpenClaw 하네스 | 세션 기록, 파일 기반 작업 공간, 도구 접근을 유지합니다. | 작업 공간 파일 7개(`agent/workspace/`), Agent Skills(에이전트 능력 패키지 규격) 13개(`skills/` 12개 + `agent/skills/discovery-evidence`), 도구는 `flygate` CLI(명령줄 인터페이스) 하위 명령 7개(exec). |
+| OpenClaw 하네스 | 세션 기록, 파일 기반 작업 공간, 도구 접근을 유지합니다. | 작업 공간 파일 7개(`agent/workspace/`), Agent Skills(에이전트 능력 패키지 규격) 13개(`skills/` 12개 + `agent/skills/discovery-evidence`), 도구는 `flygate` CLI(명령줄 인터페이스) 하위 명령 8개(exec). |
 | OpenShell 샌드박스 | 실행 중인 에이전트가 닿는 파일·네트워크·시스템 호출을 제한합니다. | `agent/policy/flygate.yaml`: 기본 거부, 외부 API 5곳을 파이썬 실행 파일에만 묶어 메서드·경로 단위로 허용, 쓰기 경로 제한, 비루트(관리자 권한 없이 실행), Landlock(읽고 쓸 수 있는 파일 경로를 제한하는 리눅스 보안 기능). |
 | NemoClaw 청사진 | OpenClaw 와 OpenShell 이 함께 돌도록 구성합니다. | NemoClaw 청사진의 OpenClaw 샌드박스 이미지와 게이트웨이 위에 올립니다. `agent/deploy_nemoclaw.sh` 가 정책 프리셋, 도구 묶음, 작업 공간, 스킬, cron(정해진 시각에 명령을 자동 실행하는 예약 도구) 을 더합니다. |
 
@@ -79,7 +79,7 @@ SANDBOX=flygate agent/openshell_smoke.sh     # 결과: agent/evidence/openshell_
 | --- | --- | --- | --- | --- |
 | 01a | 에이전트 루프 | ICSR(개별 이상사례 보고) 한 건을 인지(규칙 게이트: 모델을 부르기 전 규칙으로 거르는 관문, 라벨 근거) → 판단(타입 있는 확률 7개) → 행동(라우팅)으로 처리합니다. | 구현 | `api/_fv/triage.py`, `flygate triage` |
 | 01b | ReAct(추론과 행동을 번갈아 하는 에이전트 방식) 와 도구 호출 | OpenClaw 가 `flygate` 를 exec 로 부르고 JSON("항목 이름: 값" 형식의 데이터) 을 읽어 다음 행동을 정합니다. 크리틱(근거를 넘는 주장을 반려하는 검사 단계)이 반려하면 사유대로 한 번 고칩니다. | 구현 | `agent/workspace/AGENTS.md`, `agent/flygate.py` |
-| 01c | 도구 확장, 함수 호출, MCP(Model Context Protocol: 에이전트에 도구를 붙이는 표준 규약) | 하위 명령 7개를 한 계약(JSON + `evidence_ids`: 주장이 기댄 자료를 가리키는 근거 ID)으로 묶었습니다. 역할별 지식은 Agent Skills 로 나눴고, 도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다. | 구현 | `agent/flygate.py`, `skills/`, `agent/skills/` |
+| 01c | 도구 확장, 함수 호출, MCP(Model Context Protocol: 에이전트에 도구를 붙이는 표준 규약) | 하위 명령 8개를 한 계약(JSON + `evidence_ids`: 주장이 기댄 자료를 가리키는 근거 ID)으로 묶었습니다. 역할별 지식은 Agent Skills 로 나눴고, 도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다. | 구현 | `agent/flygate.py`, `skills/`, `agent/skills/` |
 | 02a | 워크플로와 라우팅 | 결정 정책이 규칙으로 라우팅합니다(반사 → System-2(숙고 단계) → 사람). 라벨과 문헌은 병렬로 모읍니다. | 구현 | `api/_fv/triage.py`, `api/_fv/evidence.py` |
 | 02b | 에이전트 RAG(검색 증강 생성: 찾아 온 자료를 근거로 답하는 방식) | openFDA(FDA 공개 데이터 조회 API) 라벨 절, PubMed(의학 논문 검색 서비스) 검색·초록, FAERS(미국 FDA 이상사례 보고 시스템) 2×2 표(약 × 반응 네 칸 표) SQL(데이터베이스 질의 언어). 모델은 근거 카탈로그의 ID 만 인용합니다. | 구현 | `api/_fv/evidence.py`, `api/_fv/literature.py`, `pipeline/faers/` |
 | 02c | 딥 에이전트 | 공유 저장소(근거 ID 카탈로그)를 독립 작업자가 채우고 Nemotron 이 종합, 크리틱이 검사합니다(7절). | 구현 | `api/_fv/evidence.py::bundle`, `api/_fv/assess.py` |
@@ -134,7 +134,7 @@ SANDBOX=flygate agent/openshell_smoke.sh     # 결과: agent/evidence/openshell_
 | 실패 유형(OWASP Agentic: 웹 보안 단체 OWASP의 에이전트 위험 목록) | 샌드박스가 주는 것 | 그 위의 FlyGate 통제 |
 | --- | --- | --- |
 | 목표 탈취, 프롬프트 주입 | 닿는 파일·호스트를 제한 | 외부 텍스트는 자료로만(SOUL.md 경계 6), 타입 있는 판단, 크리틱 3단 |
-| 도구 오용 | 도구가 도는 OS·네트워크 범위를 제한 | 도구는 `flygate` 7개 명령뿐, argparse 인자 검증, 제출 기능 없음 |
+| 도구 오용 | 도구가 도는 OS·네트워크 범위를 제한 | 도구는 `flygate` 8개 명령뿐, argparse 인자 검증, 제출 기능 없음 |
 | 신원·권한 남용 | 비루트, capability 0, no_new_privs | 자격 증명은 provider 가 프록시에서 주입, 호스트별 치환 |
 | 공급망, 예상 밖 코드 실행 | 파일·시스템 호출·외부 접속 축소 | 의존성은 배포 묶음(vendor/)에 고정, 실행 중 pypi 차단 |
 | 기억·맥락 오염 | 시스템 경로 읽기 전용 | 페르소나 파일 SHA-256(파일 지문 해시) 대조(`flygate watch --workspace`), MEMORY.md 는 사람 검토 뒤 반영 |

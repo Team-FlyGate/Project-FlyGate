@@ -38,14 +38,14 @@ MedDRA needs a license, and this repo holds PT names only (`api/_fv/labeltext.py
 
 1. Skip PTs where `labeltext.is_nonclinical` is true (for example "drug ineffective").
 2. Lowercase the PT and generate the variants from `labeltext.equivalents()` (US spelling, reversed word order, `EQUIV` synonyms).
-3. Call `ols_search_efo_terms` (rows 5), `HPO_search_terms` (5), and `Mondo_search_disease` (5) in that order. If any result's `label` or `synonyms` equals one of the variants, case-insensitively, use that term. Record the match kind as `label` or `synonym`.
+3. Call `ols_search_efo_terms` (rows 5), `HPO_search_terms` (5), and `Mondo_search_disease` (5) in that order. If any result's `label` or `synonyms` equals one of the variants, case-insensitively, use that term. Record the match kind as `label` or `synonym`. Hyphens are treated as spaces before comparison. The OLS and Mondo search responses in ToolUniverse 1.5.7 carry no synonyms, so synonym matches come from HPO only (confirmed in the v1 build).
 4. If all three fail, the mapping is `match: none`. The first hit is kept for reference only. Rolling an unmapped PT up to a parent term is not used in v1, because the pilot's concern about mixing disease and phenotype terms on one scale has to be measured first.
 5. Fetch the mapped term's ancestors with `OpenTargets_get_disease_ancestors_parents_by_efoId`. If the term is not in the Open Targets disease index, walk `HPO_get_term_hierarchy` (`direction: "parents"`) to the root for HP terms. If neither works, store `ancestors: null` with an error. L4 is then `null` as well.
 
 Tissue expression (L3) needs the organ where the PT occurs. That value comes from the ontology, not from a model judgment.
 
 - Fetch the label and synonyms of each HP term among the mapped term's ancestors with `HPO_get_term` (the ancestor query returns IDs only). In HPO, the direct children of `HP_0000118` (Phenotypic abnormality) are the organ-system branches. `HP_0001871`, for example, is labeled "Abnormality of blood and blood-forming tissues" with the synonym "Hematological abnormality" (queried 2026-10-26).
-- If every word of one of the 30 tissue-group names returned by `GTEx_get_tissue_sites` (`tissueSite`: Blood, Liver, Brain, and so on) appears, case-insensitively, in an ancestor's label or synonyms, that group becomes a tissue candidate. The word "blood" alone selects Blood and not Blood Vessel. In the example above, "blood" matches and Blood becomes the candidate. The rule is one word-set intersection, with no exception table.
+- If every word of one of the 30 tissue-group names returned by `GTEx_get_tissue_sites` (`tissueSite`: Blood, Liver, Brain, and so on) appears, case-insensitively, in an ancestor's label or synonyms, that group becomes a tissue candidate. The word "blood" alone selects Blood and not Blood Vessel. In the example above, "blood" matches and Blood becomes the candidate. The words of the label and all synonyms are pooled into one set before the comparison, and there is no exception table.
 - If no group matches, `organs` is `null`. L3 then reports the top 5 of the 54 tissues by TPM without a candidate filter.
 - The method is recorded as `hpo_ancestor_label`, together with which ancestor and which word matched. After the build, the README records the share of PTs that got a tissue candidate.
 
@@ -99,7 +99,7 @@ Rules.
 - The pair key is `<DRUG>|<pt lowercase>`, where DRUG is the `signals.json.gz` key as is (`drug.upper()`, with `\` kept in combination products). The `+` substitution of `evidence.id_drug` is used only inside evidence IDs. `omics.pair(drug, pt)` normalizes its input with `upper()` and `lower()` only.
 - `pairs[].safety_match` lists the indexes of the target's safety liabilities whose `eventId` equals the term ID (`term`) or is one of the term's ancestors (`ancestor`). This does not roll up the PT mapping. It records how an already mapped term relates to an event ID. Hierarchy comparison between tissue IDs is not done in v1.
 - `items(pair)` builds evidence items shaped `{"id", "layer", "what", "n"}`. L1 gives one per target. L2 gives one per safety liability per target, with a `match` field of `term`, `ancestor`, or `none`. L3 gives one per detailed tissue inside the tissue candidates (top 5 by TPM when there are no candidates). L4 gives one. The L3 `n` holds the median TPM and the rank among 54 tissues. No "expressed" verdict is attached, because a threshold cannot be set without measurement.
-- L4 emits the pilot's two scores. `what` says "literature co-mention only" only when `score > 0` and `score_no_literature == 0`.
+- L4 emits the pilot's two scores. Each score is the maximum over the drug's targets taken independently, so the two values can come from different targets. When the no-literature alias returns no row for the disease, the no-literature score is 0.0. That is a value meaning no non-literature evidence, not a failed query (failures are `null`). `what` says "literature co-mention only" only when `score > 0` and `score_no_literature == 0`.
 - When the mapping is `none`, `safety_match` and `assoc` are `null`. `items` returns all of L1, all of L2 (`match: none`), and the top 5 of L3, and no L4.
 - The set that enters the System-2 memo is cut separately by `items_for_memo(pair)`: at most 5 L1 items, only the L2 items whose `match` is `term` or `ancestor`, at most 5 L3 items inside the tissue candidates, and one L4 item. The dashboard and the CLI show all of `items`. This keeps a drug with 51 targets, such as metformin, from flooding the Nemotron prompt.
 - There is no pair-level verdict (supported, partial, none). Only per-layer counts. A verdict rule is set after the Role B measurement.
@@ -150,7 +150,7 @@ export UV_CACHE_DIR=/data/hps/assoc/private/rsc/user/ybae/.cache/uv
 cd /data/hps/assoc/private/rsc/user/ybae/RSC/Project-FlyGate
 srun -A rsc -p cpu-core -c 2 --mem=15000M -t 06:00:00 \
   uv run --no-project --with tooluniverse==1.5.7 python -m pipeline.omics.build \
-    --drugs pipeline/omics/drugs_v1.txt --pairs pipeline/omics/pairs_v1.txt \
+    --drugs pipeline/omics/drugs_v1.txt --pairs pipeline/omics/pairs_v1.txt --cases \
     --out api/_data/omics.json.gz
 ```
 

@@ -38,14 +38,14 @@ MedDRA는 사용권이 필요하고 이 저장소에는 PT 이름만 있습니�
 
 1. `labeltext.is_nonclinical`인 PT(예: drug ineffective)는 건너뜁니다.
 2. PT를 소문자로 정규화하고 `labeltext.equivalents()`가 주는 변형(미국식 철자, 어순 뒤집기, `EQUIV` 동의어)을 만듭니다.
-3. `ols_search_efo_terms`(rows 5), `HPO_search_terms`(5), `Mondo_search_disease`(5)를 순서대로 부릅니다. 어떤 결과의 `label` 또는 `synonyms`가 변형 중 하나와 대소문자 무시로 같으면 그 용어를 쓰고 일치 종류를 `label`, `synonym`으로 적습니다.
+3. `ols_search_efo_terms`(rows 5), `HPO_search_terms`(5), `Mondo_search_disease`(5)를 순서대로 부릅니다. 어떤 결과의 `label` 또는 `synonyms`가 변형 중 하나와 대소문자 무시로 같으면 그 용어를 쓰고 일치 종류를 `label`, `synonym`으로 적습니다. 비교 전에 하이픈은 공백으로 바꿉니다. ToolUniverse 1.5.7의 OLS와 Mondo 검색 응답에는 동의어가 없어 동의어 일치는 HPO에서만 납니다(v1 빌드에서 확인).
 4. 셋 다 실패하면 `match: none`이고 첫 결과는 참고로만 남깁니다. 질환 용어와 표현형 용어를 한 척도로 섞는 문제를 먼저 재야 하므로 매핑이 안 된 PT를 상위 용어로 올려 잡는 규칙은 v1에서 쓰지 않습니다.
 5. 매핑된 용어의 상위 용어를 `OpenTargets_get_disease_ancestors_parents_by_efoId`로 받습니다. 그 용어가 Open Targets 질환 색인에 없으면 `HPO_get_term_hierarchy`(`direction: "parents"`, HP 용어일 때)를 뿌리까지 되풀이해 받고, 둘 다 없으면 `ancestors: null`에 오류를 적습니다. 이 경우 L4도 `null`입니다.
 
 조직 발현(L3)에는 PT가 어느 장기에서 생기는지가 필요합니다. 이 값은 모델이 판단하지 않고 온톨로지에서 가져옵니다.
 
 - 용어의 상위 용어 가운데 HP 용어의 라벨과 동의어를 `HPO_get_term`으로 받습니다(상위 용어 조회는 ID만 주기 때문입니다). HPO는 `HP_0000118`(Phenotypic abnormality) 바로 아래가 장기 계통 가지입니다. 예를 들어 `HP_0001871`의 라벨은 "Abnormality of blood and blood-forming tissues"이고 동의어에 "Hematological abnormality"가 있습니다(2026-10-26 조회).
-- `GTEx_get_tissue_sites`가 돌려준 30개 조직 그룹 이름(`tissueSite`: Blood, Liver, Brain 등)의 단어가 모두 상위 용어의 라벨이나 동의어에 대소문자 무시로 들어 있으면 그 그룹을 조직 후보로 둡니다. "blood" 하나로는 Blood만 잡히고 Blood Vessel은 잡히지 않습니다. 위 예에서는 "blood"가 겹쳐 Blood가 후보가 됩니다. 규칙은 단어 집합 교집합 하나이고 예외 표는 두지 않습니다.
+- `GTEx_get_tissue_sites`가 돌려준 30개 조직 그룹 이름(`tissueSite`: Blood, Liver, Brain 등)의 단어가 모두 상위 용어의 라벨이나 동의어에 대소문자 무시로 들어 있으면 그 그룹을 조직 후보로 둡니다. "blood" 하나로는 Blood만 잡히고 Blood Vessel은 잡히지 않습니다. 위 예에서는 "blood"가 겹쳐 Blood가 후보가 됩니다. 라벨과 동의어의 단어를 한 집합으로 모아 비교하며, 예외 표는 두지 않습니다.
 - 겹치는 그룹이 없으면 `organs: null`이고 L3은 조직 후보 없이 54개 조직 가운데 TPM 상위 5개만 냅니다.
 - 방법을 `hpo_ancestor_label`로 적고, 어느 상위 용어와 어느 단어가 겹쳤는지 함께 저장합니다. 빌드가 끝나면 조직 후보가 생긴 PT 비율을 README에 적습니다.
 
@@ -99,7 +99,7 @@ MedDRA는 사용권이 필요하고 이 저장소에는 PT 이름만 있습니�
 - 쌍 키는 `<DRUG>|<pt 소문자>`이고 DRUG는 `signals.json.gz`의 키 그대로입니다(`drug.upper()`, 복합제의 `\` 유지). `evidence.id_drug`의 `+` 치환은 근거 ID 안에서만 씁니다. `omics.pair(drug, pt)`는 입력을 `upper()`와 `lower()`로만 정규화합니다.
 - `pairs[].safety_match`는 표적의 안전성 책임 항목의 인덱스 목록으로, `eventId`가 용어 ID와 같거나(`term`) 용어의 상위 용어 가운데 하나인(`ancestor`) 항목만 담습니다. 이는 PT 매핑을 올려 잡는 것이 아니라 이미 매핑된 용어와 이벤트 ID의 관계를 적는 것입니다. 조직 ID끼리의 계층 비교는 v1에서 하지 않습니다.
 - `items(pair)`가 만드는 근거 항목은 `{"id", "layer", "what", "n"}`입니다. L1은 표적마다 하나, L2는 표적의 안전성 책임마다 하나(`match` 필드에 `term`, `ancestor`, `none`), L3은 조직 후보에 속한 세부 조직마다 하나(후보가 없으면 TPM 상위 5개), L4는 하나입니다. L3의 `n`은 중앙값 TPM과 54개 조직 가운데 순위입니다. 문턱값은 측정 없이 정할 수 없으므로 "발현됨" 같은 판정은 넣지 않습니다.
-- L4는 파일럿과 같은 두 점수를 냅니다. `score > 0`이고 `score_no_literature == 0`일 때만 `what`에 "literature co-mention only"를 적습니다.
+- L4는 파일럿과 같은 두 점수를 냅니다. 각 점수는 약의 표적들 가운데 최댓값을 따로 취하므로 두 값이 다른 표적에서 올 수 있습니다. 문헌 제외 별칭의 목록에 그 질환 행이 없으면 문헌 제외 점수는 0.0입니다. 이는 문헌 외 근거가 없다는 뜻의 값이지 조회 실패가 아닙니다(실패는 `null`). `score > 0`이고 `score_no_literature == 0`일 때만 `what`에 "literature co-mention only"를 적습니다.
 - 매핑이 `none`이면 `safety_match`와 `assoc`는 `null`입니다. `items`는 L1 전부, L2 전부(`match: none`), L3 상위 5개를 내고 L4는 내지 않습니다.
 - 메트포르민처럼 표적이 51개인 약이 Nemotron 프롬프트를 넘치게 하지 않도록 숙고 메모에 들어가는 묶음은 `items_for_memo(pair)`가 따로 자릅니다. L1 최대 5개, L2는 `match`가 `term` 또는 `ancestor`인 것만, L3은 조직 후보 안의 세부 조직 최대 5개, L4 하나입니다. 대시보드와 CLI는 `items` 전부를 보여 줍니다.
 - 쌍 수준 판정(지지, 부분, 없음) 없이 층별 개수만 둡니다. 판정 규칙은 역할 B의 측정 뒤에 정합니다.
@@ -150,7 +150,7 @@ export UV_CACHE_DIR=/data/hps/assoc/private/rsc/user/ybae/.cache/uv
 cd /data/hps/assoc/private/rsc/user/ybae/RSC/Project-FlyGate
 srun -A rsc -p cpu-core -c 2 --mem=15000M -t 06:00:00 \
   uv run --no-project --with tooluniverse==1.5.7 python -m pipeline.omics.build \
-    --drugs pipeline/omics/drugs_v1.txt --pairs pipeline/omics/pairs_v1.txt \
+    --drugs pipeline/omics/drugs_v1.txt --pairs pipeline/omics/pairs_v1.txt --cases \
     --out api/_data/omics.json.gz
 ```
 

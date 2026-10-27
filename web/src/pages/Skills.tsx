@@ -63,7 +63,7 @@ export default function Skills() {
         </Card>
       </div>
       <div className="grid g2">
-        <Card title={t(<><Term k="overclaim">과잉해석</Term> 규칙 13종</>, <>13 <Term k="overclaim">overclaim</Term> rules</>)} sub={t(<><Term k="critic">크리틱</Term> 3단(비자기회귀 판단 모델의 판정)과 Nemotron 시스템 프롬프트가 같은 목록을 씁니다</>, <><Term k="critic">Critic</Term> tier 3 (the non-autoregressive judgment model's verdict) and the Nemotron system prompt share the same list</>)}>
+        <Card title={t(<><Term k="overclaim">과잉해석</Term> 규칙 14종</>, <>14 <Term k="overclaim">overclaim</Term> rules</>)} sub={t(<><Term k="critic">크리틱</Term> 3단(비자기회귀 판단 모델의 판정)과 Nemotron 시스템 프롬프트가 같은 목록을 씁니다</>, <><Term k="critic">Critic</Term> tier 3 (the non-autoregressive judgment model's verdict) and the Nemotron system prompt share the same list</>)}>
           <div className="grid g2" style={{ gap: 8 }}>
             {rules().map(([k, v]) => <div key={k} className="row" style={{ alignItems: 'flex-start', gap: 8, fontSize: 12 }}><span className="chip bad" style={{ fontSize: 10 }}>{k}</span><span className="muted">{v}</span></div>)}
           </div>

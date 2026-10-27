@@ -22,8 +22,7 @@ interface OmicsTerm {
 }
 interface DrugsResp { asof: string | null; drugs: string[] }
 interface PairsResp { drug: string; asof: string | null; pairs: PairRec[] }
-// term 은 아직 API 가 주지 않습니다. omics_query 가 omics._term(rec) 을 실으면 머리 카드가 그대로 읽습니다
-interface PairResp { drug: string; pt: string; asof: string | null; pair: PairRec; items: Item[]; memo_items: Item[]; term?: OmicsTerm | null }
+interface PairResp { drug: string; pt: string; asof: string | null; pair: PairRec; items: Item[]; memo_items: Item[]; term: OmicsTerm | null }
 
 type Load<T> = { s: 'idle' } | { s: 'loading' } | { s: 'ok'; v: T } | { s: 'missing' } | { s: 'error'; msg: string }
 const MISSING = /is not in the omics extract$/
@@ -115,13 +114,11 @@ function PairHead({ r }: { r: PairResp }) {
         <div style={{ padding: 8, borderRadius: 10, border: '1px solid var(--line)' }}>
           <div className="dim mono" style={{ fontSize: 9.5 }}>{t('반응 용어 매핑', 'Reaction term mapping')}</div>
           <div style={{ marginTop: 6 }}><Mapping m={p.mapping} /></div>
-          {term === undefined ? <div className="note" style={{ marginTop: 4 }}>{t('용어 ID · 이름은 API 응답에 아직 없습니다', 'Term ID and label are not in the API response yet')}</div>
-            : term && term.id && <div style={{ fontSize: 12, marginTop: 4 }}><span className="mono">{term.id}</span> · {term.label ?? '-'} <span className="dim mono" style={{ fontSize: 10 }}>{term.source}</span></div>}
+          {term && term.id && <div style={{ fontSize: 12, marginTop: 4 }}><span className="mono">{term.id}</span> · {term.label ?? '-'} <span className="dim mono" style={{ fontSize: 10 }}>{term.source}</span></div>}
         </div>
         <div style={{ padding: 8, borderRadius: 10, border: '1px solid var(--line)' }}>
           <div className="dim mono" style={{ fontSize: 9.5 }}>{t('후보 장기 · 출처', 'Organ candidates · provenance')}</div>
-          {term === undefined ? <div className="note" style={{ marginTop: 6 }}>{t('후보 장기는 API 응답에 아직 없습니다', 'Organ candidates are not in the API response yet')}</div>
-            : !o ? <div className="note" style={{ marginTop: 6 }}>{t('후보 장기 없음. L3 는 발현 상위 5개 조직을 보입니다', 'No organ candidates. L3 shows the 5 tissues with the highest expression')}</div>
+          {!o ? <div className="note" style={{ marginTop: 6 }}>{t('후보 장기 없음. L3 는 발현 상위 5개 조직을 보입니다', 'No organ candidates. L3 shows the 5 tissues with the highest expression')}</div>
             : <>
               <div className="row wrap" style={{ gap: 4, marginTop: 6 }}>{o.sites.map((s) => <span key={s} className="chip" style={{ fontSize: 10 }}>{s}</span>)}</div>
               <div className="dim mono" style={{ fontSize: 10, marginTop: 4 }}>{o.method}</div>

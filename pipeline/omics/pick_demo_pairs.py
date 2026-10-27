@@ -12,8 +12,9 @@ import pathlib
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-PRESETS = {"NIRAPARIB", "SEMAGLUTIDE", "TIRZEPATIDE", "DUPILUMAB", "METFORMIN", "CANAGLIFLOZIN", "PEMBROLIZUMAB",
-           "ADALIMUMAB", "MONTELUKAST", "LEVOFLOXACIN", "ISOTRETINOIN"}
+from pipeline.omics.lists import presets
+
+PRESETS = set(presets())
 
 
 def main(path: pathlib.Path) -> None:

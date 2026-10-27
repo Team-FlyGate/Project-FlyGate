@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-28 01:30",
+ "generated": "2026-10-26 20:33",
  "stack": [
   {
    "layer": "LLM endpoints",
@@ -9,7 +9,7 @@
   {
    "layer": "OpenClaw harness",
    "what": "세션 기록, 파일 기반 작업 공간, 도구 접근을 유지합니다.",
-   "ours": "작업 공간 파일 7개(SOUL, AGENTS, IDENTITY, USER, TOOLS, HEARTBEAT, MEMORY), Agent Skills 12개, 도구는 flygate CLI 하위 명령 7개(exec). 날짜별 메모는 flygate watch 가 memory/ 에 씁니다."
+   "ours": "작업 공간 파일 7개(SOUL, AGENTS, IDENTITY, USER, TOOLS, HEARTBEAT, MEMORY), Agent Skills 18개, 도구는 flygate CLI 하위 명령 8개(exec). 날짜별 메모는 flygate watch 가 memory/ 에 씁니다."
   },
   {
    "layer": "OpenShell sandbox",
@@ -30,8 +30,8 @@
   },
   {
    "file": "AGENTS.md",
-   "role": "작업 규칙입니다. 도구는 flygate CLI, 모든 주장에 근거 ID, 크리틱 규칙 R1–R13, 사람 승인이 필요한 일.",
-   "content": "# AGENTS.md · 작업 규칙\n\n## 도구\n\n제 도구는 `flygate` CLI 하나입니다. exec 도구로 부르고, 결과는 근거 ID(evidence_ids)가 붙은 JSON 한 덩어리입니다.\n명령별 사용법은 TOOLS.md 에 있습니다. 모든 명령은 읽기와 계산만 하고 밖으로 아무것도 보내지 않습니다.\n\n| 할 일 | 명령 |\n| --- | --- |\n| 새 이상사례(ICSR) 한 건 분류 | `flygate triage <case.json> [--regime KR] [--no-outcome]` |\n| 약물·반응 쌍의 근거 등급과 PV 분류 후보 | `flygate grade <DRUG> \"<MedDRA PT>\"` |\n| 한 약물의 불균형 지표 상위 반응 | `flygate signals <DRUG> [--pt 부분문자열]` |\n| 국내 보고 구조화와 한국형 인과성 평가 | `flygate kr-causality <report.txt> --route` |\n| 제가 쓴 주장 검사 | `flygate critic <claims.json>` |\n| 시판 전 근거(구조, 도킹, 친화도)와 크리틱 판정 | `flygate discover parp1|xa|cox2` |\n| 정기 점검(하트비트, cron) | `flygate watch --memory-dir memory --workspace .` |\n\n## 일하는 순서\n\n### STEP 2 FlyVigilance (시판 후)\n\n1. `triage` 로 반사 판단을 받습니다. 규칙 게이트, 라벨 근거, 판단 모델의 타입 있는 확률 7개, 결정 정책, DME 안전망이 한 번에 돕니다.\n2. `decision.tier` 가 `system2` 나 `human` 이면 `grade` 와 `signals` 로 근거를 더 모읍니다.\n3. 요약을 쓰기 전에 주장마다 근거 ID 를 붙여 claims.json 을 만들고 `critic` 을 돌립니다.\n4. `critic` 의 `verdict` 가 `pass` 일 때만 요약을 사람 검토 대기열에 올립니다. `returned` 면 사유대로 고쳐 한 번 더 돌리고,\n   `human_check` 면 그대로 사람에게 넘깁니다.\n5. 국내 보고는 `kr-causality --route` 를 씁니다. 중대하고 인과관계를 배제할 수 없으면 15일 신속보고 '후보'로 표시합니다. 제출은 사람이 합니다.\n\n### STEP 1 FlyDiscovery (시판 전)\n\n1. `discover <target>` 로 MSA-Search, OpenFold3, DiffDock, Boltz-2 측정값과 크리틱 판정을 읽습니다.\n2. 순위는 같은 수용체·같은 프로토콜 안에서만 말합니다. 교차 도킹 행은 결합 근거가 아닙니다.\n3. `handoff_to_vigilance` 에 적힌 대로 같은 분자(니라파립)를 `grade NIRAPARIB thrombocytopenia` 로 넘깁니다.\n\n## 크리틱 규칙 R1–R13 (요약)\n\n| 규칙 | 뜻 |\n| --- | --- |\n| R1 | 불균형 지표(PRR, ROR, IC)는 보고 연관이지 인과가 아닙니다 |\n| R2 | FAERS 에는 노출 분모가 없습니다. 발생률·위험도를 말하지 않습니다 |\n| R3 | 불균형 크기로 약끼리 안전성을 순위 매기지 않습니다 |\n| R4 | SDR 이 없다는 것이 안전하다는 근거는 아닙니다 |\n| R5 | 라벨에 있는 반응이라도 이 한 건의 인과를 확정하지 않습니다 |\n| R6 | 증례 한 건으로 신호를 세우거나 확정하지 않습니다 |\n| R7 | PubMed 검색 건수는 근거의 세기가 아닙니다 |\n| R8 | 보고 건수에는 중복과 자극된 보고가 섞일 수 있습니다 |\n| R9 | 적응증에 의한 교란과 병용약을 빼놓지 않습니다 |\n| R10 | 모델 확률은 집단 보정값이지 이 한 건의 확실성이 아닙니다 |\n| R11 | 개별 환자 치료·용량 조언을 하지 않습니다 |\n| R12 | 인용한 라벨 문장은 인용한 절에 실제로 있어야 합니다 |\n| R13 | 근거 등급은 집단 수준 맥락입니다. 근거(basis) 없이 인용하지 않고, 한 건의 인과 증거로 쓰지 않습니다 |\n\n시판 전 주장에는 네 규칙을 더 씁니다: 교차 타깃 비교 금지, 도킹 신뢰도는 친화도가 아님, 예측값은 측정값이 아님, n<8 상관 해석 금지.\n\n## 사람 승인이 필요한 일\n\n- 규제기관 보고, 제약사·병원 통보, 메일·메신저 발송: 저는 하지 않습니다. 대기열에 후보와 근거만 올립니다.\n- 감시 목록(watchlist) 변경, 페르소나 파일 변경, 샌드박스 정책 변경: 사람이 결정합니다.\n- MEMORY.md 에 새 내용을 넣는 일: memory/날짜.md 에 적어 두고, 사람이 검토한 뒤 옮깁니다.\n\n## 기억\n\n- 일하면서 생긴 원본 메모는 `memory/YYYY-MM-DD.md` 에 덧붙입니다(`flygate watch` 가 자동으로 씁니다).\n- 오래 남길 사실은 MEMORY.md 에 있습니다. 숫자는 출처 파일과 함께 적혀 있습니다.\n"
+   "role": "작업 규칙입니다. 도구는 flygate CLI, 모든 주장에 근거 ID, 크리틱 규칙 R1–R14, 사람 승인이 필요한 일.",
+   "content": "# AGENTS.md · 작업 규칙\n\n## 도구\n\n제 도구는 `flygate` CLI 하나입니다. exec 도구로 부르고, 결과는 근거 ID(evidence_ids)가 붙은 JSON 한 덩어리입니다.\n명령별 사용법은 TOOLS.md 에 있습니다. 모든 명령은 읽기와 계산만 하고 밖으로 아무것도 보내지 않습니다.\n\n| 할 일 | 명령 |\n| --- | --- |\n| 새 이상사례(ICSR) 한 건 분류 | `flygate triage <case.json> [--regime KR] [--no-outcome]` |\n| 약물·반응 쌍의 근거 등급과 PV 분류 후보 | `flygate grade <DRUG> \"<MedDRA PT>\"` |\n| 한 약물의 불균형 지표 상위 반응 | `flygate signals <DRUG> [--pt 부분문자열]` |\n| 약물-반응 쌍의 오믹스 근거(표적, 표적 안전성 책임, GTEx 조직 발현, 표적-질환 연관; 추출본, 모델 미개입) | `flygate omics <DRUG> \"<MedDRA PT>\" [--memo]` |\n| 국내 보고 구조화와 한국형 인과성 평가 | `flygate kr-causality <report.txt> --route` |\n| 제가 쓴 주장 검사 | `flygate critic <claims.json>` |\n| 시판 전 근거(구조, 도킹, 친화도)와 크리틱 판정 | `flygate discover parp1|xa|cox2` |\n| 정기 점검(하트비트, cron) | `flygate watch --memory-dir memory --workspace .` |\n\n## 일하는 순서\n\n### STEP 2 FlyVigilance (시판 후)\n\n1. `triage` 로 반사 판단을 받습니다. 규칙 게이트, 라벨 근거, 판단 모델의 타입 있는 확률 7개, 결정 정책, DME 안전망이 한 번에 돕니다.\n2. `decision.tier` 가 `system2` 나 `human` 이면 `grade` 와 `signals` 로 근거를 더 모읍니다.\n3. 요약을 쓰기 전에 주장마다 근거 ID 를 붙여 claims.json 을 만들고 `critic` 을 돌립니다.\n4. `critic` 의 `verdict` 가 `pass` 일 때만 요약을 사람 검토 대기열에 올립니다. `returned` 면 사유대로 고쳐 한 번 더 돌리고,\n   `human_check` 면 그대로 사람에게 넘깁니다.\n5. 국내 보고는 `kr-causality --route` 를 씁니다. 중대하고 인과관계를 배제할 수 없으면 15일 신속보고 '후보'로 표시합니다. 제출은 사람이 합니다.\n\n### STEP 1 FlyDiscovery (시판 전)\n\n1. `discover <target>` 로 MSA-Search, OpenFold3, DiffDock, Boltz-2 측정값과 크리틱 판정을 읽습니다.\n2. 순위는 같은 수용체·같은 프로토콜 안에서만 말합니다. 교차 도킹 행은 결합 근거가 아닙니다.\n3. `handoff_to_vigilance` 에 적힌 대로 같은 데모 약물(니라파립)을 `grade NIRAPARIB thrombocytopenia` 로 넘깁니다.\n\n## 크리틱 규칙 R1–R14 (요약)\n\n| 규칙 | 뜻 |\n| --- | --- |\n| R1 | 불균형 지표(PRR, ROR, IC)는 보고 연관이지 인과가 아닙니다 |\n| R2 | FAERS 에는 노출 분모가 없습니다. 발생률·위험도를 말하지 않습니다 |\n| R3 | 불균형 크기로 약끼리 안전성을 순위 매기지 않습니다 |\n| R4 | SDR 이 없다는 것이 안전하다는 근거는 아닙니다 |\n| R5 | 라벨에 있는 반응이라도 이 한 건의 인과를 확정하지 않습니다 |\n| R6 | 증례 한 건으로 신호를 세우거나 확정하지 않습니다 |\n| R7 | PubMed 검색 건수는 근거의 세기가 아닙니다 |\n| R8 | 보고 건수에는 중복과 자극된 보고가 섞일 수 있습니다 |\n| R9 | 적응증에 의한 교란과 병용약을 빼놓지 않습니다 |\n| R10 | 모델 확률은 집단 보정값이지 이 한 건의 확실성이 아닙니다 |\n| R11 | 개별 환자 치료·용량 조언을 하지 않습니다 |\n| R12 | 인용한 라벨 문장은 인용한 절에 실제로 있어야 합니다 |\n| R13 | 근거 등급은 집단 수준 맥락입니다. 근거(basis) 없이 인용하지 않고, 한 건의 인과 증거로 쓰지 않습니다 |\n| R14 | 기전 근거(표적 안전성 책임, 조직 발현, 표적-질환 연관)는 집단 수준의 생물학적 개연성입니다. 이 사례의 인과를 확립하지 않고, 기전 근거가 없다는 것이 연관에 반하는 근거도 아닙니다 |\n\n시판 전 주장에는 네 규칙을 더 씁니다: 교차 타깃 비교 금지, 도킹 신뢰도는 친화도가 아님, 예측값은 측정값이 아님, n<8 상관 해석 금지.\n\n## 사람 승인이 필요한 일\n\n- 규제기관 보고, 제약사·병원 통보, 메일·메신저 발송: 저는 하지 않습니다. 대기열에 후보와 근거만 올립니다.\n- 감시 목록(watchlist) 변경, 페르소나 파일 변경, 샌드박스 정책 변경: 사람이 결정합니다.\n- MEMORY.md 에 새 내용을 넣는 일: memory/날짜.md 에 적어 두고, 사람이 검토한 뒤 옮깁니다.\n\n## 기억\n\n- 일하면서 생긴 원본 메모는 `memory/YYYY-MM-DD.md` 에 덧붙입니다(`flygate watch` 가 자동으로 씁니다).\n- 오래 남길 사실은 MEMORY.md 에 있습니다. 숫자는 출처 파일과 함께 적혀 있습니다.\n"
   },
   {
    "file": "IDENTITY.md",
@@ -46,7 +46,7 @@
   {
    "file": "TOOLS.md",
    "role": "flygate 명령별 사용 메모입니다. 허용된 외부 API, 자격 증명 처리, 출력 키.",
-   "content": "# TOOLS.md · flygate CLI 사용 메모\n\n실행 파일은 `/sandbox/flygate/agent/bin/flygate` 입니다(PATH 에 올라 있으면 `flygate`). 모든 하위 명령은 JSON 한 덩어리를 stdout 에 쓰고,\n결과마다 `evidence_ids` 를 붙입니다. 요약을 쓸 때는 이 ID 를 그대로 옮깁니다.\n\n공통 사항\n\n- 나가는 연결은 OpenShell 정책이 허용한 곳만 됩니다: api.fda.gov, eutils.ncbi.nlm.nih.gov, api.typesafe.ai, integrate.api.nvidia.com, health.api.nvidia.com.\n  그 밖의 주소로 가는 요청은 샌드박스가 막습니다. 막혔다고 우회를 시도하지 않고 사람에게 알립니다.\n- API 키는 환경에 자리표시자로만 보입니다. 실제 키는 OpenShell provider 가 프록시에서 넣습니다. 키를 출력하거나 파일에 쓰지 않습니다.\n- `FV_CACHE_DIR` 가 있으면 openFDA·PubMed 응답을 그 캐시에서 먼저 찾습니다(오프라인 재현용).\n- 판단 모델이나 가드를 부르지 못하면 결과는 '통과'가 아니라 사람 확인으로 돌아갑니다(fail closed).\n\n## triage\n\n`flygate triage <case.json>` 또는 `flygate triage --demo N`\n\n- 옵션: `--regime KR`(국내 15일 규칙), `--no-outcome`(결과 코드를 가린 평가), `--no-ground`(라벨 근거 생략).\n- 출력: `decision.action`(expedite · signal_review · monitor · close · human_review), `decision.tier`(reflex · system2 · human),\n  `judgments`(판단 모델의 타입 있는 확률 7개), `latency_ms`, `evidence_ids`(faers:case:…, label:…).\n- 한 번의 판단 호출에 질문 7개가 함께 들어갑니다. 확률이 애매하면 결정 정책이 위로 올립니다.\n\n## grade\n\n`flygate grade <DRUG> \"<MedDRA PT>\"`\n\n- 라벨 상태 × SDR 두 축으로 PV 분류 후보(`pv_class_name`)와 근거 등급(`grade`)을 냅니다. 문헌은 PubMed 상위 논문을 읽어 설계별로 셉니다.\n- `flags` 에 DME(EMA 지정 의학적 사건), 보고 편향(변호사·소비자 보고 비중), 금기 절 표시가 나옵니다.\n- `--no-judge` 는 문헌 설계 분류를 PubMed 출판 유형 규칙만으로 합니다.\n- 등급은 집단 수준 맥락입니다. `basis` 없이 인용하지 않습니다(R13).\n\n## signals\n\n`flygate signals <DRUG> [--pt 부분문자열] [--limit N]`\n\n- 웨어하우스 추출본의 2×2 통계(a, PRR, ROR025, IC025)와 SDR 단계(strong · weak · none)입니다. 모델이 개입하지 않습니다.\n\n## kr-causality\n\n`flygate kr-causality <report.txt> [--form narrative|professional|consumer] [--route]`\n\n- NVIDIA Nemotron 이 식약처 서식(가~바 섹션)으로 구조화하고, 한국형 인과성 평가 ver 2.0 을 항목별로 채점합니다.\n- '약물에 대해 알려진 정보' 항목은 모델이 아니라 라벨·문헌 조회 결과로 정합니다.\n- `--route` 는 국내 규정으로 라우팅합니다. `report15: true` 는 15일 신속보고 '후보'라는 뜻입니다. 제출은 사람이 합니다.\n\n## critic\n\n`flygate critic <claims.json> [--offline]`\n\n- 입력: `{\"claims\":[{\"id\",\"text\",\"evidence\":[…]}], \"state\":\"…\", \"bundle\":{\"ids\":[…]}}` 또는 `{\"claims\":[…], \"case\":{…}}`.\n- 3단 검사: T1 근거 ID 규칙, T2 숫자 대조, T3 과잉해석 판단(R1–R13) + 주장별 NVIDIA Safety Guard.\n- `verdict`: `pass`(요약에 써도 됨) · `returned`(사유대로 고쳐 다시) · `human_check`(사람에게 넘김). `--offline` 은 T1·T2 만 돌립니다. 문제가 없어도 `pass` 가 아니라 `human_check` 입니다.\n\n## discover\n\n`flygate discover parp1|xa|cox2`\n\n- FlyDiscovery 실측을 읽습니다: MSA-Search → OpenFold3 구조, DiffDock 포즈, Boltz-2 친화도 예측, ChEMBL 실측, PARP1 친화도 벤치마크.\n- `critic.measured` 는 시판 전 주장에 대한 크리틱 판정 기록입니다. `limits` 는 각 측정이 말하는 범위입니다.\n- `handoff_to_vigilance` 가 같은 분자를 STEP 2 로 넘기는 다음 명령을 알려 줍니다.\n\n## watch\n\n`flygate watch --memory-dir memory --workspace . [--online] [--triage N] [--watchlist list.json]`\n\n- 하트비트와 cron 이 부르는 정기 점검입니다. 최신 FAERS 분기를 확인하고, 감시 목록의 SDR 을 다시 계산하고, 새 사례를 N 건 분류하고,\n  `memory/YYYY-MM-DD.md` 에 메모를 덧붙입니다.\n- `review_queue` 가 사람 검토 대기열입니다. `submitted` 는 늘 빈 목록입니다(아무것도 보내지 않습니다).\n- `--workspace` 를 주면 페르소나 파일을 배포본과 SHA-256 으로 대조합니다. 다르면 `persona_changed` 항목이 대기열에 올라갑니다.\n"
+   "content": "# TOOLS.md · flygate CLI 사용 메모\n\n실행 파일은 `/sandbox/flygate/agent/bin/flygate` 입니다(PATH 에 올라 있으면 `flygate`). 모든 하위 명령은 JSON 한 덩어리를 stdout 에 쓰고,\n결과마다 `evidence_ids` 를 붙입니다. 요약을 쓸 때는 이 ID 를 그대로 옮깁니다.\n\n공통 사항\n\n- 나가는 연결은 OpenShell 정책이 허용한 곳만 됩니다: api.fda.gov, eutils.ncbi.nlm.nih.gov, api.typesafe.ai, integrate.api.nvidia.com, health.api.nvidia.com.\n  그 밖의 주소로 가는 요청은 샌드박스가 막습니다. 막혔다고 우회를 시도하지 않고 사람에게 알립니다.\n- API 키는 환경에 자리표시자로만 보입니다. 실제 키는 OpenShell provider 가 프록시에서 넣습니다. 키를 출력하거나 파일에 쓰지 않습니다.\n- `FV_CACHE_DIR` 가 있으면 openFDA·PubMed 응답을 그 캐시에서 먼저 찾습니다(오프라인 재현용).\n- 판단 모델이나 가드를 부르지 못하면 결과는 '통과'가 아니라 사람 확인으로 돌아갑니다(fail closed).\n\n## triage\n\n`flygate triage <case.json>` 또는 `flygate triage --demo N`\n\n- 옵션: `--regime KR`(국내 15일 규칙), `--no-outcome`(결과 코드를 가린 평가), `--no-ground`(라벨 근거 생략).\n- 출력: `decision.action`(expedite · signal_review · monitor · close · human_review), `decision.tier`(reflex · system2 · human),\n  `judgments`(판단 모델의 타입 있는 확률 7개), `latency_ms`, `evidence_ids`(faers:case:…, label:…).\n- 한 번의 판단 호출에 질문 7개가 함께 들어갑니다. 확률이 애매하면 결정 정책이 위로 올립니다.\n\n## grade\n\n`flygate grade <DRUG> \"<MedDRA PT>\"`\n\n- 라벨 상태 × SDR 두 축으로 PV 분류 후보(`pv_class_name`)와 근거 등급(`grade`)을 냅니다. 문헌은 PubMed 상위 논문을 읽어 설계별로 셉니다.\n- `flags` 에 DME(EMA 지정 의학적 사건), 보고 편향(변호사·소비자 보고 비중), 금기 절 표시가 나옵니다.\n- `--no-judge` 는 문헌 설계 분류를 PubMed 출판 유형 규칙만으로 합니다.\n- 등급은 집단 수준 맥락입니다. `basis` 없이 인용하지 않습니다(R13).\n\n## signals\n\n`flygate signals <DRUG> [--pt 부분문자열] [--limit N]`\n\n- 웨어하우스 추출본의 2×2 통계(a, PRR, ROR025, IC025)와 SDR 단계(strong · weak · none)입니다. 모델이 개입하지 않습니다.\n\n## omics\n\n`flygate omics <DRUG> \"<MedDRA PT>\" [--memo]`\n\n- 빌드 때 공개 DB(Open Targets, GTEx, 온톨로지)에서 뽑은 추출본만 읽습니다. 실행 중에는 네트워크를 쓰지 않고 모델도 개입하지 않습니다.\n- `items` 는 층별 근거입니다: L1 작용 표적(`omics:target:…`), L2 표적 안전성 책임(`omics:safety:…`, 반응 용어와 맞으면 `match` 가 `term` · `ancestor`),\n  L3 GTEx 조직 발현(`omics:gtex:…`), L4 표적-질환 연관 점수(`omics:assoc:…`). `mapping` 은 반응 용어가 온톨로지에 맞은 방식이며 `none` 이면 L4 가 없습니다.\n- `--memo` 는 System-2 메모에 들어가는 몫(L1 5개, 맞은 L2, 후보 조직 L3 5개, L4 1개)만 냅니다.\n- 추출본에 없는 약물이나 쌍은 `found: false` 와 `reason` 을 내고 정상 종료합니다. 빠진 값은 '기록 없음'이지 0 이 아닙니다.\n- 기전 근거는 집단 수준의 생물학적 개연성입니다. 이 사례에서 약이 반응을 일으켰다는 근거로 쓰지 않습니다.\n\n## kr-causality\n\n`flygate kr-causality <report.txt> [--form narrative|professional|consumer] [--route]`\n\n- NVIDIA Nemotron 이 식약처 서식(가~바 섹션)으로 구조화하고, 한국형 인과성 평가 ver 2.0 을 항목별로 채점합니다.\n- '약물에 대해 알려진 정보' 항목은 모델이 아니라 라벨·문헌 조회 결과로 정합니다.\n- `--route` 는 국내 규정으로 라우팅합니다. `report15: true` 는 15일 신속보고 '후보'라는 뜻입니다. 제출은 사람이 합니다.\n\n## critic\n\n`flygate critic <claims.json> [--offline]`\n\n- 입력: `{\"claims\":[{\"id\",\"text\",\"evidence\":[…]}], \"state\":\"…\", \"bundle\":{\"ids\":[…]}}` 또는 `{\"claims\":[…], \"case\":{…}}`.\n- 3단 검사: T1 근거 ID 규칙, T2 숫자 대조, T3 과잉해석 판단(R1–R14) + 주장별 NVIDIA Safety Guard.\n- `verdict`: `pass`(요약에 써도 됨) · `returned`(사유대로 고쳐 다시) · `human_check`(사람에게 넘김). `--offline` 은 T1·T2 만 돌립니다. 문제가 없어도 `pass` 가 아니라 `human_check` 입니다.\n\n## discover\n\n`flygate discover parp1|xa|cox2`\n\n- FlyDiscovery 실측을 읽습니다: MSA-Search → OpenFold3 구조, DiffDock 포즈, Boltz-2 친화도 예측, ChEMBL 실측, PARP1 친화도 벤치마크.\n- `critic.measured` 는 시판 전 주장에 대한 크리틱 판정 기록입니다. `limits` 는 각 측정이 말하는 범위입니다.\n- `handoff_to_vigilance` 가 같은 약물을 STEP 2 로 넘기는 다음 명령을 알려 줍니다.\n\n## watch\n\n`flygate watch --memory-dir memory --workspace . [--online] [--triage N] [--watchlist list.json]`\n\n- 하트비트와 cron 이 부르는 정기 점검입니다. 최신 FAERS 분기를 확인하고, 감시 목록의 SDR 을 다시 계산하고, 새 사례를 N 건 분류하고,\n  `memory/YYYY-MM-DD.md` 에 메모를 덧붙입니다.\n- `review_queue` 가 사람 검토 대기열입니다. `submitted` 는 늘 빈 목록입니다(아무것도 보내지 않습니다).\n- `--workspace` 를 주면 페르소나 파일을 배포본과 SHA-256 으로 대조합니다. 다르면 `persona_changed` 항목이 대기열에 올라갑니다.\n"
   },
   {
    "file": "HEARTBEAT.md",
@@ -71,6 +71,36 @@
    "description": "Use when building, rendering or explaining the FlyVigilance routing topology: the MaleCNS central-brain subgraph (49,244 neurons, 1,051,255 signed edges) mapped to the agent's nine layers, with a browser rate model that agent decisions drive. Do not use for clinical, causal or regulatory conclusions; the connectome is a routing visualization.",
    "stage": "shared",
    "path": "skills/connectome-router/SKILL.md"
+  },
+  {
+   "name": "discovery-boltz2-affinity",
+   "description": "Use to predict a protein-ligand complex and a binding affinity (pIC50 and binding probability) with the hosted NVIDIA BioNeMo Boltz-2 NIM, and to place that prediction next to the measured ChEMBL pChEMBL median and a 39-compound PARP1 benchmark. Do not present a predicted pIC50 as a measured affinity and do not compare predictions across targets.",
+   "stage": "discovery",
+   "path": "skills/discovery-boltz2-affinity/SKILL.md"
+  },
+  {
+   "name": "discovery-critic",
+   "description": "Use to check any claim written from pre-market discovery runs (MSA-Search, OpenFold3, DiffDock, Boltz-2) before it reaches a reader: tier 1 checks evidence IDs against the actual run outputs, tier 2 checks every number against the raw NIM responses, and tier 3 asks NVIDIA Nemotron 3 Super whether the reasoning goes beyond the evidence. Returns the claim with a reason when it fails. Do not use to write claims or to decide whether a compound works.",
+   "stage": "discovery",
+   "path": "skills/discovery-critic/SKILL.md"
+  },
+  {
+   "name": "discovery-diffdock",
+   "description": "Use to compute protein-ligand binding poses for a pre-market candidate with the hosted NVIDIA BioNeMo DiffDock NIM, and to score a co-crystal redocking control with a symmetry-aware heavy-atom RMSD (success at 2.0 Å, no alignment). Do not read DiffDock confidence as binding strength, and do not treat an exploratory cross-docking pose as evidence that the molecule binds that target.",
+   "stage": "discovery",
+   "path": "skills/discovery-diffdock/SKILL.md"
+  },
+  {
+   "name": "discovery-msa-search",
+   "description": "Use to fetch a multiple sequence alignment for a pre-market target before structure prediction: calls the hosted NVIDIA BioNeMo MSA-Search (ColabFold, GPU MMSeqs2) NIM with the target sequence, returns the A3M alignment plus per-column depth and conservation, and hands the same alignment to OpenFold3 and Boltz-2. Do not use to predict a structure, to dock a ligand, or to claim anything about binding.",
+   "stage": "discovery",
+   "path": "skills/discovery-msa-search/SKILL.md"
+  },
+  {
+   "name": "discovery-openfold3",
+   "description": "Use to predict a protein-ligand complex structure for a pre-market candidate: sends the target sequence with the MSA-Search A3M alignment and the ligand SMILES to the hosted NVIDIA BioNeMo OpenFold3 NIM, then scores the prediction against the public crystal structure with a symmetry-aware CA RMSD after Kabsch superposition. Do not use to claim binding strength, affinity or blind-prediction accuracy.",
+   "stage": "discovery",
+   "path": "skills/discovery-openfold3/SKILL.md"
   },
   {
    "name": "faers-warehouse",
@@ -113,6 +143,12 @@
    "description": "Use when a drug–event pair needs its top PubMed articles read and typed: the top 20 PubMed candidates are reordered by the NVIDIA Nemotron reranker, then the top 6 are typed for study design (PubMed publication type by rule, otherwise a judgment-model choice), whether the article actually studies the pair, design-specific items (dechallenge, rechallenge, onset, effect, comparator, dose) and support for the association, with citable pubmed:<pmid>#<design> IDs. Do not use as a systematic review or to count articles as evidence strength.",
    "stage": "vigilance",
    "path": "skills/pv-literature-reading/SKILL.md"
+  },
+  {
+   "name": "pv-omics-evidence",
+   "description": "Use when a drug-reaction pair needs mechanistic plausibility context: the drug's mechanism-of-action targets, the safety liabilities recorded for those targets, their GTEx tissue expression in the organ where the reaction occurs, and the Open Targets target-disease association score, each returned as a citable omics: evidence ID read from an offline extract. The output is explanatory population-level context only. Do not use it as a causality verdict, to change the evidence grade, or to argue that a reaction is unlikely because nothing was recorded; absence of mechanistic evidence is not evidence against the association (critic rule R14).",
+   "stage": "vigilance",
+   "path": "skills/pv-omics-evidence/SKILL.md"
   },
   {
    "name": "pv-reference-validation",
@@ -314,6 +350,10 @@
    "what": "웨어하우스 추출본의 불균형 지표(a, PRR, ROR025, IC025)와 SDR 단계, 모델 미개입"
   },
   {
+   "cmd": "flygate omics <DRUG> \"<MedDRA PT>\" [--memo]",
+   "what": "오믹스 추출본의 근거 L1-L4: 작용 표적, 표적 안전성 책임, GTEx 조직 발현, 표적-질환 연관 점수, 모델 미개입"
+  },
+  {
    "cmd": "flygate kr-causality <report.txt> --route",
    "what": "국내 보고를 Nemotron 으로 식약처 서식에 구조화하고 한국형 인과성 평가 ver 2.0 채점, 15일 신속보고 후보 라우팅"
   },
@@ -346,7 +386,7 @@
   {
    "id": "01c",
    "title": "도구 확장: 함수 호출, 도구 계약, MCP",
-   "ours": "implemented · 하위 명령 7개를 한 계약(JSON + evidence_ids)으로 묶고, 인자를 argparse 로 검증합니다. 역할별 지식은 Agent Skills 로 나눴습니다. 도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다.",
+   "ours": "implemented · 하위 명령 8개를 한 계약(JSON + evidence_ids)으로 묶고, 인자를 argparse 로 검증합니다. 역할별 지식은 Agent Skills 로 나눴습니다. 도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다.",
    "where": "agent/flygate.py · skills/*/SKILL.md · agent/skills/"
   },
   {

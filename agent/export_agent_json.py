@@ -26,7 +26,7 @@ POLICY = AGENT / "policy" / "flygate.yaml"
 # OpenClaw 작업 공간 파일의 역할입니다(NemoClaw 과정 03b 의 대응표).
 WORKSPACE = [
     ("SOUL.md", "성격, 경계, 말투, 가치입니다. 근거에 묶인 분석가이며 인과 단정·치료 조언·외부 발송을 하지 않습니다."),
-    ("AGENTS.md", "작업 규칙입니다. 도구는 flygate CLI, 모든 주장에 근거 ID, 크리틱 규칙 R1–R13, 사람 승인이 필요한 일."),
+    ("AGENTS.md", "작업 규칙입니다. 도구는 flygate CLI, 모든 주장에 근거 ID, 크리틱 규칙 R1–R14, 사람 승인이 필요한 일."),
     ("IDENTITY.md", "이름과 정체입니다."),
     ("USER.md", "함께 일하는 사람(규제기관·제약사 PV 평가자, 지역 약물감시센터, 신약 탐색 연구자)과 선호입니다."),
     ("TOOLS.md", "flygate 명령별 사용 메모입니다. 허용된 외부 API, 자격 증명 처리, 출력 키."),
@@ -105,7 +105,7 @@ def _modules(smoke: str) -> list[dict]:
          "ours": "implemented · OpenClaw 가 flygate 명령을 exec 도구로 부르고 JSON 결과를 읽어 다음 행동을 정합니다. 크리틱이 반려하면 사유대로 한 번 고칩니다.",
          "where": "agent/workspace/AGENTS.md · agent/flygate.py"},
         {"id": "01c", "title": "도구 확장: 함수 호출, 도구 계약, MCP",
-         "ours": "implemented · 하위 명령 7개를 한 계약(JSON + evidence_ids)으로 묶고, 인자를 argparse 로 검증합니다. 역할별 지식은 Agent Skills 로 나눴습니다. "
+         "ours": "implemented · 하위 명령 8개를 한 계약(JSON + evidence_ids)으로 묶고, 인자를 argparse 로 검증합니다. 역할별 지식은 Agent Skills 로 나눴습니다. "
                  "도구 경계는 MCP 서버 대신 CLI 계약으로 두었습니다.",
          "where": "agent/flygate.py · skills/*/SKILL.md · agent/skills/"},
         {"id": "02a", "title": "워크플로: ReWOO, 라우팅, 병렬 작업",
@@ -248,8 +248,9 @@ def _cli() -> list[dict]:
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     sub = next(a for a in mod.build_parser()._actions if a.dest == "cmd")
-    assert set(sub.choices) == set(CLI), f"CLI 설명과 파서가 다릅니다: {set(sub.choices) ^ set(CLI)}"
-    return [{"cmd": CLI[k][0], "what": CLI[k][1]} for k in sub.choices]
+    tools = set(sub.choices) - {"login", "chat"}  # 대화용 명령은 에이전트 도구가 아닙니다
+    assert tools == set(CLI), f"CLI 설명과 파서가 다릅니다: {tools ^ set(CLI)}"
+    return [{"cmd": CLI[k][0], "what": CLI[k][1]} for k in sub.choices if k in CLI]
 
 
 def build() -> dict:
