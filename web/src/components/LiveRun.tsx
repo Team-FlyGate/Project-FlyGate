@@ -126,12 +126,12 @@ export default function LiveRun({ step, drug }: { step: StepId; drug: string }) 
     : <span className="chip">{t('대기', 'Idle')}</span>
 
   return (
-    <Card title={t('라이브 실행', 'Live run')} sub={<span className="mono" style={{ fontSize: 11 }}>{HOST[kind]}</span>} right={status} style={{ marginBottom: 16 }}>
+    <Card title={t('실행', 'Run')} sub={<span className="mono" style={{ fontSize: 11 }}>{HOST[kind]}</span>} right={status} style={{ marginBottom: 16 }}>
       {kind !== 'critic' && <div style={{ marginBottom: 12 }}><TargetPicker cat={cat} /></div>}
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.4fr)', gap: 18, alignItems: 'start' }}>
         <div className="stack" style={{ gap: 10 }}>
           {kind !== 'critic' && (
-            <div style={{ fontSize: 12.5 }}>{t('이번에 부를 입력', 'Input for this call')}: <b>{tLabel}</b>{kind !== 'msa' && lLabel ? <> + <b>{lLabel}</b></> : null}
+            <div style={{ fontSize: 12.5 }}>{t('입력', 'Input')}: <b>{tLabel}</b>{kind !== 'msa' && lLabel ? <> + <b>{lLabel}</b></> : null}
               <span className="mono dim" style={{ fontSize: 11 }}>{t(' · 위 선택기에서 바꿉니다', ' · change it in the picker above')}</span></div>
           )}
           {kind === 'diffdock' && (
@@ -161,7 +161,7 @@ export default function LiveRun({ step, drug }: { step: StepId; drug: string }) 
             </label>
           )}
           <div className="row wrap" style={{ gap: 10, alignItems: 'center' }}>
-            <button className="btn nv" onClick={run} disabled={busy || !cat}>{busy ? t('실행 중…', 'Running…') : kind === 'critic' ? t('크리틱 3단 실행', 'Run the 3-tier critic') : t('지금 NIM 부르기', 'Call the NIM now')}</button>
+            <button className="btn nv" onClick={run} disabled={busy || !cat}>{busy ? t('실행 중…', 'Running…') : t('실행', 'Run')}</button>
             {kind !== 'critic' && <label className="row mono dim" style={{ gap: 6, fontSize: 11, alignItems: 'center' }}>
               <input id={`live-fresh-${kind}`} type="checkbox" checked={fresh} onChange={(e) => setFresh(e.target.checked)} disabled={busy} /> {t('캐시 무시', 'Ignore cache')}
             </label>}

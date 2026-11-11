@@ -1,0 +1,11 @@
+.srm-dialog { position: fixed; inset: 0; width: min(1120px, calc(100% - 32px)); max-width: none; max-height: calc(100svh - 32px); margin: auto; padding: 0; border: 1px solid var(--line-2); border-radius: 16px; background: var(--bg); color: var(--text); overflow: auto; font-family: var(--font-kr); }
+.srm-dialog::backdrop { background: rgb(0 0 0 / 85%); backdrop-filter: blur(8px); }
+.srm-content { min-width: 0; }
+.srm-head, .srm-bottom { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.srm-head h2 { font-size: 18px; margin: 0; }
+.srm-head button { flex-shrink: 0; }
+.srm-video { display: block; width: 100%; max-height: 72svh; background: var(--bg); }
+.srm-bottom { font-size: 13px; color: var(--text-2); flex-wrap: wrap; }
+.srm-bottom p { margin: 0; }
+.srm-dialog :focus-visible { outline: 2px solid var(--c-sense); outline-offset: 4px; }
+@media (max-width: 540px) { .srm-head, .srm-bottom { padding: 16px; gap: 12px; } .srm-head h2 { font-size: 15px; } }

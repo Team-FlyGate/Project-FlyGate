@@ -15,6 +15,15 @@ import { STEP_KIND, dataText, ligandName, liveFor, useDiscovery } from '../lib/d
 // 위 단계 표시를 누르면 다른 단계 페이지로 갑니다. 왼쪽 위 초파리 커넥텀은 단계마다 다른 층을 자극합니다.
 
 // 언어에 따라 문구가 바뀌므로 렌더할 때 만듭니다.
+// 화면 맨 위에는 단계 이름과 한 줄 설명만 둡니다. 긴 설명(title · lede)은 '이 단계 설명' 을 펼쳤을 때 보입니다.
+const short = (): Record<StepId, string> => ({
+  msa: t('목표 단백질과 닮은 단백질 서열을 찾습니다.', 'Finds protein sequences similar to the target protein.'),
+  of3: t('단백질과 약이 붙은 3차원 구조를 예측합니다.', 'Predicts the 3D structure of the protein with the drug bound.'),
+  dd: t('약이 어느 자리에 어떤 자세로 붙는지 찾습니다.', 'Finds where and in what pose the drug binds.'),
+  bz: t('약과 단백질이 얼마나 세게 붙는지 예측하고 실측과 대조합니다.', 'Predicts how strongly the drug binds the protein and compares it with measurements.'),
+  critic: t('결론마다 출처 · 숫자 · 해석을 검사해 통과 · 반려를 정합니다.', 'Checks the source, numbers and interpretation of each conclusion, then passes or rejects it.'),
+})
+
 const head = (): Record<StepId, { no: string; name: string; title: ReactNode; lede: ReactNode }> => ({
   msa: { no: '01', name: 'MSA-Search', title: t(<>표적 서열의 <span style={{ color: 'var(--c-sense)' }}>진화적 이웃</span>을 모읍니다</>, <>Gathering the <span style={{ color: 'var(--c-sense)' }}>evolutionary neighbors</span> of the target sequence</>),
     lede: t(<><Term k="PARP1" /> 촉매 도메인 서열로 <Term k="MSA">상동 서열</Term>(진화적으로 닮은 서열)을 찾아 정렬(MSA)합니다. 이 정렬이 다음 단계 <Term k="OpenFold3" /> 의 입력이 되며, NVIDIA 공식 스킬 <span className="mono">bionemo-msa-structure-prediction-pipeline</span> 이 제시하는 MSA-Search → OpenFold3 규격을 그대로 따랐습니다.</>,
@@ -76,16 +85,22 @@ export default function DiscoveryStep({ step }: { step: StepId }) {
 
   return (
     <div className="page">
-      <PageHead eyebrow={`Project-FlyGate · STEP 1 FlyDiscovery · ${h.no} ${h.name}`} title={h.title} lede={h.lede}
-        right={<div className="row wrap" style={{ justifyContent: 'flex-end', maxWidth: 360 }}>
-          <span className="chip jev">{t('데모 후보', 'Demo candidate')} · {ligandName(drug, DRUG_LABEL[drug])} × PARP1</span>
-          <span className={`chip ${step === 'critic' ? 'bad' : 'nv'}`}>{step === 'critic' ? t('Nemotron 3 Super · 규칙', 'Nemotron 3 Super · rules') : `NVIDIA BioNeMo NIM · ${h.name}`}</span>
-        </div>} />
+      <PageHead eyebrow={`FlyDiscovery · ${h.no}`} title={h.name} lede={short()[step]}
+        right={<span className={`chip ${step === 'critic' ? 'bad' : 'nv'}`}>{step === 'critic' ? t('Nemotron 3 Super · 규칙', 'Nemotron 3 Super · rules') : `NVIDIA BioNeMo NIM · ${h.name}`}</span>} />
 
       {missing ? <MissingCard /> : !m || !hero || !extras ? <Loading /> : (
         <>
           <StepFlow step={step} />
+          {/* 입력을 고르고 실행하는 카드가 먼저 오고, 그 아래에 결과 장면과 분석이 이어집니다 */}
+          <LiveRun step={step} drug={drug} />
           <Card className="" style={{ marginBottom: 16 }}>
+            {!live && (
+              <div className="row wrap" style={{ gap: 8, marginBottom: 10, alignItems: 'center' }}>
+                <span className="mono dim" style={{ fontSize: 11.5, letterSpacing: 1.2 }}>{t('예시 결과', 'Example result')}</span>
+                <span className="chip jev">{ligandName(drug, DRUG_LABEL[drug])} × PARP1</span>
+                <span className="dim" style={{ fontSize: 12 }}>{t('위에서 실행하면 이 자리가 이번 실행 결과로 바뀝니다', 'Run above and this view switches to your result')}</span>
+              </div>
+            )}
             {live && (
               <div className="row" style={{ gap: 8, marginBottom: 10, alignItems: 'center' }}>
                 <span className="mono dim" style={{ fontSize: 10.5, letterSpacing: 1.2 }}>{t('장면', 'Scene')}</span>
@@ -100,8 +115,11 @@ export default function DiscoveryStep({ step }: { step: StepId }) {
               : <HeroDocking key={step} hero={hero} extras={extras} only={step} nav={STEP_PAGES} height={600} />}
           </Card>
 
-          {/* 3D 장면과 아래 분석은 그대로 두고, 이 단계의 NIM 을 지금 다시 부르는 카드만 더합니다 */}
-          <LiveRun step={step} drug={drug} />
+          <details className="card" style={{ marginBottom: 16, padding: '12px 18px' }}>
+            <summary style={{ cursor: 'pointer', fontFamily: 'var(--font)', fontWeight: 600, fontSize: 14 }}>{t('이 단계 설명', 'About this step')}</summary>
+            <h2 style={{ margin: '12px 0 6px' }}>{h.title}</h2>
+            <p className="lede" style={{ maxWidth: 900 }}>{h.lede}</p>
+          </details>
 
           {step === 'msa' && (
             <div className="grid g3" style={{ marginBottom: 16 }}>
