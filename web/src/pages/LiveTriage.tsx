@@ -5,6 +5,7 @@ import { useBrain } from '../lib/brain'
 import { api, fmt, OCCP_LABEL, OUTCOME_LABEL, type AssessResult, type Case, type ChoiceA, type Claim, type Issue, type NoulA, type ScoreA, type TriageResult } from '../lib/data'
 import { ACTION_META } from './MissionControl'
 import { GradeView } from '../components/GradeCard'
+import CaseReport from '../components/CaseReport'
 import Term from '../components/Term'
 import { t } from '../lib/i18n'
 
@@ -334,6 +335,7 @@ export default function LiveTriage() {
   const [err, setErr] = useState<string | null>(null)
   const [timings, setTimings] = useState<Record<string, number>>({})
   const [hl, setHl] = useState<string | null>(null)
+  const [report, setReport] = useState(false)
   const { sim } = useBrain()
 
   useEffect(() => { api<Case[]>('/api/cases?limit=500').then((c) => { setCases(c); setSel(c.find((x) => x.bucket === 'death') ?? c[0]) }).catch((e) => setErr(String(e))) }, [])
@@ -384,6 +386,7 @@ export default function LiveTriage() {
 
   return (
     <div className="page">
+      {report && sel && tri && <CaseReport c={sel} tri={tri} asr={asr} timings={timings} onClose={() => setReport(false)} />}
       <PageHead eyebrow={t('사례 분류(트리아지) · 실제 FAERS 2026Q2 · 실시간 API', 'Case triage · real FAERS 2026Q2 · live API')}
         title={t(<>이상사례 보고 한 건을 <span style={{ color: 'var(--jev)' }}>분류</span>하고, 필요하면 <span style={{ color: 'var(--nvidia)' }}>숙고</span>까지 보냅니다</>,
           <><span style={{ color: 'var(--jev)' }}>Triage</span> one adverse-event report, and send it on to <span style={{ color: 'var(--nvidia)' }}>deliberation</span> when needed</>)}
@@ -428,6 +431,9 @@ export default function LiveTriage() {
                 {stage === 'reflex' ? <span className="spin" /> : '⚡'} {t('① 반사 판단 실행', '① Run reflex triage')}</button>
               <button className="btn nv" onClick={runDeliberate} disabled={!tri || stage === 'evidence' || stage === 'deliberate'}>
                 {stage === 'evidence' || stage === 'deliberate' ? <span className="spin" /> : '◆'} {t('② Nemotron 숙고 실행', '② Run Nemotron deliberation')}</button>
+              <button className="btn" onClick={() => setReport(true)} disabled={!tri || stage === 'reflex' || stage === 'evidence' || stage === 'deliberate'}
+                title={t('방금 실행한 결과를 평가 보고서 서식으로 묶습니다. 인쇄하거나 PDF로 저장할 수 있습니다.', 'Bundles the results you just ran into the assessment report form. You can print it or save it as a PDF.')}>
+                {t('③ 보고서 만들기', '③ Generate report')}</button>
             </div>}>
             <CaseCard c={sel} />
           </Card>}

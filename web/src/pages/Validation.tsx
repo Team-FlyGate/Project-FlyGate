@@ -92,9 +92,9 @@ function LitEval({ le }: { le: LiteratureEval }) {
     <div className="grid g2" style={{ gap: 16 }}>
       <div className="stack" style={{ gap: 12 }}>
         <div className="row" style={{ gap: 26 }}>
-          <div><div className="dim mono" style={{ fontSize: 10.5 }}>ACCURACY</div><div className="num" style={{ fontSize: 34, color: 'var(--c-sense)' }}>{fmt.pct(le.accuracy, 1)}</div></div>
-          <div><div className="dim mono" style={{ fontSize: 10.5 }}>{t('분석·증례·리뷰 3분류', 'Analytic · case · review (3 groups)')}</div><div className="num" style={{ fontSize: 34 }}>{fmt.pct(le.group_accuracy, 1)}</div></div>
-          <div><div className="dim mono" style={{ fontSize: 10.5 }}>ARTICLES</div><div className="num" style={{ fontSize: 34 }}>{le.n}</div></div>
+          <div><div className="dim mono" style={{ fontSize: 11.5 }}>ACCURACY</div><div className="num" style={{ fontSize: 34, color: 'var(--c-sense)' }}>{fmt.pct(le.accuracy, 1)}</div></div>
+          <div><div className="dim mono" style={{ fontSize: 11.5 }}>{t('분석·증례·리뷰 3분류', 'Analytic · case · review (3 groups)')}</div><div className="num" style={{ fontSize: 34 }}>{fmt.pct(le.group_accuracy, 1)}</div></div>
+          <div><div className="dim mono" style={{ fontSize: 11.5 }}>ARTICLES</div><div className="num" style={{ fontSize: 34 }}>{le.n}</div></div>
         </div>
         {cls.map((c) => (
           <div key={c} style={{ display: 'grid', gridTemplateColumns: '90px 1fr 80px', gap: 10, alignItems: 'center' }}>
@@ -109,7 +109,7 @@ function LitEval({ le }: { le: LiteratureEval }) {
           {le.articles_per_call} articles per call, median {fmt.ms(le.latency_ms_p50)}. In production the publication type is set by rules when available; this judgment is used only when it is missing.</>)}</div>
       </div>
       <div>
-        <div className="dim mono" style={{ fontSize: 10.5, marginBottom: 6 }}><Term k="confusion">{t('혼동 행렬', 'Confusion matrix')}</Term> {t('(행 = 정답, 열 = 판정)', '(rows = truth, columns = prediction)')}</div>
+        <div className="dim mono" style={{ fontSize: 11.5, marginBottom: 6 }}><Term k="confusion">{t('혼동 행렬', 'Confusion matrix')}</Term> {t('(행 = 정답, 열 = 판정)', '(rows = truth, columns = prediction)')}</div>
         <table className="tbl" style={{ fontSize: 11.5 }}>
           <thead><tr><th></th>{le.labels.map((q) => <th key={q} className="r">{designName()[q] ?? q}</th>)}</tr></thead>
           <tbody>{cls.map((t) => (
@@ -143,8 +143,8 @@ export default function Validation() {
   return (
     <div className="page">
       <PageHead eyebrow={t('Reference validation · 공개 참조 세트 · 전향적 검증', 'Reference validation · public reference sets · prospective check')}
-        title={t(<>어느 부품이 어디서 이기는지 <span style={{ color: 'var(--c-sense)' }}>재고 나서</span> 배치했습니다</>,
-          <>We <span style={{ color: 'var(--c-sense)' }}>measured</span> where each component wins before deciding where it goes</>)}
+        title={t(<>공개 참조 세트 기반 <span style={{ color: 'var(--c-sense)' }}>구성 요소 검증</span></>,
+          <><span style={{ color: 'var(--c-sense)' }}>Component validation</span> against public reference sets</>)}
         lede={t(<>공개 <Term k="refset">참조 세트</Term>(정답을 미리 정해 둔 평가용 목록) 세 개(OMOP, EU-ADR, Harpaz)의 약물–반응 {Object.values(v.refsets).slice(0, 3).reduce((a, r) => a + r.n, 0)}쌍에서
           통계 지표, 모델 단독 판단, FlyVigilance의 두 판별 모드(<Term k="kbmode">지식 기반·통계 기반</Term>)를 같은 조건으로 비교했습니다. Harpaz는 2013년 <Term k="label">라벨</Term>(허가사항) 변경을 정답으로 삼으므로,
           2013년 이전 보고(구형 <Term k="FAERS">AERS</Term> 2004–2012Q3, {fmt.compact(pro?.N ?? 0)}건)만으로 다시 재어 "미리 알 수 있었는가"를 봤습니다. 이 <Term k="prospective">전향</Term> 조건은 2013년 이전 정보만 쓰므로 통계 기반 판별로 비교합니다.</>,
@@ -181,7 +181,7 @@ export default function Validation() {
       <Card style={{ marginBottom: 16 }}>
         <div className="row wrap between" style={{ gap: 10 }}>
           <div className="seg" style={{ flexWrap: 'wrap' }}>{Object.keys(v.refsets).map((k) => <button key={k} className={set === k ? 'on' : ''} onClick={() => setSet(k)}>{setLabel()[k] ?? k}</button>)}</div>
-          <span className="mono dim" style={{ fontSize: 11 }}>n={res.n} · {t('양성', 'positive')} {res.pos} · {t('음성', 'negative')} {res.neg}{res.window ? ` · ${res.window}` : ''}</span>
+          <span className="mono dim" style={{ fontSize: 11.5 }}>n={res.n} · {t('양성', 'positive')} {res.pos} · {t('음성', 'negative')} {res.neg}{res.window ? ` · ${res.window}` : ''}</span>
         </div>
       </Card>
 
@@ -201,7 +201,7 @@ export default function Validation() {
               <tbody>{[...res.methods].sort((a, b) => b.auc - a.auc).map((mm) => (
                 <tr key={mm.key}>
                   <td><span className="legend-dot" style={{ background: colorOf(mm), marginRight: 8 }} />{labelOf(mm)}</td>
-                  <td><span className="chip" style={{ fontSize: 10, color: FAMILY[mm.family].color }}>{FAMILY[mm.family].name}</span></td>
+                  <td><span className="chip" style={{ fontSize: 11.5, color: FAMILY[mm.family].color }}>{FAMILY[mm.family].name}</span></td>
                   <td className="r num" style={{ fontSize: 13, color: mm.family === 'knowledge' || mm.family === 'flyvigilance' ? FAMILY[mm.family].color : undefined }}>{mm.auc.toFixed(3)}</td>
                   <td className="r num dim">{mm.ci ? `${mm.ci[0].toFixed(3)}–${mm.ci[1].toFixed(3)}` : '–'}</td>
                   <td className="r num">{mm['at_0.5'] ? fmt.pct(mm['at_0.5'].sens ?? 0, 0) : ''}</td>
@@ -214,9 +214,9 @@ export default function Validation() {
                 const p = res.points[k]
                 return (
                   <div key={k} style={{ padding: 10, borderRadius: 10, border: '1px solid rgba(255,79,216,0.35)' }}>
-                    <div className="mono" style={{ fontSize: 11, color: '#ff9ce8' }}>{k === 'evans' ? 'Evans (PRR≥2, χ²≥4, a≥3)' : t('3중 기준 (Evans ∧ ROR₀₂₅>1 ∧ IC₀₂₅>0)', 'Triple criteria (Evans ∧ ROR₀₂₅>1 ∧ IC₀₂₅>0)')}</div>
+                    <div className="mono" style={{ fontSize: 11.5, color: '#ff9ce8' }}>{k === 'evans' ? 'Evans (PRR≥2, χ²≥4, a≥3)' : t('3중 기준 (Evans ∧ ROR₀₂₅>1 ∧ IC₀₂₅>0)', 'Triple criteria (Evans ∧ ROR₀₂₅>1 ∧ IC₀₂₅>0)')}</div>
                     <div className="num" style={{ fontSize: 13, marginTop: 4 }}>{t('민감도', 'Sensitivity')} {fmt.pct(p.sens ?? 0, 0)} · {t('특이도', 'specificity')} {fmt.pct(p.spec ?? 0, 0)} · PPV {fmt.pct(p.ppv ?? 0, 0)}</div>
-                    <div className="dim mono" style={{ fontSize: 10.5 }}><Term k="confusion">TP</Term> {p.tp} · FP {p.fp} · TN {p.tn} · FN {p.fn}</div>
+                    <div className="dim mono" style={{ fontSize: 11.5 }}><Term k="confusion">TP</Term> {p.tp} · FP {p.fp} · TN {p.tn} · FN {p.fn}</div>
                   </div>
                 )
               })}
@@ -229,8 +229,8 @@ export default function Validation() {
                 const sig = d.ci[0] > 0 || d.ci[1] < 0
                 return (
                   <div key={d.a + d.b} className="row between" style={{ fontSize: 12.5 }}>
-                    <span>{la} <span className="dim">−</span> {lb}{d.best_metric && <span className="chip" style={{ fontSize: 9.5, marginLeft: 6 }}>{t('최고 통계 지표', 'best statistical metric')}</span>}</span>
-                    <span className="num">{d.delta >= 0 ? '+' : ''}{d.delta.toFixed(3)} <span className="dim">[{d.ci[0].toFixed(3)}, {d.ci[1].toFixed(3)}]</span> <span className={`chip ${sig ? (d.delta > 0 ? 'ok' : 'bad') : ''}`} style={{ fontSize: 10, marginLeft: 6 }}>{sig ? t('유의', 'Significant') : t('차이 없음', 'No difference')}</span></span>
+                    <span>{la} <span className="dim">−</span> {lb}{d.best_metric && <span className="chip" style={{ fontSize: 11.5, marginLeft: 6 }}>{t('최고 통계 지표', 'best statistical metric')}</span>}</span>
+                    <span className="num">{d.delta >= 0 ? '+' : ''}{d.delta.toFixed(3)} <span className="dim">[{d.ci[0].toFixed(3)}, {d.ci[1].toFixed(3)}]</span> <span className={`chip ${sig ? (d.delta > 0 ? 'ok' : 'bad') : ''}`} style={{ fontSize: 11.5, marginLeft: 6 }}>{sig ? t('유의', 'Significant') : t('차이 없음', 'No difference')}</span></span>
                   </div>
                 )
               })}
@@ -249,7 +249,7 @@ export default function Validation() {
                 <tr key={p.drug + p.event}>
                   <td title={p.drug_ref !== p.drug ? t(`참조 이름: ${p.drug_ref}`, `Reference name: ${p.drug_ref}`) : undefined}>{p.drug}</td>
                   <td className="dim">{dataText(v.events[p.event]?.label ?? p.event)}</td>
-                  <td className="r">{p.truth ? <span className="chip ok" style={{ fontSize: 9.5 }}>{t('양성', 'Positive')}</span> : <span className="chip" style={{ fontSize: 9.5 }}>{t('음성', 'Negative')}</span>}</td>
+                  <td className="r">{p.truth ? <span className="chip ok" style={{ fontSize: 11.5 }}>{t('양성', 'Positive')}</span> : <span className="chip" style={{ fontSize: 11.5 }}>{t('음성', 'Negative')}</span>}</td>
                   <td className="r num">{fmt.int(p.a)}</td><td className="r num">{fmt.f(p.prr ?? NaN)}</td><td className="r num">{fmt.f(p.ic025)}</td>
                   <td>{p.triple ? <span className="legend-dot" style={{ background: '#ff4fd8' }} /> : null}</td>
                   <td className="r num" style={{ color: FAMILY.knowledge.color }}>{set === 'Harpaz-prospective' ? '–' : p.raw_named.toFixed(2)}</td>
@@ -264,9 +264,9 @@ export default function Validation() {
           <div className="stack" style={{ gap: 8, maxHeight: 460, overflow: 'auto' }}>
             {Object.entries(v.events).filter(([k]) => (v.pairs[set] ?? []).some((p) => p.event === k)).map(([k, e]) => (
               <details key={k} style={{ padding: '8px 10px', borderRadius: 10, border: '1px solid var(--line)' }}>
-                <summary style={{ cursor: 'pointer', fontSize: 12.5 }}>{dataText(e.label)} <span className="dim mono" style={{ fontSize: 10.5 }}>· {t(`PT ${e.pts.length}개`, `${e.pts.length} PTs`)} · {dataText(e.source)}</span></summary>
-                <div className="row wrap" style={{ gap: 4, marginTop: 6 }}>{e.pts.map((pt) => <span key={pt} className="chip" style={{ fontSize: 10 }}>{pt}</span>)}</div>
-                {e.note && <div className="mono dim" style={{ fontSize: 10, marginTop: 4, wordBreak: 'break-all' }}>{e.note}</div>}
+                <summary style={{ cursor: 'pointer', fontSize: 12.5 }}>{dataText(e.label)} <span className="dim mono" style={{ fontSize: 11.5 }}>· {t(`PT ${e.pts.length}개`, `${e.pts.length} PTs`)} · {dataText(e.source)}</span></summary>
+                <div className="row wrap" style={{ gap: 4, marginTop: 6 }}>{e.pts.map((pt) => <span key={pt} className="chip" style={{ fontSize: 11.5 }}>{pt}</span>)}</div>
+                {e.note && <div className="mono dim" style={{ fontSize: 11.5, marginTop: 4, wordBreak: 'break-all' }}>{e.note}</div>}
               </details>
             ))}
           </div>
@@ -277,7 +277,7 @@ export default function Validation() {
         <LitEval le={le} />
       </Card>}
 
-      <Card title={t('읽는 법과 한계', 'How to read this, and limitations')}>
+      <Card title={t('결과 해석과 한계', 'Interpretation and limitations')}>
         <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, lineHeight: 1.8, color: 'var(--text-2)' }}>
           {t(<><li>참조 세트의 양성은 라벨·문헌·규제 조치에서 뽑았습니다. 이 측정은 "공인된 조합을 가려내는가"를 재며, 개별 사례의 인과성을 재지 않습니다.</li>
           <li>OMOP 음성 대조군 일부가 잘못 분류됐다는 반론이 있습니다(Hauben et al. 2016). 음성의 정의가 AUC를 좌우합니다.</li>

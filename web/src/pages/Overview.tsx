@@ -1,6 +1,4 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import Architecture from './Architecture'
-import Agent from './Agent'
 import { Card, PageHead } from '../components/ui'
 import { fmt, getJSON, methodLabel } from '../lib/data'
 import type { Ablation, Bench, CriticProbe, DiscoveryMeasurements, Escalation, LiteratureEval, Validation } from '../lib/types'
@@ -43,13 +41,13 @@ const tile = { padding: '12px 14px', borderRadius: 12, border: '1px solid var(--
 function Versus({ label, fv, raw, p, sub }: { label: string; fv: ReactNode; raw: ReactNode; p?: number; sub?: ReactNode }) {
   return (
     <div style={tile}>
-      <div className="mono dim" style={{ fontSize: 10.5, letterSpacing: 0.6 }}>{label}</div>
+      <div className="mono dim" style={{ fontSize: 11.5, letterSpacing: 0.6 }}>{label}</div>
       <div className="row" style={{ gap: 8, alignItems: 'baseline', marginTop: 4 }}>
         <span className="num" style={{ fontSize: 26, color: 'var(--c-sense)', fontWeight: 600 }}>{fv}</span>
         <span className="dim" style={{ fontSize: 12 }}>vs</span>
         <span className="num" style={{ fontSize: 18, color: 'var(--text-2)' }}>{raw}</span>
       </div>
-      {p !== undefined && <span className="chip ok" style={{ fontSize: 10.5, padding: '1px 8px', margin: '4px 0 2px' }}><Term k="McNemar">McNemar</Term> {fmtP(p)}</span>}
+      {p !== undefined && <span className="chip ok" style={{ fontSize: 11.5, padding: '1px 8px', margin: '4px 0 2px' }}><Term k="McNemar">McNemar</Term> {fmtP(p)}</span>}
       {sub && <div style={{ fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.45, marginTop: 2 }}>{sub}</div>}
     </div>
   )
@@ -58,7 +56,7 @@ function Versus({ label, fv, raw, p, sub }: { label: string; fv: ReactNode; raw:
 function Fact({ value, label, sub, color }: { value: ReactNode; label: ReactNode; sub: ReactNode; color: string }) {
   return (
     <div style={{ ...tile, boxShadow: `inset 3px 0 0 ${color}` }}>
-      <div className="mono dim" style={{ fontSize: 10.5, letterSpacing: 0.6 }}>{label}</div>
+      <div className="mono dim" style={{ fontSize: 11.5, letterSpacing: 0.6 }}>{label}</div>
       <div className="num" style={{ fontSize: 24, fontWeight: 600, marginTop: 2, color }}>{value}</div>
       <div style={{ fontSize: 11.5, color: 'var(--text-2)', lineHeight: 1.45 }}>{sub}</div>
     </div>
@@ -120,14 +118,14 @@ export default function Overview() {
 
   return (
     <div className="page">
-      <PageHead eyebrow="Project-FlyGate · NVIDIA Korea Agentic AI Hackathon 2026"
+      <PageHead eyebrow={t('플랫폼 개요', 'Platform overview')}
         title={t(<>시판 전 <span style={{ color: 'var(--c-sense)' }}>표적 결합</span>부터 <span style={{ color: 'var(--nvidia)' }}>시판 후 이상사례</span>까지, 약물 전 주기의 근거를 봅니다</>,
           <>From pre-market <span style={{ color: 'var(--c-sense)' }}>target binding</span> to <span style={{ color: 'var(--nvidia)' }}>post-market adverse events</span>: evidence across the whole drug lifecycle</>)}
         lede={t(<><b>STEP 1 FlyDiscovery</b>는 시판 전 후보 물질이 <Term k="target">표적</Term>(약이 붙어 작용하는 단백질)에 붙는지를 BioNeMo <Term k="NIM" ko />로 예측해 전통 기준으로 채점하고,
-          <b> STEP 2 FlyVigilance</b>는 시판 후 허가 약물의 <Term k="FAERS" ko /> 이상사례 보고를 분류하고 신호를 평가합니다. 데모에서는 이미 허가된 <Term k="niraparib">니라파립</Term>(PARP1 억제 항암제)으로 시판 전 단계를 되짚어 재현하고, 같은 약의 실제 시판 후 보고로 이어 봅니다. NVIDIA 스킬(build.nvidia.com NIM, <Term k="AgentSkills" />, <Term k="NemoClaw" /> · <Term k="OpenShell" /> · <Term k="OpenClaw" />) 위에 만든
+          <b> STEP 2 FlyVigilance</b>는 시판 후 허가 약물의 <Term k="FAERS" ko /> 이상사례 보고를 분류하고 신호를 평가하며, 허가된 <Term k="niraparib">니라파립</Term>(PARP1 억제 항암제)을 예시로 시판 전 탐색과 실제 시판 후 보고를 연결합니다. NVIDIA 스킬(build.nvidia.com NIM, <Term k="AgentSkills" />, <Term k="NemoClaw" /> · <Term k="OpenShell" /> · <Term k="OpenClaw" />) 기반
           에이전트 워크플로이며, NVIDIA <Term k="Nemotron" />과 함께 <b style={{ color: 'var(--jev)' }}><Term k="NAR">비자기회귀 판단 모델</Term></b>(글을 생성하지 않고 확률을 한 번에 돌려주는 모델)을 써서 빠른 속도와 통계적으로 유의한 개선을 얻었습니다.</>,
-          <><b>STEP 1 FlyDiscovery</b> uses BioNeMo <Term k="NIM" ko /> to predict whether pre-market drug candidates bind their <Term k="target">target</Term> (the protein a drug acts on) and scores the predictions against established reference standards.
-          <b> STEP 2 FlyVigilance</b> triages adverse-event reports for marketed drugs from the <Term k="FAERS" ko /> and evaluates safety signals. The demo retraces the pre-market stage with the already-approved <Term k="niraparib">niraparib</Term> (a PARP1-inhibiting cancer drug) as the example drug, then follows the same drug into its real post-market reports. FlyGate is an agentic workflow built on NVIDIA Skills (build.nvidia.com NIM, <Term k="AgentSkills" />, <Term k="NemoClaw" /> · <Term k="OpenShell" /> · <Term k="OpenClaw" />),
+          <><b>STEP 1 FlyDiscovery</b> uses BioNeMo <Term k="NIM" ko /> to predict binding to a <Term k="target">target</Term> (the protein a drug acts on) and evaluates it against reference standards, while
+          <b> STEP 2 FlyVigilance</b> triages <Term k="FAERS" ko /> reports and evaluates safety signals. The approved drug <Term k="niraparib">niraparib</Term> (a PARP1-inhibiting cancer drug) links reproduced pre-market exploration to real post-market reports in an agentic workflow built on NVIDIA Skills (build.nvidia.com NIM, <Term k="AgentSkills" />, <Term k="NemoClaw" /> · <Term k="OpenShell" /> · <Term k="OpenClaw" />),
           pairing NVIDIA <Term k="Nemotron" /> with a <b style={{ color: 'var(--jev)' }}><Term k="NAR">non-autoregressive judgment model</Term></b> (a model that returns probabilities in a single pass instead of generating text), for high speed and statistically significant improvements.</>)}
         right={<div className="stack" style={{ gap: 8, alignItems: 'flex-end' }}>
           <a className="btn primary" href={REEL()} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>{t('▶ 쇼릴 영상 v4.3', '▶ Showreel v4.3')}</a>
@@ -137,13 +135,10 @@ export default function Overview() {
           </div>
         </div>} />
 
-      <div className="row between" style={{ margin: '4px 0 10px' }}>
-        <div className="row" style={{ gap: 10, alignItems: 'baseline' }}>
-          <span className="eyebrow" style={{ color: 'var(--c-sense)' }}>Architecture · connectome-routed agent</span>
-          <span className="dim" style={{ fontSize: 12.5 }}>{t('뇌의 층이 곧 에이전트의 층입니다. 노드를 누르면 해당 뉴런 집단이 커넥텀(뉴런 연결 배선도)에서 켜집니다', 'The layers of the brain are the layers of the agent. Click a node to light up its neuron population in the connectome (the wiring diagram of neurons).')}</span>
-        </div>
-      </div>
-      <div style={{ marginBottom: 16 }}><Architecture embedded /></div>
+      <Card title={t('플랫폼 아키텍처', 'Platform architecture')} style={{ marginBottom: 16 }}>
+        <p className="dim">{t('커넥텀(뉴런 연결 배선도)의 층 구조를 에이전트 라우팅에 적용합니다. 문서에서 처리 층과 뉴런 집단의 연결을 확인할 수 있습니다.', 'The layered connectome (the wiring diagram of neurons) informs agent routing. The documentation maps processing layers to neuron populations.')}</p>
+        <a className="btn ghost" href="#/architecture">{t('아키텍처 문서', 'Architecture documentation')}</a>
+      </Card>
 
       <Card title={t('Project-FlyGate 아키텍처', 'Project-FlyGate architecture')} style={{ marginBottom: 16 }}
         sub={t(<>NVIDIA NemoClaw(OpenShell · OpenClaw) 위에서 STEP 1 FlyDiscovery(시판 전 · BioNeMo NIM)와 STEP 2 FlyVigilance(시판 후 · Nemotron)가 근거 관문을 거쳐 사람 승인으로 이어집니다</>,
@@ -180,14 +175,14 @@ export default function Overview() {
         </div>
         <div className="grid g4" style={{ gap: 12, marginTop: 12 }}>
           <div style={{ ...tile, boxShadow: 'inset 3px 0 0 #4d8dff' }}>
-            <div className="mono dim" style={{ fontSize: 10.5, letterSpacing: 0.6 }}><Term k="refset">{t('참조 세트', 'Reference set')}</Term> <Term k="AUC" /> · {knowLabel}</div>
-            <div style={{ fontSize: 11, color: 'var(--text-3)', marginTop: 2 }}>{t('AUC 0.5 무작위 · 1 완벽', 'AUC (area under the curve) 0.5 = random · 1 = perfect')}</div>
+            <div className="mono dim" style={{ fontSize: 11.5, letterSpacing: 0.6 }}><Term k="refset">{t('참조 세트', 'Reference set')}</Term> <Term k="AUC" /> · {knowLabel}</div>
+            <div style={{ fontSize: 11.5, color: 'var(--text-3)', marginTop: 2 }}>{t('AUC 0.5 무작위 · 1 완벽', 'AUC (area under the curve) 0.5 = random · 1 = perfect')}</div>
             <div className="stack" style={{ gap: 3, marginTop: 6 }}>
               {know.length ? know.map(({ k, m, best }) => (
                 <div key={k} className="row" style={{ gap: 8, fontSize: 12 }}>
                   <span style={{ width: 58, color: 'var(--text-2)' }}>{k}</span>
                   <span className="num" style={{ fontSize: 16, fontWeight: 600, color: '#4d8dff' }}>{m ? m.auc.toFixed(3) : '–'}</span>
-                  <span className="dim num" style={{ fontSize: 11 }}>{t('최고 통계', 'Best statistic')} {best ? `${methodLabel(best)} ${best.auc.toFixed(3)}` : '–'}</span>
+                  <span className="dim num" style={{ fontSize: 11.5 }}>{t('최고 통계', 'Best statistic')} {best ? `${methodLabel(best)} ${best.auc.toFixed(3)}` : '–'}</span>
                 </div>
               )) : '…'}
             </div>
@@ -203,14 +198,13 @@ export default function Overview() {
         </div>
       </Card>
 
-      <div className="row between" style={{ margin: '4px 0 10px' }}>
-        <div className="row" style={{ gap: 10, alignItems: 'baseline' }}>
-          <span className="eyebrow" style={{ color: '#e2a74e' }}>{t('에이전트 구성 · NemoClaw · OpenShell · OpenClaw', 'Agent setup · NemoClaw · OpenShell · OpenClaw')}</span>
-          <span className="dim" style={{ fontSize: 12.5 }}>{t('두 워크플로를 샌드박스 안의 에이전트 하나로 돌립니다. 보고와 인과성의 최종 판정은 사람이 합니다', 'One sandboxed agent runs both workflows. Final decisions on reporting and causality stay with humans.')}</span>
+      <Card title={t('에이전트 구성', 'Agent setup')} style={{ marginBottom: 16 }}>
+        <p className="dim">{t('NemoClaw · OpenShell · OpenClaw 기반 샌드박스 에이전트가 두 워크플로를 실행합니다. 보고와 인과성의 최종 판정은 사람이 담당합니다.', 'A sandboxed agent built on NemoClaw · OpenShell · OpenClaw runs both workflows. Humans make the final decisions on reporting and causality.')}</p>
+        <div className="row">
+          <a className="btn ghost" href="#/agent">{t('에이전트 문서', 'Agent documentation')}</a>
+          <a href="#/cli">{t('FlyGate Agent CLI', 'FlyGate Agent CLI')}</a>
         </div>
-        <a href="#/cli" style={{ fontSize: 12.5, textDecoration: 'none' }}>FlyGate Agent CLI →</a>
-      </div>
-      <div style={{ marginBottom: 16 }}><Agent embedded /></div>
+      </Card>
 
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0, 1fr)', gap: 16, marginBottom: 16, alignItems: 'stretch' }}>
         <Card title={t('기술 스택', 'Tech stack')} sub={t('각 부품이 맡은 일', 'What each component does')}>
@@ -236,12 +230,12 @@ export default function Overview() {
         <Card title={t('두 단계의 공통 원칙', 'One principle across both steps')} sub={t('주장마다 근거 ID를 붙이고, 근거를 넘는 주장은 크리틱이 반려합니다', 'Every claim carries an evidence ID, and the critic rejects claims that go beyond the evidence')}>
           <div className="grid g2" style={{ gap: 10 }}>
             <div style={{ padding: '10px 12px', borderRadius: 11, border: '1px solid rgba(255,93,108,0.3)', background: 'rgba(255,93,108,0.05)' }}>
-              <div className="row between"><span className="mono" style={{ fontSize: 10.5, color: 'var(--c-sense)' }}>{t('STEP 1 · 도킹 해석', 'STEP 1 · docking interpretation')}</span><span className="chip bad" style={{ fontSize: 10 }}>{t('반려', 'Rejected')}</span></div>
+              <div className="row between"><span className="mono" style={{ fontSize: 11.5, color: 'var(--c-sense)' }}>{t('STEP 1 · 도킹 해석', 'STEP 1 · docking interpretation')}</span><span className="chip bad" style={{ fontSize: 11.5 }}>{t('반려', 'Rejected')}</span></div>
               <div style={{ fontSize: 12.5, margin: '6px 0 4px' }}>“{claim(reject1?.[0])}”</div>
               <div className="dim" style={{ fontSize: 11.5 }}>{t('두 숫자는 모두 실측이지만 다른 단백질의 도킹 점수는 서로 비교할 수 없습니다', 'Both numbers are real measurements, but docking scores for different proteins cannot be compared with each other')}</div>
             </div>
             <div style={{ padding: '10px 12px', borderRadius: 11, border: '1px solid rgba(255,93,108,0.3)', background: 'rgba(255,93,108,0.05)' }}>
-              <div className="row between"><span className="mono" style={{ fontSize: 10.5, color: 'var(--nvidia)' }}>{t('STEP 2 · 신호 해석', 'STEP 2 · signal interpretation')}</span><span className="chip bad" style={{ fontSize: 10 }}>{t('반려', 'Rejected')}{p1Issue ? ` · T3 ${p1Issue.rule}${p1Issue.p !== null ? ` p ${p1Issue.p.toFixed(2)}` : ''}` : ''}</span></div>
+              <div className="row between"><span className="mono" style={{ fontSize: 11.5, color: 'var(--nvidia)' }}>{t('STEP 2 · 신호 해석', 'STEP 2 · signal interpretation')}</span><span className="chip bad" style={{ fontSize: 11.5 }}>{t('반려', 'Rejected')}{p1Issue ? ` · T3 ${p1Issue.rule}${p1Issue.p !== null ? ` p ${p1Issue.p.toFixed(2)}` : ''}` : ''}</span></div>
               <div className="mono" style={{ fontSize: 11.5, margin: '6px 0 4px', color: 'var(--text)' }}>“{p1?.text ?? '…'}”</div>
               <div className="dim" style={{ fontSize: 11.5 }}>{t('불균형 지표는 보고 연관성이지 이 환자의 인과가 아닙니다 (규칙 R1)', 'A disproportionality measure shows an association among reports, not causation in this patient (rule R1)')}</div>
             </div>

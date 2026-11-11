@@ -67,8 +67,8 @@ export default function Problem() {
       n: '03', title: t(<>모든 건을 생성형 <Term k="LLM" />(대형 언어 모델)으로 읽으면 비싸고 느립니다</>, <>Reading every case with a generative <Term k="LLM" /> (large language model) is expensive and slow</>),
       fact: t(<>예/아니오 한 줄을 받는 선별에도 생성형 모델은 건당 입력 322 + 출력 47 <Term k="token">토큰</Term>, 지연 중앙값 1.67초를 썼습니다. 분기 40만 건이면 순차로 186시간입니다.</>,
         <>Even for yes/no screening, a generative model used 322 input + 47 output <Term k="token">tokens</Term> per case with a median latency of 1.67 s. At 400,000 reports per quarter, that is 186 hours run sequentially.</>),
-      src: t(<>팀 선행 실측: Nemotron 3 Super, niraparib 상위 10건 (korea-agentic-hackathon-2026 triage-scale)</>,
-        <>Team’s earlier measurement: Nemotron 3 Super, top 10 niraparib cases (korea-agentic-hackathon-2026 triage-scale)</>),
+      src: t(<>팀 선행 실측: Nemotron 3 Super, niraparib 상위 10건</>,
+        <>Team’s earlier measurement: Nemotron 3 Super, top 10 niraparib cases</>),
       principle: t('희소 확장 코딩', 'Sparse expansion coding'), brain: t(<><Term k="mushroom">Kenyon cell</Term> {fmt.int(4064)}개 중 소수만 발화하고 소수의 출력 뉴런(MBON)이 읽습니다</>, <>Only a few of {fmt.int(4064)} <Term k="mushroom">Kenyon cells</Term> fire, and a small set of output neurons (MBONs) reads them</>), layer: 'memory',
       fix: t(<>확률만 필요한 판단은 비자기회귀 판단 모델을 함께 써서 모든 건을 싸게 처리하고, 애매하거나 중대·예상외인 건만 NVIDIA <Term k="Nemotron" />의 숙고로 올립니다. 통계는 <Term k="SQL">SQL</Term>이 계산하고, 공개 <Term k="refset">참조 세트</Term>로 이 배치를 검증했습니다</>,
         <>Judgments that only need a probability also use the non-autoregressive judgment model, so every case is processed cheaply; only ambiguous, serious, or unexpected cases are escalated to NVIDIA <Term k="Nemotron" /> for deliberation. Statistics are computed in <Term k="SQL">SQL</Term>, and this split was validated against public <Term k="refset">reference sets</Term></>),
@@ -127,9 +127,9 @@ export default function Problem() {
 
   return (
     <div className="page">
-      <PageHead eyebrow="Problem framing · why FlyVigilance"
-        title={t(<><Term k="PV">약물감시</Term>의 병목은 <span style={{ color: 'var(--bad)' }}>양</span>이 아니라 <span style={{ color: 'var(--c-sense)' }}>배분</span>입니다</>,
-          <>The bottleneck in <Term k="PV">pharmacovigilance</Term> is not <span style={{ color: 'var(--bad)' }}>volume</span> but <span style={{ color: 'var(--c-sense)' }}>allocation</span></>)}
+      <PageHead eyebrow={t('약물감시 과제와 설계 원칙', 'Pharmacovigilance challenges and design principles')}
+        title={t(<><Term k="PV">약물감시</Term>의 <span style={{ color: 'var(--bad)' }}>처리량</span>과 <span style={{ color: 'var(--c-sense)' }}>검토 자원 배분</span></>,
+          <><span style={{ color: 'var(--bad)' }}>Report volume</span> and <span style={{ color: 'var(--c-sense)' }}>review allocation</span> in <Term k="PV">pharmacovigilance</Term></>)}
         lede={t(<>약물감시(PV)는 시판된 약의 <Term k="AE">이상사례</Term> 보고를 모아 위험을 찾아내는 일입니다. 모든 이상사례를 같은 비용으로 읽는 구조가 문제입니다. 초파리 뇌는 16만 개 뉴런으로 이 문제를 이미 풀었습니다. 감각은 넓게 받고, 반사는 싸게, 기억은 희소하게, 숙고는 드물게, 행동은 좁은 병목으로 냅니다. 우리는 그 배선 원리(<Term k="connectome">커넥텀</Term>)를 NVIDIA 스킬 위에 짠 에이전트 워크플로의 라우팅에 옮겼습니다. 처음 보는 용어는 점선 밑줄에 마우스를 올리거나 눌러 보시고, 전체 목록은 <a href="#/glossary">용어 풀이</a>에 있습니다.</>,
           <>Pharmacovigilance (PV) means collecting <Term k="AE">adverse event</Term> reports for marketed drugs to find risks. The problem is a structure that reads every adverse event at the same cost. The fruit fly brain already solved this with about 160,000 neurons: it senses broadly, reflexes cheaply, remembers sparsely, deliberates rarely, and acts through a narrow bottleneck. We carried that wiring principle (the <Term k="connectome">connectome</Term>) into the routing of an agentic workflow built on NVIDIA Skills. Hover over or tap any dotted-underlined term for an explanation; the full list is in the <a href="#/glossary">Glossary</a>.</>)} />
 
@@ -161,10 +161,10 @@ export default function Problem() {
       <Card style={{ marginTop: 16 }}>
         <div className="note" style={{ fontSize: 12.5 }}>
           {t(<>
-          <b>경계를 분명히 합니다.</b> 커넥텀은 설계 원리와 실시간 라우팅 시각화를 줍니다. 임상 판단의 근거는 FAERS, 라벨, 문헌이고, 판단은 FlyVigilance의 숙고 층(NVIDIA Nemotron)·반사 층(비자기회귀 판단 모델 병용)과 사람이 합니다.
+          <b>적용 범위와 한계.</b> 커넥텀은 설계 원리와 실시간 라우팅 시각화를 제공합니다. 임상 판단의 근거는 FAERS, 라벨, 문헌이고, 판단은 FlyVigilance의 숙고 층(NVIDIA Nemotron)·반사 층(비자기회귀 판단 모델 병용)과 사람이 합니다.
           초파리 뇌가 약물 안전성을 “이해”한다고 주장하지 않습니다. 배선도는 어디로 보낼지를 말해 주지 무엇이 옳은지를 말해 주지 않습니다.
           </>, <>
-          <b>Clear boundaries.</b> The connectome provides a design principle and a real-time routing visualization. The evidence for clinical judgment is FAERS, drug labels, and the literature, and judgments are made by FlyVigilance’s deliberative layer (NVIDIA Nemotron), its reflex layer (paired with the non-autoregressive judgment model), and humans.
+          <b>Scope and limitations.</b> The connectome provides a design principle and a real-time routing visualization. The evidence for clinical judgment is FAERS, drug labels, and the literature, and judgments are made by FlyVigilance’s deliberative layer (NVIDIA Nemotron), its reflex layer (paired with the non-autoregressive judgment model), and humans.
           We do not claim that a fly brain “understands” drug safety. A wiring diagram tells you where to send something, not what is right.
           </>)}
         </div>
