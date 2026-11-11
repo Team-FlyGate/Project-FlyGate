@@ -1,6 +1,11 @@
 [한국어](README.md) · **English**
 
 <p align="center">
+  <img src="docs/images/flygate-1st-place-banner_v1.0.0.svg" width="100%" alt="1st Place — NVIDIA Korea Agentic AI Hackathon 2026 · Team FlyGate">
+</p>
+<p align="center"><strong>🏆 1st Place — NVIDIA Korea Agentic AI Hackathon 2026 Finals</strong></p>
+
+<p align="center">
   <a href="https://flygate.kr"><img src="docs/images/flygate-hero_v2.0.0.png" width="100%" alt="FlyGate — From molecule to patient, evidence before inference."></a>
 </p>
 

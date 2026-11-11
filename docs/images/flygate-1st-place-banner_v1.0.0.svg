@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 440" width="1600" height="440" role="img" aria-label="1st Place — NVIDIA Korea Agentic AI Hackathon 2026 · Team FlyGate">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#030503"/>
+      <stop offset="0.55" stop-color="#0a1404"/>
+      <stop offset="1" stop-color="#132a02"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.2" cy="0.5" r="0.55">
+      <stop offset="0" stop-color="#76b900" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#76b900" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3b0"/>
+      <stop offset="0.45" stop-color="#f2c94c"/>
+      <stop offset="1" stop-color="#b8860b"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a6e22e"/>
+      <stop offset="1" stop-color="#76b900"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="440" rx="28" fill="url(#bg)"/>
+  <rect width="1600" height="440" rx="28" fill="url(#glow)"/>
+  <rect x="6" y="6" width="1588" height="428" rx="24" fill="none" stroke="#76b900" stroke-opacity="0.55" stroke-width="3"/>
+
+  <!-- 메달 -->
+  <g transform="translate(250 220)">
+    <path d="M-70 -190 L-20 -60 L20 -60 L70 -190 L35 -190 L0 -100 L-35 -190 Z" fill="#76b900"/>
+    <circle r="132" fill="url(#gold)"/>
+    <circle r="112" fill="none" stroke="#fff6cc" stroke-opacity="0.7" stroke-width="4"/>
+    <text y="62" text-anchor="middle" font-family="Helvetica Neue, Arial, sans-serif" font-weight="900" font-size="190" fill="#5a3d00">1</text>
+  </g>
+
+  <!-- 글 -->
+  <text x="470" y="200" font-family="Helvetica Neue, Arial, sans-serif" font-weight="900" font-size="150" letter-spacing="2" fill="url(#gold)">1ST PLACE</text>
+  <text x="474" y="275" font-family="Helvetica Neue, Arial, sans-serif" font-weight="800" font-size="44" letter-spacing="0" textLength="1060" lengthAdjust="spacingAndGlyphs" fill="url(#green)">NVIDIA KOREA AGENTIC AI HACKATHON 2026</text>
+  <text x="476" y="335" font-family="Helvetica Neue, Arial, sans-serif" font-weight="600" font-size="32" letter-spacing="3" fill="#e9efe2">TEAM FLYGATE · FINALS · AI DAY SEOUL · NOV 10, 2026</text>
+  <text x="476" y="385" font-family="Helvetica Neue, Arial, sans-serif" font-weight="500" font-size="26" fill="#9fb08a">Evidence before inference — from molecule to patient.</text>
+</svg>
