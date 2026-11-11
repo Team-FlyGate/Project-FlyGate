@@ -1,7 +1,11 @@
 <p align="center">
-  <img src="docs/images/flygate-1st-place-banner_v1.0.0.svg" width="100%" alt="1위 — NVIDIA Korea Agentic AI Hackathon 2026 · Team FlyGate">
+  <img src="docs/images/flygate-1st-place-banner_v1.0.0.svg" width="100%" alt="1위 — NVIDIA Agentic AI Hackathon 2026 · Team FlyGate">
 </p>
-<p align="center"><strong>🏆 NVIDIA Korea Agentic AI Hackathon 2026 결선 1위</strong></p>
+<p align="center"><strong>🏆 NVIDIA Agentic AI Hackathon 2026 결선 1위</strong></p>
+<p align="center">
+  <img src="docs/images/flygate-award-1st-place_v1.0.0.jpg" width="49%" alt="NVIDIA Agentic AI Hackathon 1st Place 2026 수상 보드">
+  <img src="docs/images/flygate-award-certificate_v1.0.0.jpg" width="49%" alt="NVIDIA Agentic AI Hackathon 상장 — FlyGate">
+</p>
 
 <p align="center">
   <a href="https://gitreels.com/Team-FlyGate/Project-FlyGate"><img src="https://gitreels.com/Team-FlyGate/Project-FlyGate.webp" alt="Team-FlyGate/Project-FlyGate in 15 seconds" width="100%"></a>
