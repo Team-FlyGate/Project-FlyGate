@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://gitreels.com/Team-FlyGate/Project-FlyGate"><img src="https://gitreels.com/Team-FlyGate/Project-FlyGate.webp" alt="Team-FlyGate/Project-FlyGate in 15 seconds" width="100%"></a>
+  <br>
+  <a href="https://gitreels.com"><img src="https://gitreels.com/badge.svg" alt="Made with GitReels" height="24"></a>
+</p>
+
 **한국어** · [English](README.en.md)
 
 <p align="center">
