@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/images/flygate-1st-place-banner_v1.0.0.svg" width="100%" alt="1st Place — NVIDIA Agentic AI Hackathon 2026 · Team FlyGate">
+  <img src="docs/images/flygate-1st-place-banner_v2.0.0.jpg" width="100%" alt="1st Place — NVIDIA Agentic AI Hackathon 2026 · Team FlyGate">
 </p>
 <p align="center"><strong>🏆 1st Place — NVIDIA Agentic AI Hackathon 2026 Finals</strong></p>
 <p align="center">
