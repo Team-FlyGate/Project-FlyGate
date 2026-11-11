@@ -1,15 +1,15 @@
 <p align="center">
+  <img src="docs/images/flygate-1st-place-banner_v1.0.0.svg" width="100%" alt="1위 — NVIDIA Korea Agentic AI Hackathon 2026 · Team FlyGate">
+</p>
+<p align="center"><strong>🏆 NVIDIA Korea Agentic AI Hackathon 2026 결선 1위</strong></p>
+
+<p align="center">
   <a href="https://gitreels.com/Team-FlyGate/Project-FlyGate"><img src="https://gitreels.com/Team-FlyGate/Project-FlyGate.webp" alt="Team-FlyGate/Project-FlyGate in 15 seconds" width="100%"></a>
   <br>
   <a href="https://gitreels.com"><img src="https://gitreels.com/badge.svg" alt="Made with GitReels" height="24"></a>
 </p>
 
 **한국어** · [English](README.en.md)
-
-<p align="center">
-  <img src="docs/images/flygate-1st-place-banner_v1.0.0.svg" width="100%" alt="1위 — NVIDIA Korea Agentic AI Hackathon 2026 · Team FlyGate">
-</p>
-<p align="center"><strong>🏆 NVIDIA Korea Agentic AI Hackathon 2026 결선 1위</strong></p>
 
 <p align="center">
   <a href="https://flygate.kr"><img src="docs/images/flygate-hero_v2.0.0.png" width="100%" alt="FlyGate — 분자에서 환자까지, 추론보다 근거가 먼저. Evidence before inference."></a>
