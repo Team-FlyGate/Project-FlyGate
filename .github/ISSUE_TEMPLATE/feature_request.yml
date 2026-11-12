@@ -1,0 +1,39 @@
+name: 기능 제안 · Feature request
+description: 있었으면 하는 기능이나 바꾸고 싶은 동작 · An idea or a change you would like
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 어떤 일을 하려다 막혔나요 · What are you trying to do
+      description: 기능보다 상황을 먼저 적어 주세요. 누가, 어떤 일을 하다가 필요해졌는지 · Describe the situation first — who needs it and for what task
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: 제안하는 해결 방법 · Proposed solution
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: 관련 영역 · Area
+      options:
+        - FlyDiscovery (시판 전 · pre-market)
+        - FlyVigilance (시판 후 · post-market)
+        - flygate CLI · 에이전트 · Agent
+        - 웹 화면 · Web UI
+        - 문서 · Docs
+        - 기타 · Other
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 지금은 어떻게 하고 있나요 · Current workaround
+  - type: checkboxes
+    id: principle
+    attributes:
+      label: 확인 · Check
+      options:
+        - label: 이 제안은 보고 여부와 인과성의 최종 판정을 사람에게 남겨 둡니다 · This keeps final reporting and causality decisions with people
+          required: true
