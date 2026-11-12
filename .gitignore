@@ -15,3 +15,6 @@ KakaoTalk_Photo_*
 .vercel
 .env*
 .claude/
+
+# .env.example 은 어떤 키가 필요한지 보여 주는 견본이라 커밋합니다
+!.env.example

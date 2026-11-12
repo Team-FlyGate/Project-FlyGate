@@ -572,4 +572,11 @@ main:focus { outline: none; }
   .mc-brain > .mc-inject { order: 2; padding: 4px 16px 12px; }
   .mc-brain > .mc-inject > .row { max-width: none !important; }
   .mc-brain > .mc-layers { order: 3; margin: 0 12px 14px; }
+}@media (max-width: 760px) {
+  /* 사례 분류: 사례 목록은 세 건쯤만 보이게 줄여(목록 안에서 밉니다) 실행 단추가 금방 나오게 하고, 여덟 단계 표시는 네 칸 두 줄로 줄입니다 */
+  .page .tri-queue { max-height: 236px !important; }
+  .page .tri-steps { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 4px !important; }
+  .tri-steps > div { padding: 6px !important; min-width: 0; }
+  .tri-steps > div > .dim { display: none; }
+  .tri-steps b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }

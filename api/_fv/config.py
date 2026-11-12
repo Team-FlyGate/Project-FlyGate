@@ -34,9 +34,13 @@ JEV_URL = "https://api.typesafe.ai/v1/systemone"
 JEV_MODEL = "jev-latest"
 NIM_URL = "https://integrate.api.nvidia.com/v1"
 
-# System-2 모델 사슬: 앞이 503 이면 다음으로 넘어간다
-MODEL_DELIBERATE = ["nvidia/nemotron-3-super-120b-a12b", "nvidia/nemotron-3-ultra-550b-a55b",
-                    "nvidia/nemotron-3.5-lightning-30b-a3b"]
+# System-2 모델 사슬: 앞 모델이 실패하거나(404 · 503 등) 제한 시간 안에 답하지 않으면 다음으로 넘어간다.
+# 빠른 Lightning 을 둘째에 둡니다. 예전 순서(Super → Ultra → Lightning)에서는 Ultra 가 응답 없이 남은 시간을 다 써서
+# Lightning 을 불러 보지도 못하고 실패했습니다(2026-11-12 운영에서 확인: Super HTTP 404, Ultra ReadTimeout, Lightning 시간 소진).
+MODEL_DELIBERATE = ["nvidia/nemotron-3-super-120b-a12b", "nvidia/nemotron-3.5-lightning-30b-a3b",
+                    "nvidia/nemotron-3-ultra-550b-a55b"]
+# 숙고 메모를 쓸 때 모델 하나가 쓸 수 있는 최대 대기 시간(초). 전체 예산(약 85초) 안에서 대체 모델에 시간이 남게 합니다.
+DELIBERATE_PER_MODEL_S = 35.0
 MODEL_FAST = ["nvidia/nemotron-3.5-lightning-30b-a3b", "nvidia/nemotron-nano-3-30b-a3b"]
 MODEL_EMBED = "nvidia/nemotron-3-embed-1b"
 # 문헌 후보 재정렬(교차 인코더)입니다. build.nvidia.com 에서 2026-09-28 에 응답을 확인한 공개 Nemotron 리랭커입니다

@@ -44,7 +44,7 @@ function Stepper({ stage, timings }: { stage: Stage; timings: Record<string, num
   const reached = order[stage]
   return (
     // 가운데 열이 좁으면 여덟 단계를 두 줄로 접어 칸이 잘리지 않게 합니다
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(92px, 1fr))', gap: 6 }}>
+    <div className="tri-steps" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(92px, 1fr))', gap: 6 }}>
       {steps.map((s, i) => {
         const on = i < reached
         const active = i === reached && stage !== 'done' && stage !== 'idle'
@@ -404,7 +404,7 @@ export default function LiveTriage() {
             {buckets().map((b) => <button key={b.k} className={bucket === b.k ? 'on' : ''} onClick={() => setBucket(b.k)}>{b.l}</button>)}
           </div>
           <input className="input" placeholder={t('약물 또는 반응 검색', 'Search drug or reaction')} value={q} onChange={(e) => setQ(e.target.value)} />
-          <div style={{ maxHeight: 640, overflowY: 'auto', marginTop: 10, marginRight: -8, paddingRight: 8 }} className="stack">
+          <div style={{ maxHeight: 640, overflowY: 'auto', marginTop: 10, marginRight: -8, paddingRight: 8 }} className="stack tri-queue">
             {list.slice(0, 200).map((c) => {
               const ps = c.drugs.find((d) => d.role === 'PS')?.drug ?? c.drugs[0]?.drug
               const on = sel?.primaryid === c.primaryid

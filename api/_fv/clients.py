@@ -42,8 +42,12 @@ async def jev(state: str, questions: dict, client: httpx.AsyncClient | None = No
 
 async def nim_chat(messages: list, models: list[str], max_tokens: int = 1200, temperature: float = 0.2,
                    client: httpx.AsyncClient | None = None, deadline: float | None = None, json_mode: bool = False,
-                   template_kwargs: dict | None = None, purpose: str | None = None) -> dict:
+                   template_kwargs: dict | None = None, purpose: str | None = None,
+                   per_model_s: float | None = None) -> dict:
     """NVIDIA NIM chat/completions. 모델 사슬을 따라 폴백하고 사고 과정은 끈다.
+
+    per_model_s 는 모델 하나가 쓸 수 있는 최대 대기 시간(초)입니다. 주지 않으면 한 모델이 남은 시간을 전부 쓸 수 있어,
+    앞 모델이 응답 없이 시간을 다 쓰면 뒤의 대체 모델은 불러 보지도 못합니다. 사슬이 둘 이상이면 주는 편이 안전합니다.
 
     deadline(time.monotonic 기준)이 있으면 모든 시도를 그 안에서 끝냅니다. 서버리스 함수 제한 시간을 넘기지 않으려는 장치입니다.
     시간 초과는 같은 모델로 다시 시도하지 않고 다음 모델로 넘어갑니다.
@@ -76,10 +80,11 @@ async def nim_chat(messages: list, models: list[str], max_tokens: int = 1200, te
                 extra = {"json_mode": use_json, "attempt": attempt + 1, "max_tokens": max_tokens,
                          "template": "+".join(sorted(k for k in (template_kwargs or {}) if k != "enable_thinking")) or None,
                          "fallback_of": models[0] if model != models[0] else None} if log else None
+                wait_s = min(x for x in (90.0, left, per_model_s) if x)
                 try:
                     r = await client.post(url, json=body,
                                           headers={"Authorization": f"Bearer {config.NVIDIA_API_KEY}"},
-                                          timeout=httpx.Timeout(min(90.0, left) if left else 90.0, connect=10.0))
+                                          timeout=httpx.Timeout(wait_s, connect=min(10.0, wait_s)))
                 except httpx.TimeoutException as e:
                     errors.append(f"{model}: {type(e).__name__}")
                     if log:

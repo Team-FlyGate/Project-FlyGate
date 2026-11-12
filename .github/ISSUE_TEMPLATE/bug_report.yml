@@ -1,0 +1,51 @@
+name: 버그 제보 · Bug report
+description: 동작이 설명과 다르거나 오류가 날 때 · Something does not work as described
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        제보해 주셔서 고맙습니다. API 키나 실제 환자를 식별할 수 있는 자료는 붙이지 마세요.
+        Thanks for reporting. Please do not paste API keys or anything that could identify a real patient.
+  - type: dropdown
+    id: area
+    attributes:
+      label: 어디에서 생겼나요 · Where
+      options:
+        - flygate CLI
+        - 웹 (flygate.kr) · Web
+        - API
+        - OpenShell 샌드박스 · Sandbox
+        - 문서 · Docs
+        - 기타 · Other
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: 무슨 일이 있었나요 · What happened
+      description: 기대한 동작과 실제 동작을 함께 적어 주세요 · What you expected and what you got
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: 재현 방법 · Steps to reproduce
+      description: 실행한 명령이나 누른 순서 · The command you ran or the steps you took
+      placeholder: |
+        1. flygate triage agent/examples/case_niraparib.json
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: 오류 메시지 · 출력 · Error output
+      description: 키는 지우고 붙여 주세요 · Remove keys before pasting
+      render: text
+  - type: input
+    id: env
+    attributes:
+      label: 환경 · Environment
+      description: 운영체제, Python 버전, 브라우저(웹인 경우) · OS, Python version, browser (for the web)
+      placeholder: "Ubuntu 24.04 · Python 3.12 · Chrome 141 (Android)"
