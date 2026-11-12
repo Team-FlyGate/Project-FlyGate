@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { mh } from '../lib/mobile'
 import BrainView from '../components/BrainView'
 import { Card, PageHead, ProbBar } from '../components/ui'
 import { useBrain } from '../lib/brain'
@@ -313,12 +314,12 @@ export default function KoreanPV() {
         </div>
 
         <div className="stack" style={{ gap: 16, position: 'sticky', top: 0 }}>
-          <Card className="flush" style={{ height: 380 }}>
+          <Card className="flush" style={{ height: mh(380, 260) }}>
             <div style={{ position: 'absolute', left: 16, top: 12, zIndex: 2 }}>
               <div className="eyebrow" style={{ color: 'var(--text-3)' }}>Connectome state</div>
               <div style={{ fontSize: 12.5, marginTop: 2 }}>{hl ? `${hl} layer engaged` : 'resting stream'}</div>
             </div>
-            <BrainView height={380} highlight={hl} view="front" bloom={1.1} />
+            <BrainView height={mh(380, 260)} highlight={hl} view="front" bloom={1.1} />
           </Card>
           <Card title={t('국내 약물감시 흐름', 'Pharmacovigilance in Korea')} sub={t('팀 문서 「국내 PV 흐름 설명」 요약', 'Summary of the team document "Korean PV workflow explained"')}>
             <ol style={{ margin: 0, paddingLeft: 18, fontSize: 12.5, lineHeight: 1.8, color: 'var(--text-2)' }}>{t(<>

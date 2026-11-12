@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { mh } from '../lib/mobile'
 import BrainView from '../components/BrainView'
 import { Card, Kpi, PageHead, Spark } from '../components/ui'
 import { useBrain } from '../lib/brain'
@@ -176,15 +177,15 @@ export default function MissionControl() {
         </div>} />
 
       <div className="grid" style={{ gridTemplateColumns: 'minmax(0, 1.75fr) minmax(320px, 1fr)', marginBottom: 16 }}>
-        <Card className="flush" style={{ minHeight: 600 }}>
-          <div style={{ position: 'absolute', left: 20, top: 16, zIndex: 2 }}>
+        <Card className="flush mc-brain" style={{ minHeight: 600 }}>
+          <div className="mc-head" style={{ position: 'absolute', left: 20, top: 16, zIndex: 2 }}>
             <div className="eyebrow" style={{ color: 'var(--text-3)' }}>Live connectome · 30 Hz rate model</div>
             <div style={{ fontFamily: 'var(--font)', fontSize: 15, marginTop: 4 }}>
               {conn ? <>{fmt.int(conn.meta.neurons)} neurons · {fmt.compact(conn.meta.edges)} connections · {fmt.compact(conn.meta.synapses)} synapses</> : '…'}
             </div>
             <div className="mono dim" style={{ fontSize: 10.5, marginTop: 2 }}>t = {tick} · active {sim ? fmt.int(sim.spikes) : 0} neurons</div>
           </div>
-          <div style={{ position: 'absolute', right: 16, bottom: 16, zIndex: 2, width: 330, padding: 14, borderRadius: 14,
+          <div className="mc-layers" style={{ position: 'absolute', right: 16, bottom: 16, zIndex: 2, width: 330, padding: 14, borderRadius: 14,
             background: 'rgba(5,9,18,0.72)', border: '1px solid var(--line)', backdropFilter: 'blur(10px)' }}>
             <div className="row between" style={{ marginBottom: 8 }}>
               <span className="eyebrow" style={{ color: 'var(--text-2)' }}>Layer activity</span>
@@ -192,7 +193,7 @@ export default function MissionControl() {
             </div>
             <LayerMeter />
           </div>
-          <div style={{ position: 'absolute', left: 16, bottom: 16, zIndex: 2 }} className="stack">
+          <div style={{ position: 'absolute', left: 16, bottom: 16, zIndex: 2 }} className="stack mc-inject">
             <span className="eyebrow" style={{ color: 'var(--text-3)' }}>Inject data stream</span>
             <div className="row wrap" style={{ gap: 6, maxWidth: 360 }}>
               {conn?.meta.channels.filter((c) => c.key !== 'none').map((c) => (
@@ -203,7 +204,7 @@ export default function MissionControl() {
               ))}
             </div>
           </div>
-          <BrainView height={600} />
+          <BrainView height={mh(600, 320)} />
         </Card>
 
         <div className="stack" style={{ gap: 16 }}>

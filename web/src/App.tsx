@@ -124,9 +124,18 @@ export default function App() {
   const [health, setHealth] = useState<Health | null>(null)
   const [healthErr, setHealthErr] = useState(false)
   const [reel, setReel] = useState(false)
+  // 폰에서는 사이드바가 서랍으로 열립니다. 화면을 옮기거나 Esc 를 누르면 닫습니다
+  const [menu, setMenu] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
   useEffect(() => { api<Health>('/api/health').then(setHealth).catch(() => setHealthErr(true)) }, [])
   useEffect(() => {
+    if (!menu) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenu(false) }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [menu])
+  useEffect(() => {
+    setMenu(false)
     document.querySelector('.main')?.scrollTo({ top: 0 })
     document.querySelector('.landing-scroll')?.scrollTo({ top: 0 })
     window.scrollTo({ top: 0 })
@@ -161,6 +170,8 @@ export default function App() {
               <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="m8 5 12 7-12 7V5Z" fill="currentColor" /></svg>
               <span>{t('영상', 'Film')}</span>
             </button>
+            {/* 폰에서는 자리가 좁아 KO | EN 두 칸 대신 바꿀 언어 하나만 보여 줍니다 */}
+            <button type="button" className="lang-one" onClick={() => setLang(lang === 'ko' ? 'en' : 'ko')} aria-label={t('영어로 보기', '한국어로 보기')} lang={lang === 'ko' ? 'en' : 'ko'}>{lang === 'ko' ? 'EN' : 'KO'}</button>
             <div className="lang-toggle" role="group" aria-label={t('언어 선택', 'Language')}>
               <button type="button" className={lang === 'ko' ? 'on' : ''} aria-pressed={lang === 'ko'} onClick={() => setLang('ko')} lang="ko" title="한국어">KO</button>
               <button type="button" className={lang === 'en' ? 'on' : ''} aria-pressed={lang === 'en'} onClick={() => setLang('en')} lang="en" title="English">EN</button>
@@ -176,7 +187,14 @@ export default function App() {
           <main className="landing-scroll" ref={mainRef} tabIndex={-1}><NotFound page={page} /></main>
         ) : (
           <div className="shell">
-            <nav className="nav" aria-label={area.name} style={{ ['--area' as string]: area.color }}>
+            <button type="button" className="nav-toggle" onClick={() => setMenu(true)} aria-expanded={menu} aria-controls="side-nav" style={{ ['--area' as string]: area.color }}>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+              <span className="nav-toggle-label"><small>{area.name}</small><b>{cur.label}</b></span>
+              <span className="nav-toggle-more">{t('메뉴', 'Menu')}</span>
+            </button>
+            {menu && <button type="button" className="nav-backdrop" aria-label={t('메뉴 닫기', 'Close menu')} onClick={() => setMenu(false)} />}
+            <nav id="side-nav" className={`nav ${menu ? 'open' : ''}`} aria-label={area.name} style={{ ['--area' as string]: area.color }}>
+              <button type="button" className="nav-close" onClick={() => setMenu(false)}>{t('닫기', 'Close')} ✕</button>
               <div className="nav-area">
                 <span>{area.step}</span>
                 <b>{area.name}</b>
@@ -186,7 +204,7 @@ export default function App() {
                 <div key={si} style={{ display: 'contents' }}>
                   {s.title && <div className="nav-sec">{s.title}</div>}
                   {s.pages.map((p) => (
-                    <a key={p.id} href={`#/${p.id}`} className={`nav-item ${p.id === cur.id ? 'active' : ''}`} aria-current={p.id === cur.id ? 'page' : undefined}>
+                    <a key={p.id} href={`#/${p.id}`} onClick={() => setMenu(false)} className={`nav-item ${p.id === cur.id ? 'active' : ''}`} aria-current={p.id === cur.id ? 'page' : undefined}>
                       {p.icon}
                       <span className="lbl">{p.label}<small>{p.en}</small></span>
                     </a>

@@ -464,3 +464,112 @@ main:focus { outline: none; }
 .lang-toggle button.on { color: var(--text); background: rgba(55, 230, 255, 0.12); }
 .lang-toggle button:focus-visible { outline: 2px solid var(--c-sense); outline-offset: -2px; }
 @media (max-width: 760px) { .lang-toggle { align-self: center; margin: 0 8px 0 0; } }
+
+/* ---------- 모바일(760px 이하) 정리 ----------
+   페이지들이 데스크톱 배치를 인라인 스타일로 적어 둔 곳이 많아, 여기서는 그 값을 !important 로 덮어 한 줄로 쌓습니다.
+   1 다단 배치 접기 · 2 사이드바 서랍 · 3 글자 · 누르는 영역 키우기 · 5 표 가로 스크롤 · 6 긴 소개 문단 접기
+   (4 3D 장면 높이는 lib/mobile.ts 의 mh() 로, 7 대문은 Landing.css 에서 다룹니다) */
+.nav-toggle, .nav-close, .nav-backdrop, .lede-more { display: none; }
+@media (max-width: 760px) {
+  body { font-size: 15px; }
+
+  /* 2. 사이드바는 서랍으로: 본문 위에는 지금 화면 이름이 적힌 메뉴 단추 한 줄만 둡니다 */
+  .nav-toggle {
+    display: flex; align-items: center; gap: 12px; width: 100%; min-height: 52px; padding: 8px 14px; position: sticky; top: 52px; z-index: 6;
+    border: 0; border-bottom: 1px solid var(--line); background: rgba(5, 8, 16, 0.96); color: var(--text); text-align: left; cursor: pointer;
+  }
+  .nav-toggle-label { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+  .nav-toggle-label small { font-family: var(--mono); font-size: 11.5px; letter-spacing: .6px; color: var(--area); }
+  .nav-toggle-label b { font-family: var(--font); font-size: 15.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .nav-toggle-more { flex: none; font-size: 12.5px; color: var(--text-2); padding: 6px 10px; border: 1px solid var(--line-2); border-radius: 9px; }
+  .shell > .nav {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 60; width: min(86vw, 330px); max-width: none; flex-direction: column; align-items: stretch;
+    gap: 2px; padding: 12px 12px 20px; overflow-x: hidden; overflow-y: auto; background: #060a14; border-right: 1px solid var(--line-2);
+    transform: translateX(-104%); visibility: hidden; transition: transform .2s ease, visibility .2s;
+  }
+  .shell > .nav.open { transform: none; visibility: visible; box-shadow: 30px 0 80px rgba(0, 0, 0, 0.6); }
+  .nav-backdrop { display: block; position: fixed; inset: 0; z-index: 55; border: 0; background: rgba(0, 0, 0, 0.62); }
+  .shell > .nav .nav-close { display: block; align-self: flex-end; min-height: 40px; padding: 6px 12px; border: 1px solid var(--line-2); border-radius: 9px; background: none; color: var(--text-2); font-size: 13px; cursor: pointer; }
+  .shell > .nav .nav-area, .shell > .nav .nav-cross { display: flex; }
+  .shell > .nav .nav-sec, .shell > .nav .nav-foot { display: block; }
+  .shell > .nav .nav-item { min-height: 48px; padding: 8px 10px; white-space: normal; font-size: 15px; }
+  .shell > .nav .nav-item .lbl small { display: block; font-size: 12px; }
+  .shell > .nav .nav-sec { font-size: 11.5px; padding-top: 16px; }
+  .shell > .nav .status-row { font-size: 12px; }
+
+  /* 1. 다단 배치는 한 줄로 쌓고, 따라다니던(sticky) 옆 칸은 제자리에 둡니다 */
+  .page { padding: 16px 14px 44px; overflow-x: clip; }
+  .page-head { flex-direction: column; align-items: stretch; gap: 12px; margin-bottom: 16px; }
+  .page-head > :not(:first-child) { justify-content: flex-start !important; align-items: flex-start !important; max-width: none !important; }
+  h1.title { font-size: 24px; line-height: 1.3; }
+  .page .g2, .page .g3, .page .g4, .page .g5, .page .grid[style*="grid-template-columns"]:not(.mono),
+  .page [style*="grid-template-columns: 220px"], .page [style*="grid-template-columns: 300px"], .page [style*="grid-template-columns: 340px"],
+  .page [style*="grid-template-columns: 360px"], .page [style*="grid-template-columns: 170px"], .page [style*="grid-template-columns: minmax(3"],
+  .page [style*="grid-template-columns: repeat("] { grid-template-columns: minmax(0, 1fr) !important; }
+  .page [style*="position: sticky"] { position: static !important; }
+  .page [style*="grid-column"] { grid-column: auto !important; }
+  .page .row { flex-wrap: wrap; }
+  .card { padding: 14px; overflow-x: auto; }
+  .card.flush { padding: 0; overflow: hidden; }
+  .card-head { flex-wrap: wrap; }
+  .flow { flex-direction: column; }
+  .flow-step { flex: none; }
+
+  /* 3. 글자를 키우고 누르는 영역을 넓힙니다. 인라인으로 적힌 작은 글자(9 ~ 12.5px)도 함께 올립니다 */
+  .page [style*="font-size: 9"], .page [style*="font-size: 10"], .page [style*="font-size: 11"] { font-size: 12.5px !important; }
+  .page [style*="font-size: 12px"], .page [style*="font-size: 12.5px"] { font-size: 13.5px !important; }
+  .lede { font-size: 15px; line-height: 1.65; max-width: none; }
+  .eyebrow { font-size: 12px; letter-spacing: 1.4px; }
+  .card-head p, .note { font-size: 13.5px; }
+  .chip { font-size: 12.5px; white-space: normal; }
+  .kpi .k-label, .kpi .k-hint { font-size: 12px; }
+  .kpi .k-sub { font-size: 13px; }
+  .nav-item .lbl small, .flow-step .fs-tech { font-size: 12px; }
+  .btn { min-height: 44px; white-space: normal; }
+  .seg { flex-wrap: wrap; }
+  .seg button, .tabs button { min-height: 40px; padding: 8px 14px; font-size: 14px; }
+  button.chip, a.chip { min-height: 36px; padding: 6px 12px; }
+  .input, .page select, .page textarea { min-height: 44px; font-size: 16px !important; }
+  .lang-toggle button { padding: 9px 11px; font-size: 12px; }
+  .topbar-reel { min-width: 40px; min-height: 38px; justify-content: center; }
+  .term-tip { font-size: 14px; }
+
+  /* 5. 넓은 표는 표 안에서만 옆으로 밉니다 */
+  .page table.tbl { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; font-size: 13.5px; }
+  .tbl th { position: static; font-size: 12px; white-space: nowrap; }
+  .tbl td { min-width: 76px; }
+  .codebox { font-size: 12.5px; }
+
+  /* 6. 긴 소개 문단은 세 줄까지만 보이고 '더 보기'로 펼칩니다 */
+  .lede.lede-clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+  .lede-more { display: inline-block; margin-top: 6px; min-height: 36px; padding: 4px 0; border: 0; background: none; color: var(--c-sense); font-size: 14px; cursor: pointer; }
+}
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) { .shell > .nav { transition: none; } }
+/* 폰 상단 바: 제품 탭 세 개가 한 줄에 다 보이도록 영상 단추는 대문에만 두고, 언어는 단추 하나로 줄입니다 */
+.lang-one { display: none; }
+@media (max-width: 760px) {
+  .topbar { gap: 6px; padding: 0 10px; }
+  .topbar-tabs { flex: 1; justify-content: center; gap: 0; }
+  .topbar-tabs a { padding: 0 8px; }
+  .topbar-tabs a b { font-size: 13.5px; }
+  .topbar-tabs a.on::after { left: 6px; right: 6px; }
+  .topbar .lang-toggle, .app:not(.is-home) .topbar-reel { display: none; }
+  .lang-one { display: inline-flex; align-items: center; justify-content: center; min-width: 40px; min-height: 38px; border: 1px solid var(--line-2); border-radius: 9px; background: rgba(10, 16, 30, 0.5); color: var(--text); font-family: var(--mono); font-size: 12px; letter-spacing: .8px; cursor: pointer; }
+  .topbar-right { gap: 6px; }
+}
+@media (max-width: 380px) { .topbar-tabs a { padding: 0 6px; } .topbar-tabs a b { font-size: 12.5px; } }@media (max-width: 760px) {
+  /* 머리말 오른쪽의 칩 묶음은 세로로 쌓지 않고 줄바꿈하며 나란히 둡니다 */
+  .page-head > :not(:first-child) { display: flex; flex-direction: row !important; flex-wrap: wrap; gap: 8px !important; }
+  /* 3D 장면 위 HUD 제목은 한 줄 고정 · 타자 효과를 풀어 잘리지 않게 합니다 */
+  .hud-type { white-space: normal; clip-path: none; animation: none; }
+  .flow-arrow { display: none; }
+}@media (max-width: 760px) {
+  /* 관제 센터 커넥텀 카드: 장면 위에 겹쳐 있던 제목 · 데이터 주입 단추 · 층 활동 표를 장면 위아래로 풀어 놓습니다 */
+  .mc-brain { display: flex; flex-direction: column; min-height: 0 !important; }
+  .mc-brain > .mc-head, .mc-brain > .mc-inject, .mc-brain > .mc-layers { position: static !important; width: auto !important; }
+  .mc-brain > .mc-head { order: 0; padding: 14px 16px 0; }
+  .mc-brain > :last-child { order: 1; }
+  .mc-brain > .mc-inject { order: 2; padding: 4px 16px 12px; }
+  .mc-brain > .mc-inject > .row { max-width: none !important; }
+  .mc-brain > .mc-layers { order: 3; margin: 0 12px 14px; }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { mh } from '../lib/mobile'
 import BrainView from '../components/BrainView'
 import { Card, PageHead, ProbBar } from '../components/ui'
 import { useBrain } from '../lib/brain'
@@ -495,12 +496,12 @@ export default function LiveTriage() {
         </div>
 
         <div className="stack" style={{ gap: 16, position: 'sticky', top: 0 }}>
-          <Card className="flush" style={{ height: 420 }}>
+          <Card className="flush" style={{ height: mh(420, 260) }}>
             <div style={{ position: 'absolute', left: 16, top: 12, zIndex: 2 }}>
               <div className="eyebrow" style={{ color: 'var(--text-3)' }}>Connectome state</div>
               <div style={{ fontSize: 12.5, marginTop: 2 }}>{hl ? `${hl} layer engaged` : stage === 'done' ? 'action layer fired' : 'resting stream'}</div>
             </div>
-            <BrainView height={420} highlight={hl} bloom={1.1} view="front" />
+            <BrainView height={mh(420, 260)} highlight={hl} bloom={1.1} view="front" />
           </Card>
           <Card title={t('이 화면의 구성', 'What this screen uses')} sub={t('실시간으로 부르는 서비스와 각 값을 만드는 주체입니다', 'Live services called, and what produces each value')}>
             <div className="note" style={{ lineHeight: 1.7 }}>
