@@ -350,6 +350,7 @@ async def assess(case_state: str, triage_answers: dict, bundle: dict, max_rounds
             [{"role": "system", "content": SYSTEM},
              {"role": "user", "content": _user_prompt(case_state, compact, bundle, feedback)}],
             config.MODEL_DELIBERATE, max_tokens=1400, deadline=deadline - 15, json_mode=True,
+            per_model_s=config.DELIBERATE_PER_MODEL_S,
             purpose="System-2 assessment memo (evidence-cited claims, JSON)")
         try:
             memo = clients.parse_json_block(out["content"])
