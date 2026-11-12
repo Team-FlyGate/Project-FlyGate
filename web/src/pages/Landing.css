@@ -98,3 +98,43 @@
 @media (max-width: 1023px) { .lp-hero-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; } .lp-intro { grid-column: 1 / -1; grid-row: 1; padding: 32px 0 48px; } .lp-discovery { grid-column: 1; grid-row: 2; } .lp-vigilance { grid-column: 2; grid-row: 2; } .lp-product { min-height: 400px; } .lp-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); } .lp-tools { grid-template-columns: 1fr; } }
 @media (max-width: 540px) { .lp-hero { padding: 120px 20px 28px; } .lp-hero-grid { grid-template-columns: minmax(0, 1fr); } .lp-intro { padding: 20px 0 34px; } .lp-intro h1 { font-size: 58px; } .lp-discovery, .lp-vigilance { grid-column: 1; grid-row: auto; } .lp-product { min-height: 360px; padding: 26px; } .lp-product h2 { font-size: 28px; } .lp-product-glyph { margin-top: 24px; } .lp-section { padding: 54px 20px; } .lp-flow, .lp-evidence-grid { grid-template-columns: minmax(0, 1fr); } .lp-flow h3 { margin-top: 16px; } .lp-value { font-size: 32px; } .lp-hero-bottom { flex-wrap: wrap; } }
 @media (prefers-reduced-motion: reduce) { .lp-product, .lp-flow a, .lp-tools > a { transition: none; } }
+
+/* 폰: 제품 두 개를 제목 바로 아래에 나란히 두고, 긴 설치 명령은 빠른 시작 섹션에서만 보여 줍니다 */
+@media (max-width: 760px) {
+  .lp-hero { min-height: auto; padding: 84px 16px 28px; }
+  .lp-hero-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .lp-intro { grid-column: 1 / -1; grid-row: 1; padding: 8px 0 18px; }
+  .lp-intro h1 { font-size: clamp(40px, 12.5vw, 56px); margin: 18px 0 14px; }
+  .lp-tagline { font-size: 17px; line-height: 1.6; }
+  .lp-intro .lp-intro-note { font-size: 14.5px; line-height: 1.75; }
+  .lp-intro .lp-cmd { display: none; }
+  .lp-req { font-size: 12.5px; margin-top: 16px; }
+  .lp-actions { margin-top: 22px; gap: 10px; }
+  .lp-actions .btn { flex: 1 1 auto; justify-content: center; min-height: 48px; font-size: 15px; }
+  .lp-actions .btn.primary { flex-basis: 100%; }
+  .lp-discovery, .lp-vigilance { grid-row: 2; }
+  .lp-discovery { grid-column: 1; }
+  .lp-vigilance { grid-column: 2; }
+  .lp-product { min-height: 0; padding: 16px 14px; border-radius: 14px; background: rgb(7 11 21 / 86%); }
+  .lp-product-glyph, .lp-product dl { display: none; }
+  .lp-product h2 { font-size: 19px; margin: 10px 0 8px; }
+  .lp-product p { font-size: 13.5px; line-height: 1.6; margin-bottom: 14px; }
+  .lp-open { font-size: 13.5px; margin-top: auto; }
+  .lp-eyebrow, .lp-step { font-size: 12px; }
+  .lp-motion { top: 60px; right: 12px; }
+  .lp-hero-bottom { margin-top: 24px; font-size: 12.5px; }
+  .lp-section { padding: 48px 16px; }
+  .lp-section > h2 { font-size: 26px; }
+  .lp-section-intro { font-size: 15px; line-height: 1.75; margin-bottom: 24px; }
+  .lp-flow, .lp-evidence-grid, .lp-uses, .lp-start, .lp-tools, .lp-delta { grid-template-columns: minmax(0, 1fr); }
+  .lp-flow a, .lp-tools > a, .lp-uses a, .lp-start li, .lp-evidence { padding: 18px 16px; }
+  .lp-flow h3 { margin-top: 12px; }
+  .lp-flow p, .lp-tools p, .lp-uses p, .lp-start p, .lp-evidence p, .lp-delta > div p { font-size: 14px; line-height: 1.7; }
+  .lp-evidence p { margin-bottom: 14px; }
+  .lp-evidence > a, .lp-evidence details, .lp-more, .lp-scope > a { font-size: 14px; }
+  .lp-cmd { flex-wrap: wrap; }
+  .lp-cmd code { flex-basis: 100%; font-size: 13px; }
+  .lp-cmd button { min-height: 40px; padding: 8px 16px; font-size: 13.5px; margin-left: auto; }
+  .lp-uses code { font-size: 12.5px; }
+  .lp-scope p { font-size: 14.5px; line-height: 1.8; }
+}@media (max-width: 760px) { .lp-req { font-size: 11.5px; letter-spacing: 0; } .lp-motion { position: static; align-self: flex-end; margin-bottom: 10px; } }

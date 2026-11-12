@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { mh } from '../lib/mobile'
 import DockingView, { type RedockScene } from '../components/DockingView'
 import HeroDocking, { type HeroExtras, type HeroScene, type StepId } from '../components/HeroDocking'
 import { Card, Kpi, Loading, PageHead } from '../components/ui'
@@ -179,7 +180,7 @@ export function RedockBench({ list, pocketR }: { list: [string, RedockScene][]; 
             </div>
           </div>
         </>}
-        {cur ? <DockingView scene={cur} height={600} playKey={play} onSettled={() => setSettled(true)} /> : <div className="shimmer" style={{ height: 600 }} />}
+        {cur ? <DockingView scene={cur} height={mh(600, 340)} playKey={play} onSettled={() => setSettled(true)} /> : <div className="shimmer" style={{ height: mh(600, 340) }} />}
       </Card>
       <Card title="Docking Stream" sub={t('공결정 구조의 원래 리간드를 DiffDock NIM으로 다시 도킹한 실측 결과를 차례로 재생합니다. 누르면 그 장면으로 넘어갑니다', 'Replays measured results of redocking each co-crystal structure’s original ligand with the DiffDock NIM (NVIDIA Inference Microservice). Click an entry to jump to that scene')}
         right={<span className="chip nv"><span className="dot on pulse" style={{ background: 'var(--nvidia)' }} />live replay</span>}>
@@ -299,7 +300,7 @@ export default function Discovery() {
           <Card title={t(<>데모 약물 <span style={{ color: 'var(--jev)' }}>니라파립 × PARP1</span> · 다섯 단계 자동 재생</>, <>Demo drug <span style={{ color: 'var(--jev)' }}>niraparib × PARP1</span> · five-step autoplay</>)}
             sub={t('OpenFold3 NIM 이 예측한 복합체를 가운데 두고 단계마다 NIM 실측 결과를 겹쳐 봅니다. 단계를 누르면 그 단계 페이지로 갑니다', 'The complex predicted by the OpenFold3 NIM sits in the center, with each step’s measured NIM results layered on top. Click a step to open its page')}
             right={<span className="chip nv"><span className="dot on pulse" style={{ background: 'var(--nvidia)' }} />{t('BioNeMo NIM 실측', 'BioNeMo NIM measured')}</span>} style={{ marginBottom: 16 }}>
-            {hero && extras ? <HeroDocking hero={hero} extras={extras} nav={STEP_PAGES} /> : <div className="shimmer" style={{ height: 620 }} />}
+            {hero && extras ? <HeroDocking hero={hero} extras={extras} nav={STEP_PAGES} height={mh(560, 340)} /> : <div className="shimmer" style={{ height: mh(620, 360) }} />}
           </Card>
 
           <div className="grid g4" style={{ marginBottom: 16 }}>

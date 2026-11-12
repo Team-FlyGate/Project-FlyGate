@@ -3,12 +3,25 @@ import * as d3 from 'd3'
 import { t } from '../lib/i18n'
 
 export function PageHead({ eyebrow, title, lede, right }: { eyebrow: string; title: ReactNode; lede?: ReactNode; right?: ReactNode }) {
+  // 폰에서는 긴 소개 문단을 세 줄까지만 보이고 '더 보기'로 펼칩니다(줄이는 규칙은 index.css 의 모바일 구간에만 있습니다)
+  const [open, setOpen] = useState(false)
+  const [long, setLong] = useState(false)
+  const ledeRef = useRef<HTMLParagraphElement>(null)
+  useEffect(() => {
+    const el = ledeRef.current
+    if (!el || open) return
+    const check = () => setLong(el.scrollHeight > el.clientHeight + 2)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [open, lede])
   return (
     <div className="page-head fade-in">
       <div>
         <div className="eyebrow">{eyebrow}</div>
         <h1 className="title">{title}</h1>
-        {lede && <p className="lede">{lede}</p>}
+        {lede && <p ref={ledeRef} className={`lede ${open ? '' : 'lede-clamp'}`}>{lede}</p>}
+        {lede && (long || open) && <button type="button" className="lede-more" onClick={() => setOpen((v) => !v)} aria-expanded={open}>{open ? t('접기', 'Show less') : t('더 보기', 'Show more')}</button>}
       </div>
       {right}
     </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { mh } from '../lib/mobile'
 import DockingView, { type RedockScene } from './DockingView'
 import ConnectomePanel from './ConnectomePanel'
 import Step2Handoff from './Step2Handoff'
@@ -106,7 +107,7 @@ export default function DockPlayground({ scenes }: { scenes: Record<string, Redo
             <div style={{ fontFamily: 'var(--font)', fontSize: 20, fontWeight: 600 }}>{cap(scene.drug)} <span className="dim" style={{ fontWeight: 400 }}>→</span> {scene.gene}</div>
             <div className="mono dim" style={{ fontSize: 11 }}>{scene.target} · PDB {scene.pdb}</div>
           </div>}
-          {scene ? <DockingView scene={scene} height={480} playKey={play} onSettled={() => setSettled(true)} /> : <div className="shimmer" style={{ height: 480 }} />}
+          {scene ? <DockingView scene={scene} height={mh(480, 320)} playKey={play} onSettled={() => setSettled(true)} /> : <div className="shimmer" style={{ height: mh(480, 320) }} />}
         </div>
         <div className="stack" style={{ gap: 12 }}>
           <label className="stack" style={{ gap: 4 }}>

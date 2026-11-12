@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from 'react'
+import { mh } from '../lib/mobile'
 import HeroDocking, { DRUG_LABEL, useHeroDrug, type StepId } from '../components/HeroDocking'
 import DockPlayground from '../components/DockPlayground'
 import Step2Handoff from '../components/Step2Handoff'
@@ -110,9 +111,9 @@ export default function DiscoveryStep({ step }: { step: StepId }) {
             )}
             {/* 두 장면을 동시에 띄우지 않고 바꿔 끼웁니다(WebGL 컨텍스트 수를 늘리지 않게) */}
             {live && view === 'live'
-              ? <LiveScene key={`${step}-${stamp}`} step={step} env={live} height={600} pred={store.runs.openfold3}
+              ? <LiveScene key={`${step}-${stamp}`} step={step} env={live} height={mh(600, 340)} pred={store.runs.openfold3}
                   pocket={hero.msa ? { query_len: hero.msa.query_len, residues: hero.msa.pocket_residues } : undefined} />
-              : <HeroDocking key={step} hero={hero} extras={extras} only={step} nav={STEP_PAGES} height={600} />}
+              : <HeroDocking key={step} hero={hero} extras={extras} only={step} nav={STEP_PAGES} height={mh(600, 340)} />}
           </Card>
 
           <details className="card" style={{ marginBottom: 16, padding: '12px 18px' }}>
