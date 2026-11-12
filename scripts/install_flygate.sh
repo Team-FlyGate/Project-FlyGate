@@ -6,6 +6,16 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BIN="${1:-$HOME/.local/bin}"
 
+# 파이썬 3.10 이상이 필요합니다(코드가 `str | None` 같은 3.10 문법을 씁니다). 없거나 낮으면 여기서 멈추고 알려 줍니다.
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "python3 를 찾지 못했습니다. Python 3.10 이상을 설치한 뒤 다시 실행하세요." >&2
+  exit 1
+fi
+if ! python3 -c 'import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)'; then
+  echo "Python 3.10 이상이 필요합니다. 지금 버전: $(python3 --version 2>&1)" >&2
+  exit 1
+fi
+
 if [ ! -x "$ROOT/.venv/bin/python" ]; then
   python3 -m venv "$ROOT/.venv"
 fi
@@ -19,3 +29,4 @@ case ":$PATH:" in
   *) echo "PATH 에 $BIN 이 없습니다. 셸 설정에 다음 줄을 더하세요: export PATH=\"$BIN:\$PATH\"" ;;
 esac
 "$BIN/flygate" --help | head -5
+echo "다음: flygate 를 실행하고 /login 으로 NVIDIA 키를 넣으세요(또는 .env.example 을 .env 로 복사해 채웁니다)."

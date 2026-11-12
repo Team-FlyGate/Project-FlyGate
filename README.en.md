@@ -225,6 +225,7 @@ Use `/login` in the chat to enter your NVIDIA key and the optional Jev key with 
 
 ```bash
 git clone https://github.com/Team-FlyGate/Project-FlyGate && cd Project-FlyGate
+# Requires macOS / Linux / Windows WSL, Python 3.10+, and an NVIDIA API key (TypeSafe key optional). See .env.example.
 ./scripts/install_flygate.sh              # creates .venv, installs dependencies, links ~/.local/bin/flygate
 flygate                                  # starts the interactive CLI · set keys with /login
 

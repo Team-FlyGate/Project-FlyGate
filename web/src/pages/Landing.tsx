@@ -93,7 +93,7 @@ export default function Landing({ onOpenShowreel }: { onOpenShowreel: () => void
       <p className="lp-section-intro">{t('FlyGate는 Apache-2.0 라이선스의 무료 오픈소스입니다. 저장소를 받아 설치하면 터미널에서 바로 씁니다.', 'FlyGate is free and open source under the Apache-2.0 license. Clone the repository, install, and use it from your terminal.')}</p>
       <ol className="lp-start">
         <li><span className="lp-step">01</span><h3>{t('설치', 'Install')}</h3><p>{t('저장소를 받아 설치 스크립트를 실행합니다.', 'Clone the repository and run the install script.')}</p><Command text={INSTALL} /></li>
-        <li><span className="lp-step">02</span><h3>{t('NVIDIA API 키 설정', 'Set your NVIDIA API key')}</h3><p>{t('저장소 루트의 .env 파일에 키를 적습니다.', 'Put your key in the .env file at the repository root.')}</p><Command text="NVIDIA_API_KEY=nvapi-..." label=".env" /></li>
+        <li><span className="lp-step">02</span><h3>{t('NVIDIA API 키 연결', 'Connect your NVIDIA API key')}</h3><p>{t('flygate 를 실행하고 /login 을 입력하면 키를 숨김 입력으로 받아 저장합니다. 또는 .env.example 을 .env 로 복사해 아래 한 줄을 채웁니다.', 'Run flygate and type /login to enter the key with hidden input. Or copy .env.example to .env and fill in the line below.')}</p><Command text="NVIDIA_API_KEY=nvapi-..." label=".env" /></li>
         <li><span className="lp-step">03</span><h3>{t('실행', 'Run')}</h3><p>{t('대화형 CLI를 열거나, 명령을 바로 실행해 JSON 결과를 받습니다.', 'Open the interactive CLI, or run a command directly and get JSON back.')}</p><Command text="flygate" /><Command text="flygate discover parp1" /></li>
       </ol>
       <a className="lp-more" href="#/cli">{t('CLI 튜토리얼 전체 보기 →', 'Read the full CLI tutorial →')}</a>

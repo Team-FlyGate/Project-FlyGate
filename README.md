@@ -229,6 +229,17 @@ MaleCNS 초파리 커넥텀(뇌 뉴런 연결 배선도, 뉴런 49,244개) 화�
 <p align="center"><a href="https://flygate.kr/#/cli"><img src="docs/images/cli_install_v1.0.0.png" width="100%" alt="새로 클론한 Project-FlyGate 저장소에서 install_flygate.sh 를 실행하고 flygate --help 로 하위 명령 9개를 확인한 실제 터미널 화면"></a></p>
 <p align="center"><sub>빈 임시 폴더에 저장소를 새로 클론해 설치 스크립트와 <code>flygate --help</code>를 실제로 실행한 화면입니다(2026-09-28). triage · grade · critic · discover --live · kr-causality · watch의 실제 실행 화면은 <a href="https://flygate.kr/#/cli">대시보드 FlyGate Agent CLI 페이지</a>에서 크게 볼 수 있습니다.</sub></p>
 
+**필요한 것**
+
+| 항목 | 내용 |
+|---|---|
+| 운영체제 | macOS · Linux · Windows는 WSL(설치 스크립트가 bash와 심볼릭 링크를 씁니다) |
+| Python | 3.10 이상 |
+| NVIDIA API 키 | 필수. [build.nvidia.com](https://build.nvidia.com/settings/api-keys)에서 발급합니다 |
+| TypeSafe API 키 | 선택. 없으면 판단이 필요한 명령은 '사람 확인'으로 돌립니다 |
+
+키는 `flygate` 실행 후 `/login`으로 넣거나(운영체제 보안 저장소에 저장), [.env.example](.env.example)을 `.env`로 복사해 채웁니다.
+
 ```bash
 git clone https://github.com/Team-FlyGate/Project-FlyGate && cd Project-FlyGate
 ./scripts/install_flygate.sh              # .venv 생성, 의존성 설치, ~/.local/bin/flygate 연결
@@ -254,8 +265,8 @@ OpenShell 샌드박스 배포는 `agent/deploy_nemoclaw.sh worker|assistant`, �
 ./scripts/fetch_data.sh
 
 # 키 (.env, 커밋하지 않습니다)
-TYPESAFE_API_KEY=...
-NVIDIA_API_KEY=nvapi-...
+cp .env.example .env                      # NVIDIA_API_KEY(필수) · TYPESAFE_API_KEY(선택)를 채웁니다
+.venv/bin/python scripts/check_models.py  # 설정된 NVIDIA 모델이 이 키로 실제 응답하는지 점검
 
 # 대시보드와 API
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt duckdb pandas pyarrow numpy scipy uvicorn pytest
